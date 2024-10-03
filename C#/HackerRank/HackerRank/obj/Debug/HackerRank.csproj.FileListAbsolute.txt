@@ -1,0 +1,7 @@
+C:\Users\Vain_Kane\source\repos\HackerRank\HackerRank\bin\Debug\HackerRank.exe.config
+C:\Users\Vain_Kane\source\repos\HackerRank\HackerRank\bin\Debug\HackerRank.exe
+C:\Users\Vain_Kane\source\repos\HackerRank\HackerRank\bin\Debug\HackerRank.pdb
+C:\Users\Vain_Kane\source\repos\HackerRank\HackerRank\obj\Debug\HackerRank.csproj.AssemblyReference.cache
+C:\Users\Vain_Kane\source\repos\HackerRank\HackerRank\obj\Debug\HackerRank.csproj.CoreCompileInputs.cache
+C:\Users\Vain_Kane\source\repos\HackerRank\HackerRank\obj\Debug\HackerRank.exe
+C:\Users\Vain_Kane\source\repos\HackerRank\HackerRank\obj\Debug\HackerRank.pdb

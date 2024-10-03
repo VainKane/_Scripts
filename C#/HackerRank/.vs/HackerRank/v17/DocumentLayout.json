@@ -1,0 +1,41 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Vain_Kane\\source\\repos\\HackerRank\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{5988A7E6-36C0-47A8-B5C7-BB55CD34036E}|HackerRank\\HackerRank.csproj|c:\\users\\vain_kane\\source\\repos\\hackerrank\\hackerrank\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5988A7E6-36C0-47A8-B5C7-BB55CD34036E}|HackerRank\\HackerRank.csproj|solutionrelative:hackerrank\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Vain_Kane\\source\\repos\\HackerRank\\HackerRank\\Program.cs",
+              "RelativeDocumentMoniker": "HackerRank\\Program.cs",
+              "ToolTip": "C:\\Users\\Vain_Kane\\source\\repos\\HackerRank\\HackerRank\\Program.cs",
+              "RelativeToolTip": "HackerRank\\Program.cs",
+              "ViewState": "AgIAAFEAAAAAAAAAAADwv84AAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-24T04:44:04.906Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
