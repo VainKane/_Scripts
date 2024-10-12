@@ -7,9 +7,9 @@ using namespace std;
 
 int main()
 {
-	int numPairs;
+	int n;
 
-	cin >> numPairs;
+	cin >> n;
 
-	cout << numPairs * 2 - 1;
+	cout << n + 1;
 }

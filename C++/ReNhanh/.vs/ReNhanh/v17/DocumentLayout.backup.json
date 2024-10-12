@@ -1,0 +1,75 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "E:\\_Scripts\\C\u002B\u002B\\ReNhanh\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|E:\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\GAMES.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|solutionrelative:ReNhanh\\GAMES.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|E:\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\gift.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|solutionrelative:ReNhanh\\gift.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|E:\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\MINMAX4.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|solutionrelative:ReNhanh\\MINMAX4.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "GAMES.cpp",
+              "DocumentMoniker": "E:\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\GAMES.cpp",
+              "RelativeDocumentMoniker": "ReNhanh\\GAMES.cpp",
+              "ToolTip": "E:\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\GAMES.cpp",
+              "RelativeToolTip": "ReNhanh\\GAMES.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-10-11T09:17:50.689Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MINMAX4.cpp",
+              "DocumentMoniker": "E:\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\MINMAX4.cpp",
+              "RelativeDocumentMoniker": "ReNhanh\\MINMAX4.cpp",
+              "ToolTip": "E:\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\MINMAX4.cpp",
+              "RelativeToolTip": "ReNhanh\\MINMAX4.cpp",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAwwDAAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-10-11T08:57:56.127Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "gift.cpp",
+              "DocumentMoniker": "E:\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\gift.cpp",
+              "RelativeDocumentMoniker": "ReNhanh\\gift.cpp",
+              "ToolTip": "E:\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\gift.cpp",
+              "RelativeToolTip": "ReNhanh\\gift.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-10-11T08:46:45.255Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
