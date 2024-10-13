@@ -2,11 +2,12 @@
 
 using namespace std;
 
-int a;
-int b;
 
 int main()
 {
+	int a;
+	int b;
+
 	cin >> a >> b;
 
 	if (a <= b)

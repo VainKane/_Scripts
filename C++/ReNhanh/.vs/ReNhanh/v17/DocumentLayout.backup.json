@@ -1,18 +1,62 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "E:\\_Scripts\\C\u002B\u002B\\ReNhanh\\",
+  "WorkspaceRootPath": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|E:\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\GAMES.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\SORT.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|solutionrelative:ReNhanh\\SORT.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\SUM.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|solutionrelative:ReNhanh\\SUM.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\triangle5.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|solutionrelative:ReNhanh\\triangle5.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\triangle4.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|solutionrelative:ReNhanh\\triangle4.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\triangle3.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|solutionrelative:ReNhanh\\triangle3.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\triangle2.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|solutionrelative:ReNhanh\\triangle2.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\triangle1.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|solutionrelative:ReNhanh\\triangle1.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\MINMAX4.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|solutionrelative:ReNhanh\\MINMAX4.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\GAMES.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|solutionrelative:ReNhanh\\GAMES.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|E:\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\gift.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\CHECK.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|solutionrelative:ReNhanh\\CHECK.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\chinhphuong.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|solutionrelative:ReNhanh\\chinhphuong.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\gift.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|solutionrelative:ReNhanh\\gift.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|E:\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\MINMAX4.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|solutionrelative:ReNhanh\\MINMAX4.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\ASHOES.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|solutionrelative:ReNhanh\\ASHOES.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\BILL.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2EE01F1A-841C-4446-B134-9DF6FAACD40A}|ReNhanh\\ReNhanh.vcxproj|solutionrelative:ReNhanh\\BILL.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,47 +66,190 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SORT.cpp",
+              "DocumentMoniker": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\SORT.cpp",
+              "RelativeDocumentMoniker": "ReNhanh\\SORT.cpp",
+              "ToolTip": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\SORT.cpp",
+              "RelativeToolTip": "ReNhanh\\SORT.cpp",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAA4AAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-10-13T14:51:48.162Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "triangle5.cpp",
+              "DocumentMoniker": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\triangle5.cpp",
+              "RelativeDocumentMoniker": "ReNhanh\\triangle5.cpp",
+              "ToolTip": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\triangle5.cpp",
+              "RelativeToolTip": "ReNhanh\\triangle5.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-10-13T14:23:24.48Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "triangle4.cpp",
+              "DocumentMoniker": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\triangle4.cpp",
+              "RelativeDocumentMoniker": "ReNhanh\\triangle4.cpp",
+              "ToolTip": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\triangle4.cpp",
+              "RelativeToolTip": "ReNhanh\\triangle4.cpp",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABcAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-10-13T14:18:43.52Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "triangle3.cpp",
+              "DocumentMoniker": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\triangle3.cpp",
+              "RelativeDocumentMoniker": "ReNhanh\\triangle3.cpp",
+              "ToolTip": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\triangle3.cpp",
+              "RelativeToolTip": "ReNhanh\\triangle3.cpp",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAACAAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-10-13T14:09:09.654Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "triangle2.cpp",
+              "DocumentMoniker": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\triangle2.cpp",
+              "RelativeDocumentMoniker": "ReNhanh\\triangle2.cpp",
+              "ToolTip": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\triangle2.cpp",
+              "RelativeToolTip": "ReNhanh\\triangle2.cpp",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAACAAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-10-13T13:55:49.699Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "triangle1.cpp",
+              "DocumentMoniker": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\triangle1.cpp",
+              "RelativeDocumentMoniker": "ReNhanh\\triangle1.cpp",
+              "ToolTip": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\triangle1.cpp",
+              "RelativeToolTip": "ReNhanh\\triangle1.cpp",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABkAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-10-13T13:43:24.526Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "GAMES.cpp",
-              "DocumentMoniker": "E:\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\GAMES.cpp",
-              "RelativeDocumentMoniker": "ReNhanh\\GAMES.cpp",
-              "ToolTip": "E:\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\GAMES.cpp",
-              "RelativeToolTip": "ReNhanh\\GAMES.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAABAAAAAAAAAA==",
+              "DocumentIndex": 12,
+              "Title": "ASHOES.cpp",
+              "DocumentMoniker": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\ASHOES.cpp",
+              "RelativeDocumentMoniker": "ReNhanh\\ASHOES.cpp",
+              "ToolTip": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\ASHOES.cpp",
+              "RelativeToolTip": "ReNhanh\\ASHOES.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-10-11T09:17:50.689Z",
+              "WhenOpened": "2024-10-13T13:28:29.911Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 13,
+              "Title": "BILL.cpp",
+              "DocumentMoniker": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\BILL.cpp",
+              "RelativeDocumentMoniker": "ReNhanh\\BILL.cpp",
+              "ToolTip": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\BILL.cpp",
+              "RelativeToolTip": "ReNhanh\\BILL.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-10-13T12:54:31.988Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "CHECK.cpp",
+              "DocumentMoniker": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\CHECK.cpp",
+              "RelativeDocumentMoniker": "ReNhanh\\CHECK.cpp",
+              "ToolTip": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\CHECK.cpp",
+              "RelativeToolTip": "ReNhanh\\CHECK.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-10-13T11:50:03.954Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "SUM.cpp",
+              "DocumentMoniker": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\SUM.cpp",
+              "RelativeDocumentMoniker": "ReNhanh\\SUM.cpp",
+              "ToolTip": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\SUM.cpp",
+              "RelativeToolTip": "ReNhanh\\SUM.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-10-12T15:08:23.931Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "chinhphuong.cpp",
+              "DocumentMoniker": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\chinhphuong.cpp",
+              "RelativeDocumentMoniker": "ReNhanh\\chinhphuong.cpp",
+              "ToolTip": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\chinhphuong.cpp",
+              "RelativeToolTip": "ReNhanh\\chinhphuong.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-10-12T14:57:30.314Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "GAMES.cpp",
+              "DocumentMoniker": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\GAMES.cpp",
+              "RelativeDocumentMoniker": "ReNhanh\\GAMES.cpp",
+              "ToolTip": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\GAMES.cpp",
+              "RelativeToolTip": "ReNhanh\\GAMES.cpp",
+              "ViewState": "AgIAACQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-10-12T14:56:53.509Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "MINMAX4.cpp",
-              "DocumentMoniker": "E:\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\MINMAX4.cpp",
+              "DocumentMoniker": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\MINMAX4.cpp",
               "RelativeDocumentMoniker": "ReNhanh\\MINMAX4.cpp",
-              "ToolTip": "E:\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\MINMAX4.cpp",
+              "ToolTip": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\MINMAX4.cpp",
               "RelativeToolTip": "ReNhanh\\MINMAX4.cpp",
-              "ViewState": "AgIAAB8AAAAAAAAAAAAwwDAAAAAbAAAAAAAAAA==",
+              "ViewState": "AgIAABwAAAAAAAAAAAAAABsAAAADAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-10-11T08:57:56.127Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 11,
               "Title": "gift.cpp",
-              "DocumentMoniker": "E:\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\gift.cpp",
+              "DocumentMoniker": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\gift.cpp",
               "RelativeDocumentMoniker": "ReNhanh\\gift.cpp",
-              "ToolTip": "E:\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\gift.cpp",
+              "ToolTip": "D:\\Dev\\_Scripts\\C\u002B\u002B\\ReNhanh\\ReNhanh\\gift.cpp",
               "RelativeToolTip": "ReNhanh\\gift.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-10-11T08:46:45.255Z",
               "EditorCaption": ""

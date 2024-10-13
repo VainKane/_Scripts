@@ -19,29 +19,29 @@ int main()
 	min = a;
 	max = a;
 	
-	if (min >= b)
+	if (min > b)
 	{
 		min = b;
 	}
-	if (min >= c)
+	if (min > c)
 	{
 		min = c;
 	}
-	if (min >= d)
+	if (min > d)
 	{
 		min = d;
 	}
 
 	
-	if (max <= b)
+	if (max < b)
 	{
 		max = b;
 	}
-	if (max <= c)
+	if (max < c)
 	{
 		max = c;
 	}
-	if (max <= d)
+	if (max < d)
 	{
 		max = d;
 	}
