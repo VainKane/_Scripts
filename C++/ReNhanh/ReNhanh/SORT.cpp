@@ -12,7 +12,7 @@ int main()
 
 	int min;
 	int max;
-	int middleNum;
+	int mid;
 
 	cin >> a >> b >> c;
 
@@ -38,5 +38,7 @@ int main()
 		max = c;
 	}
 
-	if (a <= min && a )
+	mid = a + b + c - min - max;
+
+	cout << min << " " << mid << " " << max;
 }

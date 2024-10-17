@@ -4,20 +4,28 @@
 
 using namespace std;
 
+long double a;
+long double b;
+long double c;
+
 int main()
 {
-	int a;
-	int b;
-	int c;
-
 	string result;
 
 	cin >> a >> b >> c;
 
-	if (a == b && b == c)
+	if (a > 0 && b > 0 && c > 0)
 	{
-		result = "YES";
+		if (a == b && b == c && c == a)
+		{
+			result = "YES";
+		}
+		else
+		{
+			result = "NO";
+		}
 	}
+	
 	else
 	{
 		result = "NO";

@@ -24,14 +24,12 @@ int main()
 	height = sqrt(c * c - d * d);
 	r = 0.25 * height;
 
-	circleArea = height * height * 3.14;
+	circleArea = r * r * 3.14;
 
-	totalArea = ((a + b) / 2) * height;
-
-	cout << totalArea;
+	totalArea = 0.5 * (a + b) * height;
 
 	cout << fixed << setprecision(2);
 
-	//cout << totalArea - circleArea;
+	cout << totalArea - circleArea;
 
 }

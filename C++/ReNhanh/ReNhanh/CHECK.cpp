@@ -15,8 +15,6 @@ int main()
 	int hangTram;
 	int hangChuc;
 
-
-
 	cin >> num;
 	hangNghin = num / 1000;
 	

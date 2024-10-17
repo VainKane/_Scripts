@@ -5,16 +5,16 @@ using namespace std;
 
 void MinMaxFind(int a, int b, int c, int d, int e);
 
+unsigned int a;
+unsigned int b;
+unsigned int c;
+unsigned int d;
+unsigned int e;
+
+int sum;
+
 int main()
 {
-	int a;
-	int b;
-	int c;
-	int d;
-	int e;
-
-	int sum;
-
 	cin >> a >> b >> c >> d >> e;
 
 	sum = a + b + c + d + e;
@@ -30,39 +30,39 @@ void MinMaxFind(int a, int b, int c, int d, int e)
 	min = a;
 	max = a;
 
-	if (min > b)
+	if (min >= b)
 	{
 		min = b;
 	}
-	if (min > c)
+	if (min >= c)
 	{
 		min = c;
 	}
-	if (min > d)
+	if (min >= d)
 	{
 		min = d;
 	}
-	if (min > e)
+	if (min >= e)
 	{
 		min = e;
 	}
 
 
-	if (max < b)
+	if (max <= b)
 	{
 		max = b;
 	}
-	if (max < c)
+	if (max <= c)
 	{
 		max = c;
 	}
-	if (max < d)
+	if (max <= d)
 	{
 		max = d;
 	}
-	if (max < e)
+	if (max <= e)
 	{
-		max < e;
+		max = e;
 	}
 
 	cout << min << " " << max;
