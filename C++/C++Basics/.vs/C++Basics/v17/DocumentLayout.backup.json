@@ -3,16 +3,20 @@
   "WorkspaceRootPath": "D:\\Dev\\_Scripts\\C\u002B\u002B\\C\u002B\u002BBasics\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{C94D254F-CBEE-4030-ACCD-DA5515CAAC5C}|C\u002B\u002BBasics\\C\u002B\u002BBasics.vcxproj|D:\\Dev\\_Scripts\\C\u002B\u002B\\C\u002B\u002BBasics\\C\u002B\u002BBasics\\BTHUC.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{C94D254F-CBEE-4030-ACCD-DA5515CAAC5C}|C\u002B\u002BBasics\\C\u002B\u002BBasics.vcxproj|solutionrelative:C\u002B\u002BBasics\\BTHUC.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C94D254F-CBEE-4030-ACCD-DA5515CAAC5C}|C\u002B\u002BBasics\\C\u002B\u002BBasics.vcxproj|D:\\Dev\\_Scripts\\C\u002B\u002B\\C\u002B\u002BBasics\\C\u002B\u002BBasics\\AREA3.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{C94D254F-CBEE-4030-ACCD-DA5515CAAC5C}|C\u002B\u002BBasics\\C\u002B\u002BBasics.vcxproj|solutionrelative:C\u002B\u002BBasics\\AREA3.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{C94D254F-CBEE-4030-ACCD-DA5515CAAC5C}|C\u002B\u002BBasics\\C\u002B\u002BBasics.vcxproj|D:\\Dev\\_Scripts\\C\u002B\u002B\\C\u002B\u002BBasics\\C\u002B\u002BBasics\\exp.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{C94D254F-CBEE-4030-ACCD-DA5515CAAC5C}|C\u002B\u002BBasics\\C\u002B\u002BBasics.vcxproj|solutionrelative:C\u002B\u002BBasics\\exp.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{C94D254F-CBEE-4030-ACCD-DA5515CAAC5C}|C\u002B\u002BBasics\\C\u002B\u002BBasics.vcxproj|D:\\Dev\\_Scripts\\C\u002B\u002B\\C\u002B\u002BBasics\\C\u002B\u002BBasics\\terms.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{C94D254F-CBEE-4030-ACCD-DA5515CAAC5C}|C\u002B\u002BBasics\\C\u002B\u002BBasics.vcxproj|solutionrelative:C\u002B\u002BBasics\\terms.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C94D254F-CBEE-4030-ACCD-DA5515CAAC5C}|C\u002B\u002BBasics\\C\u002B\u002BBasics.vcxproj|D:\\Dev\\_Scripts\\C\u002B\u002B\\C\u002B\u002BBasics\\C\u002B\u002BBasics\\AREA3.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{C94D254F-CBEE-4030-ACCD-DA5515CAAC5C}|C\u002B\u002BBasics\\C\u002B\u002BBasics.vcxproj|solutionrelative:C\u002B\u002BBasics\\AREA3.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{C94D254F-CBEE-4030-ACCD-DA5515CAAC5C}|C\u002B\u002BBasics\\C\u002B\u002BBasics.vcxproj|D:\\Dev\\_Scripts\\C\u002B\u002B\\C\u002B\u002BBasics\\C\u002B\u002BBasics\\AREA2.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -29,10 +33,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{C94D254F-CBEE-4030-ACCD-DA5515CAAC5C}|C\u002B\u002BBasics\\C\u002B\u002BBasics.vcxproj|D:\\Dev\\_Scripts\\C\u002B\u002B\\C\u002B\u002BBasics\\C\u002B\u002BBasics\\AREA4.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{C94D254F-CBEE-4030-ACCD-DA5515CAAC5C}|C\u002B\u002BBasics\\C\u002B\u002BBasics.vcxproj|solutionrelative:C\u002B\u002BBasics\\AREA4.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C94D254F-CBEE-4030-ACCD-DA5515CAAC5C}|C\u002B\u002BBasics\\C\u002B\u002BBasics.vcxproj|D:\\Dev\\_Scripts\\C\u002B\u002B\\C\u002B\u002BBasics\\C\u002B\u002BBasics\\BTHUC.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{C94D254F-CBEE-4030-ACCD-DA5515CAAC5C}|C\u002B\u002BBasics\\C\u002B\u002BBasics.vcxproj|solutionrelative:C\u002B\u002BBasics\\BTHUC.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{C94D254F-CBEE-4030-ACCD-DA5515CAAC5C}|C\u002B\u002BBasics\\C\u002B\u002BBasics.vcxproj|D:\\Dev\\_Scripts\\C\u002B\u002B\\C\u002B\u002BBasics\\C\u002B\u002BBasics\\SHOES.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -65,8 +65,12 @@
               "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "TONG1.cpp",
               "DocumentMoniker": "D:\\Dev\\_Scripts\\C\u002B\u002B\\C\u002B\u002BBasics\\C\u002B\u002BBasics\\TONG1.cpp",
               "RelativeDocumentMoniker": "C\u002B\u002BBasics\\TONG1.cpp",
@@ -74,12 +78,11 @@
               "RelativeToolTip": "C\u002B\u002BBasics\\TONG1.cpp",
               "ViewState": "AgIAABIAAAAAAAAAAAAAABwAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-10-11T08:20:37.112Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-11T08:20:37.112Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "AREA4.cpp",
               "DocumentMoniker": "D:\\Dev\\_Scripts\\C\u002B\u002B\\C\u002B\u002BBasics\\C\u002B\u002BBasics\\AREA4.cpp",
               "RelativeDocumentMoniker": "C\u002B\u002BBasics\\AREA4.cpp",
@@ -91,7 +94,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "AREA2.cpp",
               "DocumentMoniker": "D:\\Dev\\_Scripts\\C\u002B\u002B\\C\u002B\u002BBasics\\C\u002B\u002BBasics\\AREA2.cpp",
               "RelativeDocumentMoniker": "C\u002B\u002BBasics\\AREA2.cpp",
@@ -99,12 +102,11 @@
               "RelativeToolTip": "C\u002B\u002BBasics\\AREA2.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-10-11T07:19:24.248Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-11T07:19:24.248Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "AREA0.cpp",
               "DocumentMoniker": "D:\\Dev\\_Scripts\\C\u002B\u002B\\C\u002B\u002BBasics\\C\u002B\u002BBasics\\AREA0.cpp",
               "RelativeDocumentMoniker": "C\u002B\u002BBasics\\AREA0.cpp",
@@ -112,8 +114,7 @@
               "RelativeToolTip": "C\u002B\u002BBasics\\AREA0.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-10-07T13:50:53.131Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-07T13:50:53.131Z"
             },
             {
               "$type": "Document",
@@ -141,32 +142,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 0,
               "Title": "BTHUC.cpp",
               "DocumentMoniker": "D:\\Dev\\_Scripts\\C\u002B\u002B\\C\u002B\u002BBasics\\C\u002B\u002BBasics\\BTHUC.cpp",
               "RelativeDocumentMoniker": "C\u002B\u002BBasics\\BTHUC.cpp",
               "ToolTip": "D:\\Dev\\_Scripts\\C\u002B\u002B\\C\u002B\u002BBasics\\C\u002B\u002BBasics\\BTHUC.cpp",
               "RelativeToolTip": "C\u002B\u002BBasics\\BTHUC.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-10-07T13:10:50.951Z"
+              "WhenOpened": "2024-10-07T13:10:50.951Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "exp.cpp",
               "DocumentMoniker": "D:\\Dev\\_Scripts\\C\u002B\u002B\\C\u002B\u002BBasics\\C\u002B\u002BBasics\\exp.cpp",
               "RelativeDocumentMoniker": "C\u002B\u002BBasics\\exp.cpp",
               "ToolTip": "D:\\Dev\\_Scripts\\C\u002B\u002B\\C\u002B\u002BBasics\\C\u002B\u002BBasics\\exp.cpp",
               "RelativeToolTip": "C\u002B\u002BBasics\\exp.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-10-07T13:41:27.981Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "terms.cpp",
               "DocumentMoniker": "D:\\Dev\\_Scripts\\C\u002B\u002B\\C\u002B\u002BBasics\\C\u002B\u002BBasics\\terms.cpp",
               "RelativeDocumentMoniker": "C\u002B\u002BBasics\\terms.cpp",
@@ -174,8 +176,7 @@
               "RelativeToolTip": "C\u002B\u002BBasics\\terms.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-10-11T07:58:54.423Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-11T07:58:54.423Z"
             },
             {
               "$type": "Document",
@@ -191,7 +192,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "AREA3.cpp",
               "DocumentMoniker": "D:\\Dev\\_Scripts\\C\u002B\u002B\\C\u002B\u002BBasics\\C\u002B\u002BBasics\\AREA3.cpp",
               "RelativeDocumentMoniker": "C\u002B\u002BBasics\\AREA3.cpp",

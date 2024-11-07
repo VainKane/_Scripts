@@ -1,11 +1,19 @@
+#define _CRT_SECURE_NO_DEPRECATE
+#include <stdio.h>
 #include <iostream>
+#include <cmath>
+#include <string>
 
 using namespace std;
 
+
+int bacChoice;
+int namChoice;
+
 int main()
 {
-	int bacChoice;
-	int namChoice;
+	freopen("GAMES.inp", "r", stdin);
+	freopen("GAMES.out", "w", stdout);
 
 	cin >> bacChoice >> namChoice;
 	

@@ -3,18 +3,18 @@
 
 using namespace std;
 
+int num;
+
+int tram;
+int chuc;
+int dv;
+
+int hangNghin;
+int hangTram;
+int hangChuc;
+
 int main()
 {
-	int num;
-	
-	int tram;
-	int chuc;
-	int dv;
-
-	int hangNghin;
-	int hangTram;
-	int hangChuc;
-
 	cin >> num;
 	hangNghin = num / 1000;
 	

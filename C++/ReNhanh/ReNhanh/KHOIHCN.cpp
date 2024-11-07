@@ -2,9 +2,8 @@
 #include <cmath>
 #include <string>
 
-using namespace std;
-
-void Check(int num, int x, int y, char &resultOut);
+void Check(int num, int x, int y, std::string& resultOut);
+void PairCheck(std::string aCheck, std::string bCheck, std::string& resultOut);
 
 unsigned int a;
 unsigned int b;
@@ -13,57 +12,84 @@ unsigned int c;
 unsigned int x;
 unsigned int y;
 
-char aCheck;
-char bCheck;
-char cCheck;
+std::string aCheck;
+std::string bCheck;
+std::string cCheck;
 
-int trueCase = (int)'x' + (int)'y';
-
-string result = "KHONG";
-long long sum;
-
+std::string result = "KHONG";
 
 int main()
 {
-	cin >> a >> b >> c >> x >> y;
+	std::cin >> a >> b >> c >> x >> y;
 
 	Check(a, x, y, aCheck);
 	Check(b, x, y, bCheck);
 	Check(c, x, y, cCheck);
 
-	if (aCheck + bCheck == trueCase)
-	{
-		result = "CO";
-	}
-	else if (bCheck + cCheck == trueCase)
-	{
-		result = "CO";
-	}
-	else if (cCheck + aCheck == trueCase)
-	{
-		result = "CO";
-	}
-	else
-	{
-		result = "KHONG";
-	}
+	//std::cout << aCheck;
+	//std::cout << bCheck;
+	//std::cout << cCheck;
 
-	cout << result;
+	PairCheck(aCheck, bCheck, result);
+	PairCheck(bCheck, cCheck, result);
+	PairCheck(cCheck, aCheck, result);
+
+	std::cout << result;
 }
 
 
-void Check(int num, int x, int y, char &resultOut)
+void Check(int num, int x, int y, std::string& resultOut)
 {
-	if (num <= x)
+	if (num < x)
 	{
-		resultOut = 'x';
-	}
-	else if (num <= y)
-	{
-		resultOut = 'y';
+		resultOut = "x";
+
+		if (num < y)
+		{
+			resultOut += "y";
+		}
 	}
 	else
 	{
-		resultOut = '0';
+		if (num < y)
+		{
+			resultOut = "y";
+		}
+		else
+		{
+			resultOut = "0";
+		}
+	}
+}
+
+void PairCheck(std::string aCheck, std::string bCheck, std::string& resultOut)
+{
+	if (aCheck + bCheck == "xy")
+	{
+		resultOut = "CO";
+	}
+	else if (aCheck + bCheck == "yx")
+	{
+		resultOut = "CO";
+	}
+	else if (aCheck + bCheck == "xyxy")
+	{
+		resultOut = "CO";
+	}
+	else if (aCheck + bCheck == "xyx")
+	{
+		resultOut = "CO";
+	}
+	else if (aCheck + bCheck == "xyy")
+	{
+		resultOut = "CO";
+	}
+	else if (aCheck + bCheck == "xxy")
+	{
+		resultOut = "CO";
+	}
+	else if (aCheck + bCheck == "yxy")
+	{
+		resultOut = "CO";
 	}
 }

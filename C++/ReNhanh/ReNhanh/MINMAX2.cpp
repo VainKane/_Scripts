@@ -1,16 +1,19 @@
+#define _CRT_SECURE_NO_DEPRECATE
+#include <stdio.h>
 #include <iostream>
+#include <cmath>
+#include <string>
 
 using namespace std;
 
+int a;
+int b;
 
 int main()
 {
-	int a;
-	int b;
-
 	cin >> a >> b;
 
-	if (a <= b)
+	if (a < b)
 	{
 		cout << a << " " << b;
 	}
