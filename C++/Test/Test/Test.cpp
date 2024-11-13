@@ -11,13 +11,16 @@ int i = 999;
 
 std::string abc;
 
+int intt[5];
+
+
 int main()
 {
 	/*while (true)
 	{
 		char test;
-		cin >> test;
-		cout << (int)test << endl << "---";
+		std::cin >> test;
+		std::cout << (int)test << std::endl << "---\n";
 	}*/
 	
 
@@ -32,7 +35,7 @@ int main()
 	}*/
 
 
-	while (true)
+	/*while (true)
 	{
 		std::cout << "Day la phan dau vong lap thu nhat\n";
 
@@ -42,6 +45,27 @@ int main()
 		}
 		break;
 		std::cout << "Day la phan cuoi vong lap thu nhat\n";
-	}
+	}*/
+
+	/*int arr[4];
+
+	for (int i = 0; i <= 4; i++)
+	{
+		std::cout << "Phan tu thu " << i + 1 << '\n';
+	}*/
+	
+	//std::cout << (char)5;
+
+
+	/*for (long long i = 0; i <= sqrt(2 * std::pow(10, 4)); i++)
+	{
+		if (n % i == 0)
+		{
+			std::cout << "nah";
+			break;
+		}
+	} */
+
+	std::cout << sqrt(1000000000000000000);
 }
 

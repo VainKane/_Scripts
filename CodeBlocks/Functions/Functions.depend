@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1731205996 source:d:\dev\_scripts\codeblocks\functions\palnum.cpp
+	<iostream>
+	<string.h>
+	<string>
+
