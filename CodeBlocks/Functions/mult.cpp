@@ -11,6 +11,7 @@ int main()
 	std::cin >> a >> b;
 
 	std::cout << Multi(a, b);
+	
 }
 
 int Multi(int a, int b)
