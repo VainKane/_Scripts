@@ -2,6 +2,7 @@
 
 int times;
 int n;
+int x;
 
 int main()
 {
@@ -9,8 +10,7 @@ int main()
 
     for (int i = 0; i < times; i++)
     {
-        std::cin >> n;
-        std::cout << 7 - n << '\n';
+        std::cin >> n >> x;
+        std::cout << 10 * (n - 1) - (n - 1) * x << '\n'; 
     }
 }
-
