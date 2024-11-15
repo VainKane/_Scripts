@@ -1,14 +1,17 @@
 #include <bits/stdc++.h>
 
-int Replace(int n);
-int Reverse(int n);
+long long Replace(long long n);
+long long Reverse(long long n);
 
 
-int a;
+long long a;
 int times;
 
 int main()
 {
+    freopen("replacedigit.inp", "r", stdin);
+    freopen("replacedigit.out", "w", stdout);
+
     std::cin >> times;
 
     for (int i = 0; i < times; i++)
@@ -19,9 +22,9 @@ int main()
     
 }
 
-int Replace(int n)
+long long Replace(long long n)
 {
-    int result = 0;
+    long long result = 0;
 
     int r = n % 10;
 
@@ -53,9 +56,9 @@ int Replace(int n)
     return result;
 }
 
-int Reverse(int n)
+long long Reverse(long long n)
 {
-    int reversedNum = 0;
+    long long reversedNum = 0;
 
     while (n > 0)
     {

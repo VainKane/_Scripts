@@ -7,6 +7,9 @@ long long n;
 
 int main()
 {
+    freopen("Parity.inp", "r", stdin);
+    freopen("Parity.out", "w", stdout);
+
     std::cin >> times;
     
     for (int i = 0; i < times; i++)
