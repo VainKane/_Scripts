@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 
 int Cal(int n, int p);
+int Count(int n, int p);
 
 
 int times;
@@ -9,8 +10,8 @@ int p;
 
 int main()
 {
-    // freopen("PowerOfPrime.inp", "w", stdin);
-    // freopen("PowerOfPrime.out", "r", stout);
+    freopen("PowerOfPrime.inp", "r", stdin);
+    freopen("PowerOfPrime.out", "w", stdout);
 
     std::cin >> times;
     
@@ -20,18 +21,32 @@ int main()
 
         std::cout << Cal(n, p) << '\n';
     }
+
 }
 
 int Cal(int n, int p)
 {
-    int soMu = 0;
-    int count = 0;
+    int result = 0;
 
     for (int i = p; i <= n; i += p)
     {
+        result += Count(i, p);
+    }
+
+    return result;
+}
+
+
+int Count(int n, int p)
+{
+    int count = 0;
+
+    while (n % p == 0)
+    {
         count += 1;
-        // soMu += count;
+        n /= p;
     }
 
     return count;
 }
+
