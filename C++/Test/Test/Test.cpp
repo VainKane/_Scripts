@@ -4,6 +4,9 @@
 #include <cmath>
 #include <iomanip>
 
+bool Solve(int n, int a, int b, int& xOut, int& yOut);
+
+
 int a = 3;
 int b = 4;
 int c;
@@ -65,7 +68,24 @@ int main()
 			break;
 		}
 	} */
-
-	std::cout << sqrt(1000000000000000000);
+	
+	
 }
 
+
+
+bool Solve(int n, int a, int b, int& xOut, int& yOut)
+{
+	for (int y = 0; y <= n; y++)
+	{
+		if ((n - y * b) % a == 0)
+		{
+			yOut = y;
+			xOut = (n - y * b) / a;
+
+			return true;
+		}
+	}
+
+	return false;
+}
