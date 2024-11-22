@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 
-int CountCM(int &l, int &r, int &a, int &b);
+int CountCM(int l, int r, int a, int b);
 
 
 int times;
@@ -24,7 +24,7 @@ int main()
     }
 }
 
-int CountCM(int &l, int &r, int &a, int &b)
+int CountCM(int l, int r, int a, int b)
 {
     int count = 0;
 

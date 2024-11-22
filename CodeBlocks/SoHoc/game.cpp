@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 
-int Play(int &x, int &y, int &n);
+int Play(int x, int y, int n);
 
 int times;
 
@@ -12,8 +12,8 @@ int y;
 
 int main()
 {
-    freopen("game.inp", "r", stdin);
-    freopen("game.out", "w", stdout);
+    // freopen("game.inp", "r", stdin);
+    // freopen("game.out", "w", stdout);
 
     std::cin >> times;;
 
@@ -25,7 +25,7 @@ int main()
 
 }
 
-int Play(int &x, int &y, int &n)
+int Play(int x, int y, int n)
 {
     for (int i = 0; i < n; i++)
     {

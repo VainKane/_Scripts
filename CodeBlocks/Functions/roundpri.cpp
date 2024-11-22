@@ -9,7 +9,11 @@ void Sieve(int n);
 bool Check(std::string n);
 
 
-std::string n;
+void NumsFind2(int n);
+bool Check2(int n);
+
+
+int n;
 int nums[6];
 bool prime[1000001];
 
@@ -23,17 +27,69 @@ int main()
 
     Sieve(1000001);
 
-    for (int i = 2; i < std::stoi(n); i++)
-    {
-        if (Check(ToString(i, Count(i))) == true)
-        {
-            count += 1;
-        }
-    }
+    // for (int i = 2; i < std::stoi(n); i++)
+    // {
+    //     if (Check(ToString(i, Count(i))) == true)
+    //     {
+    //         count += 1;
+    //     }
+    // }
     
-    std::cout << count;
+    // for (int i = 2; i <= n; i++)
+    // {
+    //     if (prime[i] == true)
+    //     {
+    //         NumsFind2(i);
+            
+    //         if (Check2(n) == true)
+    //         {
+    //             count += 1;
+    //             std::cout << i << ' ';
+    //         }
+    //     }
+    // }
+
+    NumsFind2(n);
+
+    std::cout << Check2(n);
+   
 }
 
+int Count(int num)
+{
+    int count = 0;
+
+    while (num > 0)
+    {
+        count += 1;
+        num /= 10;
+    }
+
+    return count;
+}
+
+void NumsFind2(int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        n += std::pow(10, Count(n)) * (n % 10);
+        n /= 10;
+        nums[i] = n;
+    }
+}
+
+bool Check2(int n)
+{
+    for (int i = 0; i < Count(n); i++)
+    {
+        if (prime[nums[i]] == false)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
 
 std::string ToString(int num, int count)
 {
@@ -67,18 +123,6 @@ int Reverse(int num)
 	return reversedNum;
 }
 
-int Count(int num)
-{
-    int count = 0;
-
-    while (num > 0)
-    {
-        count += 1;
-        num /= 10;
-    }
-
-    return count;
-}
 
 bool Check(std::string n)
 {

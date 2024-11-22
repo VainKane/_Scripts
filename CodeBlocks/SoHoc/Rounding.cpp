@@ -1,13 +1,13 @@
 #include <bits/stdc++.h>
 
-void Round(int &n);
+void Round(long long &n);
 
-int n;
+long long n;
 
 int main()
 {
-    // freopen("Rounding.inp", "r", stdin);
-    // freopen("Roudning.out", "w", stdout);
+    freopen("Rounding.inp", "r", stdin);
+    freopen("Rounding.out", "w", stdout);
 
     std::cin >> n;
     
@@ -16,9 +16,9 @@ int main()
     std::cout << n;
 }
 
-void Round(int &n)
+void Round(long long &n)
 {
-    if (n % 10 < 5)
+    if (n % 10 <= 5)
     {
         n /= 10;
         n *= 10;
@@ -27,7 +27,7 @@ void Round(int &n)
     {
         n /= 10;
 
-        int temp = n % 10;
+        long long temp = n % 10;
 
         n /= 10;
         n *= 10;

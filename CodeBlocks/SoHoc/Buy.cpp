@@ -8,8 +8,8 @@ int n;
 int a;
 int b;
 
-int x; 
-int y;
+int x = 0; 
+int y = 0;
 
 int main()
 {
@@ -20,7 +20,7 @@ int main()
 
     std::cout << Solve(n, a, b, x, y) << '\n';
     
-    if (Solve(n, a, b, x, y) == "YES")
+    if (x + y != 0)
     {
         std::cout << x << ' ' << y;
     }
