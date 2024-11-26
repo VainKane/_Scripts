@@ -28,14 +28,25 @@ int main()
 
 std::string Solve(int n, int a, int b, int &xOut, int &yOut)
 {
-    for (int y = 0; y <= n; y++)
+    for (int y = 0; y <= n / b; y++)
     {
-        if ((n - y * b) % a == 0)
+        if ((n - y * b) % a == 0 && (n - x * a) % b == 0)
         {
-            yOut = y;
-            xOut = (n - y * b) / a;
-
-            return "YES";
+            if (N - x * a > 0)
+            {
+                yOut = y;
+                xOut = (n - y * b) / a;
+                return "YES";
+            }
+            else
+            {
+                return "NO";
+            }
+            
+        else
+        {
+            return "NO";
+        }
         }
     }
 

@@ -1,43 +1,41 @@
 #include <bits/stdc++.h>
 
-int Play(int x, int y, int n);
+long long LuyThua(int x, int soMu);
+
 
 int times;
 
 int n;
 
-int x;
-int y;
+long long x;
+long long y;
 
 
 int main()
 {
-    // freopen("game.inp", "r", stdin);
-    // freopen("game.out", "w", stdout);
+    freopen("game.inp", "r", stdin);
+    freopen("game.out", "w", stdout);
 
-    std::cin >> times;;
+    std::cin >> times;
 
     for (int i = 0; i < times; i++)
     {
         std::cin >> x >> y >> n;
-        std::cout << Play(x, y, n) << '\n';
-    }
 
-}
-
-int Play(int x, int y, int n)
-{
-    for (int i = 0; i < n; i++)
-    {
-        if (i % 2 == 0)
+        if (n % 2 == 0)
         {
-            x *= 2;
+            x = x * std::pow(2, n / 2);
+            y = y * std::pow(2, n / 2);
         }
         else
         {
-            y *= 2;
+            x = x * std::pow(2, n / 2 + 1);
+            y = y * std::pow(2, n / 2);
         }
+
+        std::cout << std::max(x, y) / std::min(x, y) << '\n';
     }
 
-    return std::max(x, y) / std::min(x, y);
+ 
 }
+
