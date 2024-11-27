@@ -28,7 +28,7 @@ int main()
 
 std::string Solve(int n, int a, int b, int &xOut, int &yOut)
 {
-    for (int y = 0; y <= n / b; y++)
+    for (int y = 1; y <= n / b; y++)
     {
         if ((n - y * b) % a == 0 && (n - x * a) % b == 0)
         {
