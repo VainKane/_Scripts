@@ -32,7 +32,7 @@ std::string Solve(int n, int a, int b, int &xOut, int &yOut)
     {
         if ((n - y * b) % a == 0 && (n - x * a) % b == 0)
         {
-            if (N - x * a > 0)
+            if (n - x * a > 0)
             {
                 yOut = y;
                 xOut = (n - y * b) / a;
@@ -42,13 +42,11 @@ std::string Solve(int n, int a, int b, int &xOut, int &yOut)
             {
                 return "NO";
             }
-            
+        } 
         else
         {
             return "NO";
         }
-        }
     }
-
     return "NO";
 }
