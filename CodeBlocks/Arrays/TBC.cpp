@@ -1,22 +1,30 @@
 #include <bits/stdc++.h>
 
-long double nums[101];
+using namespace std;
 
-long double average = 0;
-long double value = 0;
+double nums[110];
+
+double average = 0;
+double value = 0;
+
 
 int n;
 
 int main()
 {
-    std::cout << std::fixed << std::setprecision(2);
     std::cin >> n;
 
     for (int i = 0; i < n; i++)
     {
         std::cin >> nums[i];
-        average += nums[i] / n;
     }
+
+    for (int i = 0; i < n; i++)
+    {
+        average += nums[i];
+    }
+
+    average /= n;
 
     value = nums[0];
 
@@ -28,5 +36,5 @@ int main()
         }
     }
 
-    std::cout << average << '\n' << value;
+    std::cout << std::fixed << std::setprecision(2) << average << '\n' << value;
 }

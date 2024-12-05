@@ -10,6 +10,7 @@ int main()
     getline(std::cin, str);
 
     std::cout << Reverse(str);
+
 }
 
 std::string Reverse(std::string str)

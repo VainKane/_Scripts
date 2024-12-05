@@ -7,9 +7,6 @@ int n;
 long long x;
 long long y;
 
-long long w = 1;
-long long z = 1;
-
 long long result;
 
 int main()

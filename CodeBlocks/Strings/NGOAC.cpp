@@ -2,7 +2,6 @@
 
 std::string Check(std::string str);
 
-
 std::string str;
 
 int main()
@@ -14,68 +13,34 @@ int main()
 
 std::string Check(std::string str)
 {
-    int openLength = 0;
-    int pos;
-
-    int closeLength = 0;
-
-    bool check = true;
-
     for (int i = 0; i < str.length(); i++)
     {
         if (str[i] != '(' && str[i] != ')')
         {
             return "KHONG HOP LE";
         }
-
-        
-        
-        if (check == true)
+        else
         {
             if (str[i] == '(')
             {
-                openLength += 1;
-                pos = i;
-                check = false;
-            }
-        }
-        
-        else
-        {
-            if (str[i] == ')')
-            {
-                while (str[i] == ')')
+                if (str[i + 1] == ')')
                 {
-                    closeLength += 1;
-                    i += 1;
-
-                    if (str[i] != '(' && str[i] != ')')
+                    str.erase(i, 2);
+                    
+                    if (i != 0)
                     {
-                        if(i < str.length())
-                        {
-                            return "KHONG HOP LE";
-                        }
+                        i -= 2;
+                    }
+                    else
+                    {
+                        i -= 1;
                     }
                 }
-
-                if (closeLength != openLength)
-                {
-                    return "KHONG DUNG";
-                }
-
-                i += openLength;
-                openLength = 1;
-                check = true;
-            }
-            else
-            {
-                openLength += 1;
             }
         }
     }
 
-
-    if (str.length() > 1 || str.length() == 0)
+    if (str.length() == 0)
     {
         return "DUNG";
     }

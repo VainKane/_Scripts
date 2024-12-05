@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>
+#include <iostream>
 
 std::string Delete(std::string str, char x);
 
