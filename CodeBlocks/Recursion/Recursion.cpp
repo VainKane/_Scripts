@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-
+#include <bits/stdc++.h>
 using namespace std;
 
 int ToHop(int k, int n)
@@ -12,6 +12,7 @@ int ToHop(int k, int n)
     {
         return ToHop(k - 1, n - 1) + ToHop(k, n - 1);
     }
+
 }
 
 int RecursiveGCD(int a, int b)
@@ -109,7 +110,10 @@ void Tower(int n, char a, char b, char c)
     }
     else
     {
-        Tower(n - 1, b, a, c);
+
+
+        
+        Tower(n - 1, c, a, b);
     }
 }
 
