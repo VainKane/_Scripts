@@ -110,12 +110,13 @@ void Tower(int n, char a, char b, char c)
     }
     else
     {
-
-
-        
-        Tower(n - 1, c, a, b);
+        Tower(n - 1, a, c, b);
+        cout << a << " -> " << c << '\n';
+        Tower(n - 1, b, a, c);
     }
 }
+
+
 
 int a;
 int b;
@@ -124,7 +125,11 @@ int n[7]{2, 3, 5, 3, 5, 3, 2};
 
 int main()
 {
+    cout << "Nhap n = ";
     cin >> a;
     
+    cout << "Cach giai:\n";
     Tower(a, 'A', 'B', 'C');
+
+    cin >> b;
 }
