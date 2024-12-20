@@ -35,15 +35,7 @@ int main()
 
     for (int i = 0; i + 1 < n; i++)
     {
-        if (Abs(heights[i] - heights[i + 1]) == k)
-        {
-            streak += 1;
-            res += streak;
-        }
-        else
-        {
-            streak = 0;
-        }
+        
     }
 
     cout << res;
