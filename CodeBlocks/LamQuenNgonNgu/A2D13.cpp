@@ -5,7 +5,8 @@ using namespace std;
 int n;
 int nums[102][102];
 
-long long dig[202];
+long long sum = 0;
+long long res = 0;
 
 int main()
 {
@@ -13,7 +14,7 @@ int main()
 
     for (int i = 0; i < n; i++)
     {
-        for(int j = 0; j < n; j++)
+        for (int j = 0; j < n; j++)
         {
             cin >> nums[i][j];
         }
@@ -21,31 +22,24 @@ int main()
 
     for (int i = 0; i < 2 * n - 1; i++)
     {
-        dig[i] = 0;
+        for (int j = 0; j <= i; j++)
+        {
+            int a = n - 1 - j;
+            int b = i - j;
+
+            if (a < n && b < n)
+            {
+                sum += nums[a][b];
+            }
+        }
+
+        if (sum > res)
+        {
+            res = sum;
+        }
+
+        sum = 0;
     }
 
-
-    for (int i = 0; i < 2 * n - 1; i++)
-    {
-        if (i <= n - 1)
-        {
-            for (int j = 0; j <= i; j++)
-            {
-                dig[i] += nums[n - 1 - j][i - j];
-            }
-
-        }
-        else
-        {
-            for (int j = 1; j <= 2 * n - i - 1; j++)
-            {
-                int a = i - n + j;
-                int b = j - 1;
-                int n = nums[b][a];
-                dig[i] += nums[j - 1][i - n + j];
-            }
-
-            cout << dig[i] << '\n';
-        }
-    }
+    cout << res;
 }
