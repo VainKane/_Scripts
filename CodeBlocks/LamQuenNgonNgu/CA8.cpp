@@ -2,13 +2,11 @@
 
 using namespace std;
 
-int d;
-int m;
-int y;
+char a;
 
 int main()
 {
-    cin >> d >> m >> y;
+    cin >> a;
 
-    
+    cout << (int)a;
 }
