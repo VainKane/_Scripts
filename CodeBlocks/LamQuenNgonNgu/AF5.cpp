@@ -35,6 +35,8 @@ int Count(int n)
 int n;
 int nums[102];
 
+int cnt[10];
+
 int count1 = 0;
 
 int main()
@@ -48,15 +50,15 @@ int main()
         nums[i] = Count(value);
     }
 
+    // for (int i = 0; i < n; i++)
+    // {
+    //     cout << nums[i] << ' ';
+    // }
+
     for (int i = 0; i < n; i++)
     {
-        for (int j = i + 1; j < n; j++)
-        {
-            if ((nums[i] + nums[j]) % 7 == 0)
-            {
-                count1 += 1;
-            }
-        }
+        count1 += cnt[nums[i] % 7];
+        cnt[7 - (nums[i] % 7)] += 1;
     }
 
     cout << count1;

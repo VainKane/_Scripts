@@ -86,6 +86,10 @@ int FirstSearch(int a[], int l , int r, int target)
     return result;
 }
 
+int cnt[10];
+
+int count1 = 0;
+
 int main()
 {
     cin >> n >> target;
@@ -95,7 +99,13 @@ int main()
         cin >> a[i];
     }
 
-    cout << FirstSearch(a, 0, n - 1, target);
+    for (int i = 0; i < n; i++)
+    {
+        count1 += cnt[a[i]];
+        cnt[7 - a[i]] += 1;
+    }
+
+    cout << count1;
 }
 
 
