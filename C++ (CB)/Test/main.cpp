@@ -92,7 +92,7 @@ int count1 = 0;
 
 int main()
 {
-    cin >> n >> target;
+    cin >> n;
 
     for (int i = 0; i < n; i++)
     {
@@ -101,8 +101,7 @@ int main()
 
     for (int i = 0; i < n; i++)
     {
-        count1 += cnt[a[i]];
-        cnt[7 - a[i]] += 1;
+        
     }
 
     cout << count1;
