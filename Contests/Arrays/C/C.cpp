@@ -20,11 +20,6 @@ int main()
         cin >> nums[i];
     }
 
-    for (auto p : visisted)
-    {
-        p.second = 0;
-    }
-
     visisted[0] = 1;
 
     for (int i = 0; i < n; i++)
