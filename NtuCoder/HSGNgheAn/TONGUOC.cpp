@@ -11,11 +11,24 @@ int main()
 {
     cin >> a >> b;
 
-    for (int i = 1; i <= sqrt(a); i++)
+    for (long long i = 1; i <= sqrt(a); i++)
     {
-        if (a % i == 0 && b % (3 * i) == 0)
+        if (a % i == 0)
         {
-            sum += i;
+            if (b % (3 * i) == 0)
+            {
+                sum += i;
+            }
+
+            if (i != sqrt(a))
+            {
+                long long u = a / i;
+
+                if (b % (3 * u) == 0)
+                {
+                    sum += u;
+                }
+            }
         }
     }
 

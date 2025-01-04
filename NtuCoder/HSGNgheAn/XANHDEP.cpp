@@ -6,6 +6,8 @@ int n;
 string a[109];
 int res = 0;
 
+int length = 1;
+
 int main()
 {
     cin >> n;
@@ -19,7 +21,7 @@ int main()
     for (int i = 0; i < n; i++)
     {
         string str = a[i];
-        int length = 1;
+        length = 1;
 
         for (int j = 0; j + 1 < str.length(); j++)
         {
@@ -37,6 +39,11 @@ int main()
                 length = 1;
             }
         }
+    }
+
+    if (res < length)
+    {
+        res = length;
     }
 
     cout << res;
