@@ -2,20 +2,13 @@
 
 using namespace std;
 
-string str;
-
-int n;
-
-int res = 1;
-
 bool s[(int)1e4][(int)1e4];
 
-int main()
+int DP(string str)
 {
+    int res = 1;
 
-    getline(cin, str);
-
-    n = str.length();
+    int n = str.length();
 
     for (int i = 0; i < n; i++)
     {
@@ -62,7 +55,76 @@ int main()
         }
     }
 
-    cout << res;
+    return res;
+}
+
+int Solve(string str)
+{
+    int l;
+    int r;
+    int res = 0;
+
+    str = " " + str;
+
+    for (int i = 1; i < str.length(); i++)
+    {
+        l = i - 1;
+        r = i + 1;
+
+        while (str[l] == str[r] && l >= 0 && r < str.length())
+        {
+            if (r - l + 1 > res)
+            {
+                res = r - l + 1;
+            }
+
+            l--;
+            r++;
+        }
+
+        l = i;
+        r = i + 1;
+
+        if (str[i] == str[i + 1])
+        {
+            if (r - l + 1 > res)
+            {
+                res = r - l + 1;
+            }
+
+            while (str[l] == str[r])
+            {
+                if (r - l + 1 > res)
+                {
+                    res = r - l + 1;
+                }
+
+                l--;
+                r++;
+            }
+        }
+    }
+
+    if (res == 0)
+    {
+        res = 1;
+    }
+
+    return res;
+}
+
+string str;
+
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(0); cout.tie(0);
+
+    cin >> str;
+
+    cout << Solve(str);
+
 
     return 0;
 }
