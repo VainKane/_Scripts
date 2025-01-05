@@ -5,17 +5,19 @@ using namespace std;
 int Search(int nums[], int target, int l, int r)
 {
     int mid;
-    int res = 0;
+    int res = 1;
 
     while (l <= r)
     {
-        mid = (l + r) / 2;
+        mid = (r + l) / 2;
 
-        if (target > nums[mid])
+        int a = nums[mid];
+
+        if (target > nums[mid] && nums[mid] != 0)
         {
-            if (res < nums[mid])
+            if (res < mid)
             {
-                res = nums[mid];
+                res = mid;
             }
 
             l = mid + 1;
@@ -33,7 +35,6 @@ int n;
 int nums[1009];
 int l[1009];
 
-
 int res = 0;
 
 int main()
@@ -46,10 +47,25 @@ int main()
     for (int i = 0; i < n; i++)
     {
         cin >> nums[i];
-        l[i] = 1;
+        l[i + 1] = INT_MAX;
     }
 
-    sort(nums, nums + n);
+    l[1] = nums[0];
 
-    
+    for (int i = 1; i < n; i++)
+    {
+        int x = Search(l, nums[i], 1, i);
+
+        if (l[x + 1] > nums[i])
+        {
+            l[x + 1] = nums[i];
+        }
+
+        if (res < x + 1)
+        {
+            res = x + 1;
+        }
+    }
+
+    cout << res;
 }
