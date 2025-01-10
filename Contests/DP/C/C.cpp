@@ -5,12 +5,15 @@ using namespace std;
 short int n;
 short int nums[109];
 set<short int> s;
-short int temp[(int)1e6 + 10];
+short int temp[(int)1e8 + 10];
 short int index = 0;
 bool pos[10009][109];
 
 int main()
 {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0); cout.tie(0);
+
     cin >> n;
 
     for (short int i = 0; i < n; i++)
@@ -19,9 +22,9 @@ int main()
         s.insert(nums[i]);
     }
 
-    for (int i = 0; i < 10001; i++)
+    for (int i = 0; i < 10009; i++)
     {
-        for (int j = 0; j < 101; j++)
+        for (int j = 0; j < 109; j++)
         {
             pos[i][j] = false;
         }
@@ -33,10 +36,38 @@ int main()
         {
             if (s.count(nums[i] + nums[j]) == 0)
             {
-                s.insert(nums[i] + nums[j]);
                 temp[index] = nums[i] + nums[j];
-                pos[nums[i] + nums[j]][i] = true;
-                pos[nums[i] + nums[j]][j] = true;
+                s.insert(temp[index]);
+
+                if (!pos[temp[index]][105])
+                {
+                    pos[temp[index]][i] = true;
+                    pos[temp[index]][j] = true;
+                    pos[temp[index]][105] = true;
+                }
+                else
+                {
+                    for (int r = 0; r < n; r++)
+                    {
+                        if (pos[temp[index]][r])
+                        {
+                            if (r == i || r == j)
+                            {
+                                pos[temp[index]][r] = true;
+                            }
+                            else
+                            {
+                                pos[temp[index]][r] = false;
+                            }
+                        }
+                        else
+                        {
+                            pos[temp[index]][r] = false;
+                        }
+
+                    }
+                }
+
                 index++;
             }
         }
@@ -51,8 +82,10 @@ int main()
     {
         short int cnt = index;
         index = 0;
-
+        bool isCheck = false;
         short int clone[10009];
+
+
         for (short int j = 0; j < cnt; j++)
         {
             clone[j] = temp[j];
@@ -62,30 +95,50 @@ int main()
         {
             for (short int i = 0; i < n; i++)
             {
-//                if (pos[clone[j]] != "")
+                if (!pos[clone[j]][i])
                 {
-                    if (!pos[clone[j]][i])
+                    isCheck = true;
+
+                    temp[index] = clone[j] + nums[i];
+
+                    if (!pos[temp[index]][105])
                     {
-//                        cout << clone[j] << ' ' << pos[clone[j]] << '\n';
-
-                        if (s.count(clone[j] + nums[i]) == 0)
+                        for (int r = 0; r < n; r++)
                         {
-                            temp[index] = clone[j] + nums[i];
-
-                            for (int r = 0; r < n; r++)
-                            {
-                                pos[temp[index]][r] = pos[clone[j]][r];
-                            }
-                            pos[temp[index]][i] = true;
-
-//                            cout << temp[index] << ' ' << pos[temp[index]] << '\n';
-                            s.insert(temp[index]);
-
-                            index++;
+                            pos[temp[index]][r] = pos[clone[j]][r];
                         }
+                        pos[temp[index]][i] = true;
+                        pos[temp[index]][105] = true;
+                    }
+                    else
+                    {
+                        for (int r = 0; r < n; r++)
+                        {
+                            if (pos[temp[index]][r] && pos[clone[j]][r])
+                            {
+                                pos[temp[index]][r] = true;
+                            }
+                            else
+                            {
+                                pos[temp[index]][r] = false;
+                            }
+                        }
+
+                        pos[temp[index]][i] = true;
+                    }
+
+                    if (s.count(clone[j] + nums[i]) == 0)
+                    {
+                        s.insert(temp[index]);
+                        index++;
                     }
                 }
             }
+        }
+
+        if (!isCheck)
+        {
+            break;
         }
     }
 
@@ -93,7 +146,11 @@ int main()
 
     for (short int value : s)
     {
-        cout << ' ' << value;
+        if (value != 0)
+        {
+            cout << ' ' << value;
+        }
+
     }
 
 
