@@ -32,8 +32,8 @@ int Search(int nums[], int target, int l, int r)
 }
 
 int n;
-int nums[1009];
-int l[1009];
+int nums[(int)1e5 + 10];
+int l[(int)1e5 + 10];
 
 int res = 0;
 
@@ -54,7 +54,7 @@ int main()
 
     for (int i = 1; i < n; i++)
     {
-        int x = Search(l, nums[i], 1, i);
+        int x = Search(l, nums[i], 1, i - 1);
 
         if (l[x + 1] > nums[i])
         {
