@@ -10,11 +10,14 @@ struct Truck
     int r;
 };
 
-int Check(Truck trucks[], int vc, int d[], int truckCount)
+bool Check(Truck trucks[], int vc, int d[], int m, bool isVC)
 {
-    for (int i = 0; i < truckCount; i++)
+    for (int i = 0; i < m; i++)
     {
-        int v = vc * trucks[i].c;
+        int v;
+        if (isVC) v = vc * trucks[i].c;
+        else v = vc;
+
         int f = v;
         int r = trucks[i].r;
 
@@ -42,6 +45,54 @@ int Check(Truck trucks[], int vc, int d[], int truckCount)
     return true;
 }
 
+int MinVc(Truck trucks[], int d[], int l, int r, int m)
+{
+    int mid;
+
+    while (l <= r)
+    {
+        mid = (l + r) / 2;
+
+        if (Check(trucks, mid, d, m, true))
+        {
+            r = mid - 1;
+        }
+        else{
+            l = mid + 1;
+        }
+    }
+
+    return mid;
+}
+
+int MinV(Truck trucks[], int d[], int c[], int vc, int l, int r, int m)
+{
+//    int mid;
+//
+//    while (l <= r)
+//    {
+//        mid = (l + r) / 2;
+//
+//        if (Check(trucks, c[mid] * vc, d, m, false))
+//        {
+//            r = mid - 1;
+//        }
+//        else{
+//            l = mid + 1;
+//        }
+//    }
+//
+//    return c[mid] * vc;
+
+    for (int i = 0; i < m; i++)
+    {
+        if (Check(trucks, c[i] * vc, d, m, false))
+        {
+            return c[i] * vc;
+        }
+    }
+}
+
 int n;
 int m;
 
@@ -52,6 +103,8 @@ Truck trucks[(int)1e3 + 10];
 int d[(int)1e3 + 10];
 int maxd = 0;
 int sumd = 0;
+
+int c[(int)1e3 + 10];
 
 int main()
 {
@@ -71,16 +124,17 @@ int main()
 
     sumd = a[n - 1] - a[0];
 
-//    for (int i = 0; i < n - 1; i++) cout << d[i] << ' ';
-//    cout << '\n';
-//    cout << maxd << ' ' << sumd;
-
-    for (int i = 0; i < m; i++) cin >> trucks[i].s >> trucks[i].f >> trucks[i].c >> trucks[i].r;
-
-    for (int i = maxd; i <= sumd; i++)
+    for (int i = 0; i < m; i++)
     {
-        cout << i << ' ' << Check(trucks, i, d, m) << '\n';
+        cin >> trucks[i].s >> trucks[i].f >> trucks[i].c >> trucks[i].r;
+        c[i] = trucks[i].c;
     }
+
+    int vc = MinVc(trucks, d, maxd, sumd, m);
+
+    sort(c, c + m);
+
+    cout << vc << ' ' << MinV(trucks, d, c, vc, 0, m - 1, m);
 
     return 0;
 }
