@@ -10,34 +10,28 @@ struct Truck
     int r;
 };
 
-bool Check(Truck trucks[], int vc, int d[], int m, bool isVC)
+bool Check(Truck trucks[], long long v, int d[], int m)
 {
     for (int i = 0; i < m; i++)
     {
-        int v;
-        if (isVC) v = vc * trucks[i].c;
-        else v = vc;
-
-        int f = v;
+        long long f = v;
         int r = trucks[i].r;
 
         for (int j = trucks[i].s - 1; j < trucks[i].f - 1; j++)
         {
-            if (d[j] > v) return false;
+            long long fNeed = 1LL * d[j] * trucks[i].c;
+            if (fNeed > v) return false;
 
-            if (f >= d[j] * trucks[i].c)
+            if (f >= fNeed)
             {
-                f -= d[j] * trucks[i].c;
+                f -= fNeed;
             }
             else
             {
                 f = v;
-                r -= 1;
-                if (r < 0)
-                {
-//                    cout << "wrong: " << i << '\n';
-                    return false;
-                }
+                r--;
+                if (r < 0) return false;
+                f -= fNeed;
             }
         }
     }
@@ -45,66 +39,14 @@ bool Check(Truck trucks[], int vc, int d[], int m, bool isVC)
     return true;
 }
 
-int MinVc(Truck trucks[], int d[], int l, int r, int m)
-{
-    int mid;
-
-    while (l <= r)
-    {
-        mid = (l + r) / 2;
-
-        if (Check(trucks, mid, d, m, true))
-        {
-            r = mid - 1;
-        }
-        else{
-            l = mid + 1;
-        }
-    }
-
-    return mid;
-}
-
-int MinV(Truck trucks[], int d[], int c[], int vc, int l, int r, int m)
-{
-//    int mid;
-//
-//    while (l <= r)
-//    {
-//        mid = (l + r) / 2;
-//
-//        if (Check(trucks, c[mid] * vc, d, m, false))
-//        {
-//            r = mid - 1;
-//        }
-//        else{
-//            l = mid + 1;
-//        }
-//    }
-//
-//    return c[mid] * vc;
-
-    for (int i = 0; i < m; i++)
-    {
-        if (Check(trucks, c[i] * vc, d, m, false))
-        {
-            return c[i] * vc;
-        }
-    }
-}
-
 int n;
 int m;
 
 int a[(int)1e3 + 10];
-
 Truck trucks[(int)1e3 + 10];
-
 int d[(int)1e3 + 10];
-int maxd = 0;
-int sumd = 0;
 
-int c[(int)1e3 + 10];
+long long res;
 
 int main()
 {
@@ -119,22 +61,34 @@ int main()
     {
         cin >> a[i];
         d[i - 1] = a[i] - a[i - 1];
-        if (d[i - 1] > maxd) maxd = d[i - 1];
     }
 
-    sumd = a[n - 1] - a[0];
 
     for (int i = 0; i < m; i++)
     {
         cin >> trucks[i].s >> trucks[i].f >> trucks[i].c >> trucks[i].r;
-        c[i] = trucks[i].c;
     }
 
-    int vc = MinVc(trucks, d, maxd, sumd, m);
+    long long l = 1;
+    long long r = 1e18;
+    long long mid;
 
-    sort(c, c + m);
+    while (l <= r)
+    {
+        mid = ( l + r ) / 2;
 
-    cout << vc << ' ' << MinV(trucks, d, c, vc, 0, m - 1, m);
+        if (Check(trucks, mid, d, m))
+        {
+            res = mid;
+            r = mid - 1;
+        }
+        else
+        {
+            l = mid + 1;
+        }
+    }
+
+    cout << res;
 
     return 0;
 }

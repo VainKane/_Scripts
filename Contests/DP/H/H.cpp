@@ -2,17 +2,36 @@
 
 using namespace std;
 
-struct matrix()
-{
-    int x[3][3];
-
-    matrix()
-    {
-        memset(x, 0, sizeof x);
-    }
-};
-
+int x[30];
 int n;
+int matrix[30][30];
+
+long long res = 0;
+
+void Res()
+{
+    long long sum = 0;
+
+    for (int i = 1; i <= n; i++)
+    {
+        sum += x[i];
+    }
+
+    if (sum > res) res = sum;
+}
+
+
+void Try(int i)
+{
+    for (int j = 0; j < n; j++)
+    {
+        for (int k = 0; k < n; k++)
+        {
+
+        }
+    }
+}
+
 
 int main()
 {
@@ -21,10 +40,15 @@ int main()
 
     cin >> n;
 
-    matrix t;
-    t.x[0][0] = t.x[0][1] = t.x[0][2] = t.x[1][0] = t.x[1][2] = 1;
-    matrix u;
-    u.x[0][0] =
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            cin >> matrix[i][j];
+        }
+    }
+
+    Try(1);
 
     cout << res;
 

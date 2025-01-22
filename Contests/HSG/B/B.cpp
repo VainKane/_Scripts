@@ -4,25 +4,26 @@ using namespace std;
 
 bool Check1(string str)
 {
-    bool con1 = false;
-    bool con2 = false;
+    bool key = false;
+    bool num = false;
 
-    for (int i = 0; i < str.length(); i++)
+    for (char chr : str)
     {
-        if (str[i] >= 'A' && str[i] <= 'Z')
+        if (chr >= '0' && chr <= '9')
         {
-            con1 = true;        
+            num = true;
         }
-        if (str[i] >= '0' && str[i] <= '9')
+        if (chr >= 'A' && chr <= 'Z')
         {
-            con2 = true;
+            key = true;
         }
     }
 
-    if (con1 && con2)
+    if (key && num)
     {
         return true;
     }
+
     return false;
 }
 
@@ -43,6 +44,7 @@ bool Check2(string str)
     {
         return true;
     }
+
     return false;
 }
 
@@ -50,11 +52,11 @@ bool Check3(string str)
 {
     for (int i = 0; i + 1 < str.length(); i++)
     {
-        if (str[i] >= 'A' && str[i + 1] >= 'A' && str[i] <= 'Z' && str[i + 1] <= 'Z')
+        if (str[i] >= '0' && str[i + 1] >= 0 && str[i] <= '9' && str[i + 1] <= '9')
         {
             return false;
         }
-        if (str[i] >= '0' && str[i + 1] >= '0' && str[i] <= '9' && str[i + 1] <= '9')
+        if (str[i] >= 'A' && str[i + 1] >= 'A' && str[i] <= 'Z' && str[i + 1] <= 'Z')
         {
             return false;
         }
@@ -63,9 +65,9 @@ bool Check3(string str)
     return true;
 }
 
-string str;
-
+int sum = 0;
 int t;
+string str;
 
 int main()
 {
@@ -75,19 +77,13 @@ int main()
     while (t--)
     {
         getline(cin, str);
-        int res = Check1(str) + Check2(str) + Check3(str);
 
-        if (res == 3)
-        {
-            cout << "PERFECT\n";
-        }
-        else if (res == 2)
-        {
-            cout << "VALID\n";
-        }
-        else
-        {
-            cout << "INVALID\n";
-        }
+        sum = Check1(str) + Check2(str) + Check3(str);
+
+        if (sum == 3) cout << "PERFECT\n";
+        else if (sum == 2) cout << "VALID\n";
+        else cout << "INVALID\n";
     }
+
+    return 0;
 }

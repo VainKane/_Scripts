@@ -6,7 +6,6 @@ int n;
 int k;
 int x[109];
 
-int nums[109];
 
 void PrintRes()
 {
@@ -20,9 +19,9 @@ void PrintRes()
 
 void Try(int i)
 {
-    for (int j = i; j <= n - k + i; j++)
+    for (int j = i + 1; j <= n - k + i; j++)
     {
-        x[i] = nums[j];
+        x[i] = j;
 
         if (i == k)
         {
@@ -38,11 +37,6 @@ void Try(int i)
 int main()
 {
     cin >> k >> n;
-
-    for (int i = 1; i <= n; i++)
-    {
-        cin >> nums[i];
-    }
 
     Try(1);
 }
