@@ -31,7 +31,7 @@ int main()
 
         int cnt = 0;
 
-        while (r != l)
+        while (l < r)
         {
             long long sum = (long long)nums[l] + nums[r];
 
