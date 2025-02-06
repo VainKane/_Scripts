@@ -42,9 +42,9 @@ bool Check(Truck trucks[], long long v, int d[], int m)
 int n;
 int m;
 
-int a[(int)1e3 + 10];
+int a[409];
 Truck trucks[250009];
-int d[(int)1e3 + 10];
+int d[409];
 
 long long res;
 

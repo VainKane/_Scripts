@@ -4,75 +4,47 @@
 
 using namespace std;
 
-int a[59];
-int b[59];
-int c[59];
-
-void Sum(int n, long long &res, char type, int cnt)
-{
-    if (n == 1)
-        return;
-
-    if (type == 'b')
-        for (int i = 0; i < n; i++)
-            a[i] = b[i];
-    else
-        for (int i = 0; i < n; i++)
-            a[i] = c[i];
-
-    long long s = 0;
-
-    for (int i = 1; i < n; i++)
-    {
-        b[i] = a[i] - a[i - 1];
-        s += 1LL * b[i];
-
-        res = max(res, s);
-
-        Sum(n - 1, res, 'b', cnt);
-        Sum(n - 1, res, 'c', cnt);
-    }
-
-    s = 0;
-
-    for (int i = n - 2; i >= 0; i--)
-    {
-        c[i] = a[i] - a[i + 1];
-        s += 1LL * c[i];
-
-        res = max(res, s);
-
-        Sum(n - 1, res, 'c', cnt);
-        Sum(n - 1, res, 'b', cnt);
-    }
-}
+long long a[59];
+int tmp[59];
 
 int t;
 int n;
 
-long long res;
+long long res = 0;
+long long sum;
 
 int main()
 {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+
     cin >> t;
 
     while (t--)
     {
         cin >> n;
 
-        for (int i = 0; i < n; i++)
+        res = LONG_LONG_MIN;
+
+        for (int i = 0; i < n; i++) cin >> a[i];
+
+        int k = n;
+
+        for (int j = 0; j < k; j++)
         {
-            cin >> a[i];
-            b[i] = c[i] = a[i];
+            sum = 0;
+
+            for (int i = 0; i < n; i++) sum += a[i];
+
+            res = max(res, sum);
+            if (j > 0) res = max(res, -sum);
+            n--;
+
+            for (int i = 0; i < n; i++) a[i] = a[i + 1] - a[i];
         }
 
-        if (n > 1)
-        {
-            Sum(n, res, 'b', 0);
-            cout << res << '\n';
-        }
-        else
-            cout << a[0] << '\n';
+        cout << res << '\n';
     }
 
     return 0;

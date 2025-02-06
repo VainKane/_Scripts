@@ -72,5 +72,8 @@
         "typeinfo": "cpp",
         "valarray": "cpp"
     },
+    "files.exclude": {
+        "**/*.exe": true
+    },
     "C_Cpp.errorSquiggles": "disabled"
 }
