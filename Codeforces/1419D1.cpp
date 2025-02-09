@@ -21,15 +21,17 @@ int main()
 
     int x = (n - 1) / 2;
 
-    int k = 0;
     int j = x;
 
-    cout << x << '\n';
+    cout << x << '\n' << a[x] << ' ';
 
-    for (int i = 0; i < n / 3; i++)
+    for (int i = 0; i < x; i++)
     {
-        if (j < n - 1 && k < x) cout << a[j] << ' ' << a[k] << ' ' << a[j + 1];
+        cout << a[i] << ' ' << a[x + i + 1] << ' ';
+        j += 2;
     }
+
+    if (n % 2 == 0) cout << a[n - 1];
 
     return 0;
 }

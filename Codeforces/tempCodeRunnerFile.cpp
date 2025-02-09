@@ -1,7 +1,29 @@
-if (cows[j].cards[i] < cows[j].cards[i - 1] || cows[j].cards[i] < pre);
-                // {
-                //     j = n + 1;
-                //     i = m + 1;
 
-                //     cout << -1 << '\n';
-                // }
+
+
+
+// CPP program to find
+// sum of given series
+#include <bits/stdc++.h>
+using namespace std;
+ 
+// function to find sum of series
+long long int sum(long long int n)
+{
+    long long int root = sqrt(n);
+    long long int ans = 0;
+ 
+    for (int i = 1; i <= root; i++) 
+        ans += n / i;
+     
+    ans = 2 * ans - (root * root);
+    return ans;
+}
+ 
+// driver code
+int main()
+{
+    long long int n = 35;
+    cout << sum(n);
+    return 0;
+}
