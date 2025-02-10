@@ -10,12 +10,12 @@ int PowMod(long long a, int b, int mod)
     {
         if (b & 1)
         {
-            res *= a;
+            res = (res % mod) * (a % mod);
             res %= mod;
         }
 
-        b >>= 2;
-        a *= a;
+        b >>= 1;
+        a = (a % mod) * (a % mod);
         a %= mod;
     }
 
