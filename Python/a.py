@@ -1,30 +1,15 @@
-def compute_sum(n, a, b):
-    total = 0
-    k = a
-    while k <= b:
-        q = n // k  # Giá trị của ⌊n/k⌋
-        if q == 0:
-            break  # Khi q = 0, tất cả k lớn hơn đều sẽ có ⌊n/k⌋ = 0
-        
-        # Tìm khoảng lớn nhất mà ⌊n/k⌋ vẫn bằng q
-        last_k = min(n // q, b)  
-        
-        # Số lượng k trong khoảng này
-        count = last_k - k + 1  
-        
-        # Cộng vào tổng
-        total += count * q  
-        
-        # Nhảy đến giá trị tiếp theo
-        k = last_k + 1  
+def find_permutation(n, p):
+    result = [0] * n
+    available = list(range(1, n + 1))  # Danh sách các số từ 1 đến n
     
-    return total
+    for i in range(n - 1, -1, -1):
+        result[i] = available.pop(p[i])  # Lấy phần tử có chỉ số p[i]
+    
+    print(*result)
 
 # Đọc input
-n, a, b = map(int, input().split())
+n = int(input())
+p = list(map(int, input().split()))
 
-# Tính kết quả
-result = compute_sum(n, a, b)
-
-# In kết quả
-print(result)
+# Gọi hàm giải
+find_permutation(n, p)

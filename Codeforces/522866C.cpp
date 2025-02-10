@@ -2,15 +2,12 @@
 
 using namespace std;
 
-int Sum(int a, int b)
-{
-    return -a * a + a + b * b + b;
-}
-
 int n;
 
-int a = 0;
-int b = 0;
+int k = 0;
+
+int a;
+int b;
 
 int main()
 {
@@ -19,23 +16,21 @@ int main()
 
     cin >> n;
 
-    b = sqrt(n);
-
-    while (a <= b)
+    for (int l = 1; l * l + 2 * l - l <= 2 * n; l++)
     {
-        int s = Sum(a,b);
-
-        if (s < 2 * n)
+        if ((2 * n - l * l + l) % (2 * l) == 0)
         {
-            if (a >= 1)
+            if (k < l)
             {
-                if (Sum(a - 1, b))
+                a = (2 * n - l * l + l) / (2 * l);
+                b = l + a - 1;
+
+                k = b - a + 1;
             }
-        } 
-        else a++;
+        }
     }
 
-    cout << a << ' ' << b;
+    cout << n << "=" << a << "+...+" << b;
 
     return 0;
 }

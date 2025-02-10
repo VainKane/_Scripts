@@ -3,11 +3,7 @@
 using namespace std;
 
 int n;
-
-int a[(int)1e5 + 10];
-
-int res = INT_MIN;
-int sum = 0;
+int x[109];
 
 int main()
 {
@@ -18,22 +14,23 @@ int main()
 
     for (int i = 0; i < n; i++)
     {
-        cin >> a[i];
+        cin >> x[i];
     }
 
     for (int i = 0; i < n; i++)
     {
-        sum += a[i];
+        int cnt = 0;
 
-        res = max(res, sum);
-
-        if (sum < 0)
+        for (int j = 0; j < i; j++)
         {
-            sum = 0;
+            if (x[j] > x[i])
+            {
+                cnt++;
+            }
         }
-    }
 
-    cout << res;
+        cout << cnt << ' ';
+    }
 
     return 0;
 }

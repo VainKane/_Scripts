@@ -2,7 +2,7 @@
 
 using namespace std;
 
-int Sum(int n)
+int Sum(long long n)
 {
     int sum = 0;
 
@@ -15,42 +15,46 @@ int Sum(int n)
     return sum;
 }
 
-int Solve(int n)
+long long Solve(long long n)
 {
-    int mi = 0;
-    int res = INT_MAX;
+    int ma = 0;
+    long long res = LONG_LONG_MAX;
 
-    for (int i = 1; i * i <= n; i++)
+    for (long long i = 1; i * i <= n; i++)
     {
         if (n % i == 0)
         {
             int s = Sum(i);
 
-            if (s > mi)
+            if (s > ma)
             {
-                mi = s;
+                ma = s;
                 res = i;
             }
-            else if (s == mi) res = min(res, i);
+            else if (s == ma) 
+            {
+                res = min(res, i);
+            }
 
-            int j = n / i;
+            long long j = n / i;
             s = Sum(j);
 
-            if (s > mi)
-            {
-                mi = s;
+            if (s > ma)
+            {   
+                ma = s;
                 res = j;
             }
-            else if (s == mi) res = min(res, j);
-
-            cout << i << ' ' << j << '\n';
+            else if (s == ma)
+            {
+                res = min(res, j);
+            }
         }
     }
 
     return res;
 }
 
-int n;
+long long n;
 
 int main()
 {
