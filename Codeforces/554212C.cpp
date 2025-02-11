@@ -2,17 +2,18 @@
 
 using namespace std;
 
-bool cmp(pair<int, int> a, pair<int, int> b)
+struct Paper
 {
-    if (a.second < b.second) return true;
-    else if (a.second == b.second) return a.first > b.first;
-    return false;
-}
+    int x1;
+    int x2;
+    int y1;
+    int y2;
+};
 
 int n;
-int p[109];
+Paper a[109];
 
-set<int> a;
+int res = 0;
 
 int main()
 {
@@ -23,13 +24,18 @@ int main()
 
     for (int i = 0; i < n; i++)
     {
-        cin >> p[i];
+        cin >> a[i].x1 >> a[i].y1 >> a[i].x2 >> a[i].y2;
     }
 
-    for (int i = n - 1; i >= 0; i--)
+    for (int i = 0; i < n; i++)
     {
-        
+        for (int j = i + 1; j < n; j++)
+        {
+            res += Area(a[i], a[j]);
+        }
     }
+
+    cout << res;
 
     return 0;
 }
