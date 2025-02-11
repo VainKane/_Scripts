@@ -2,18 +2,11 @@
 
 using namespace std;
 
-struct Paper
-{
-    int x1;
-    int x2;
-    int y1;
-    int y2;
-};
-
 int n;
-Paper a[109];
 
 int res = 0;
+
+map<pair<int, int>, bool> visisted;
 
 int main()
 {
@@ -22,20 +15,24 @@ int main()
 
     cin >> n;
 
-    for (int i = 0; i < n; i++)
+    while (n--)
     {
-        cin >> a[i].x1 >> a[i].y1 >> a[i].x2 >> a[i].y2;
-    }
+        int x1, x2, y1, y2;
+        cin >> x1 >> y1 >> x2 >> y2;
 
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = i + 1; j < n; j++)
+        for (int i = x1; i < x2; i++)
         {
-            res += Area(a[i], a[j]);
+            for (int j = y1; j < y2; j++)
+            {
+                if (!visisted.count(make_pair(i, j)))
+                {
+                    visisted[make_pair(i, j)] = true;
+                }
+            }
         }
     }
 
-    cout << res;
+    cout << visisted.size();
 
     return 0;
 }
