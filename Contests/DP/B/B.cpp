@@ -5,10 +5,10 @@ using namespace std;
 int n;
 int m;
 
-int w[109];
+int w[(int)1e5 + 10];
 int v[109];
 
-long long dp[(int)1e4 + 10];
+long long dp[100];
 
 int main()
 {
@@ -17,8 +17,7 @@ int main()
 
     cin >> n >> m;
 
-    for (int i = 1; i <= n; i++) cin >> w[i];
-    for (int i = 1; i <= n; i++) cin >> v[i];
+    for (int i = 1; i <= n; i++) cin >> w[i] >> v[i];
 
     for (int i = 0; i <= m; i++) dp[i] = 0;
 
