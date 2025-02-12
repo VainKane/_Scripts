@@ -2,10 +2,10 @@
 
 using namespace std;
 
-int Kadane(int a[], int n)
+long long Kadane(long long a[], int n)
 {
-    int sum = 0;
-    int res = INT_MIN;
+    long long sum = 0;
+    long long res = LONG_LONG_MIN;
 
     for (int i = 0; i < n; i++)
     {
@@ -21,11 +21,11 @@ int Kadane(int a[], int n)
     return res;
 }
 
-int MaxSum(int a[], int n)
+long long MaxSum(long long a[], int n)
 {
-    int sum = 0;
+    long long sum = 0;
     int ind;
-    int mi = INT_MAX;
+    long long mi = LONG_LONG_MAX;
 
     for (int i = 0; i < n; i++)
     {
@@ -39,7 +39,7 @@ int MaxSum(int a[], int n)
     }
 
     sum = 0;
-    int ma;
+    long long ma = LONG_LONG_MIN;
 
     for (int i = ind + 1; i < n; i++)
     {
@@ -52,13 +52,12 @@ int MaxSum(int a[], int n)
 
 int a[509][509];
 long long p[509][509];
-
-int b[509];
+long long b[509];
 
 int n;
 int m;
 
-int res = 0;
+long long res = LONG_LONG_MIN;
 
 int main()
 {
@@ -91,12 +90,14 @@ int main()
         {
             for (int k = 0; k < n; k++)
             {
-                b[k] = p[j][k] - p[i - 1][k];
+                if (i > 0) b[k] = p[j][k] - p[i - 1][k];
+                else b[k] = p[j][k];
             }
 
-            int sum;
-            // sum = Kadane(a, n);
-            sum = MaxSum(b, n);
+            long long sum;
+            
+            sum = Kadane(b, n);
+            // sum = MaxSum(b, n);
 
             res = max(res, sum);
         }

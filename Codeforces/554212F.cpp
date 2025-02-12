@@ -2,28 +2,68 @@
 
 using namespace std;
 
-bool Check1(pair<int, int> a, pair<int, int> b)
+bool IsEqual(pair<int, int> a, pair<int, int> b)
 {
-    return (a.first == b.first && a.second == b.second);
+    if (a.first == b.first && a.second == b.second) return true;
+    if (a.first == b.second && a.second == b.first) return true;
+
+    return false;
 }
 
-bool Check2(pair<int, int> a, pair<int, int> b, pair<int, int> c, pair<int, int> d)
+bool Check(pair<int, int> p[], int u, int v)
 {
-    int x = a.first;
-    int y = a.second;
+    int a = p[u].first;
+    int b = p[u].second;
 
-    int cntx = 1;
-    int cnty = 1;
+    vector<int> c;
 
-    if (b.first == x || b.second) cntx++;
-    if (c.first == x || c.second) cntx++;
-    if (d.first == x || d.second) cntx++;
+    for (int i = 0; i < 6; i++)
+    {
+        for (int j = i + 1; j < 6; j++)
+        {
+            if (i != u && i != v && j != u && j != v)
+            {
+                if (IsEqual(p[i], p[j]))
+                {
+                    sort(c.begin(), c.end());
 
-    if (b.first == y || b.second) cnty++;
-    if (c.first == y || c.second) cnty++;
-    if (d.first == y || d.second) cnty++;
+                    if (p[i].first == a || p[i].second == a)
+                    {
+                        if (!binary_search(c.begin(), c.end(), i))
+                        {
+                            c.push_back(i);
+                        }
+                    }
+                    if (p[i].first == b || p[i].second == b)
+                    {
+                        if (!binary_search(c.begin(), c.end(), i))
+                        {
+                            c.push_back(i);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-    return (cntx == 4 || cnty == 4);
+    if (c.size() >= 2) 
+    {
+        for (int j = 0; j < c.size(); j++)
+        {
+            a = p[c[j]].first;
+            b = p[c[j]].second;
+
+            for (int i = j + 1; i < c.size(); i++)
+            {
+                if ((p[c[i]].first == a || p[c[i]].second == a) || (p[c[i]].first == b || p[c[i]].second == b))
+                {
+                    return true;
+                }
+            }
+        }
+    }
+    
+    return false;
 }
 
 pair<int, int> p[6];
@@ -35,43 +75,25 @@ int main()
 
     for (int i = 0; i < 6; i++)
     {
-        int x;
-        int y;
-
-        cin >> x >> y;
-
-        p[i].first = min(x, y);
-        p[i].second = max(x, y);
+        cin >> p[i].first >> p[i].second;
     }
-
-    int s1 = 0;
 
     for (int i = 0; i < 6; i++)
     {
         for (int j = i + 1; j < 6; j++)
         {
-            s1 += Check1(p[i], p[j]);
-        }
-    }
-
-    int s2 = 0;
-
-    for (int i = 0; i < 6; i++)
-    {
-        for (int j = i + 1; j < 6; j++)
-        {
-            for (int u = j + 1; u < 6; u++)
+            if (IsEqual(p[i], p[j]))
             {
-                for (int v = u + 1; v < 6; v++)
+                if (Check(p, i, j))
                 {
-                    s2 += Check2(p[i], p[j], p[u], p[v]);
+                    cout << "YES";
+                    return 0;
                 }
             }
         }
     }
 
-    if (s1 >= 3 && s2 >= 2) cout << "YES";
-    else cout << "NO";
-
+    cout << "NO";
+    
     return 0;
 }
