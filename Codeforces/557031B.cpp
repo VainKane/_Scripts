@@ -3,9 +3,9 @@
 using namespace std;
 
 string s;
-
 int k;
 
+stack<char> st;
 string res = "";
 
 int main()
@@ -16,17 +16,27 @@ int main()
     cin >> s;
     cin >> k;
 
-    int pre = 0;
-
-    auto i = s.begin();
-
-    while (res.length() < s.length() - k)
+    for (char digit : s)
     {
-        int c = s.length() - 1 - (s.length() - k - res.length() - 1);
-        auto it = min_element(i, s.begin() + s.length() - 1 - (s.length() - k - res.length() - 1) + 1);
-        i = it + 1;
+        while (!st.empty() && st.top() > digit && k > 0)
+        {
+            st.pop();
+            k--;
+        }
 
-        res += *it;
+        st.push(digit);
+    }  
+    
+    while (!st.empty() && k > 0)
+    {
+        st.pop();
+        k--;
+    }
+
+    while (!st.empty())
+    {
+        res = st.top() + res;
+        st.pop();
     }
 
     cout << res;
