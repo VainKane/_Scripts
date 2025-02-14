@@ -1,33 +1,8 @@
-#include <bits/stdc++.h>
+for (int i = 0; i < s.length() && k > 0; i++)
+    // {
+    //     int ind = min_element(s.begin() + i, s.begin() + k + 1) - s.begin();
+    //     s.erase(i + 1, ind);
+    //     k -= ind - i;
+    // }
 
-using namespace std;
-
-int const mod = 10000;
-
-int PowMod(int a)
-{
-    return (1LL * (a % mod) * (a % mod)) % mod;
-}
-
-int a;
-int n;
-
-int main()
-{
-    ios_base::sync_with_stdio(false);
-    cin.tie(0); cout.tie(0);
-
-    cin >> a >> n;
-
-    int pre = a;
-
-    for (int i = 1; i < n; i++)
-    {
-        a = PowMod(pre);
-        pre = a;
-    }
-
-    cout << pre;
-
-    return 0;
-}
+    // cout << s << '\n';

@@ -5,68 +5,28 @@ using namespace std;
 bool IsEqual(pair<int, int> a, pair<int, int> b)
 {
     if (a.first == b.first && a.second == b.second) return true;
-    if (a.first == b.second && a.second == b.first) return true;
-
     return false;
 }
 
-bool Check(pair<int, int> p[], int u, int v)
+
+bool Check(multiset<int> t)
 {
-    int a = p[u].first;
-    int b = p[u].second;
+    int cnt = 0;
 
-    vector<int> c;
-
-    for (int i = 0; i < 6; i++)
+    for (auto val : t)
     {
-        for (int j = i + 1; j < 6; j++)
-        {
-            if (i != u && i != v && j != u && j != v)
-            {
-                if (IsEqual(p[i], p[j]))
-                {
-                    sort(c.begin(), c.end());
-
-                    if (p[i].first == a || p[i].second == a)
-                    {
-                        if (!binary_search(c.begin(), c.end(), i))
-                        {
-                            c.push_back(i);
-                        }
-                    }
-                    if (p[i].first == b || p[i].second == b)
-                    {
-                        if (!binary_search(c.begin(), c.end(), i))
-                        {
-                            c.push_back(i);
-                        }
-                    }
-                }
-            }
-        }
+        if (t.count(val) >= 2) cnt++;
     }
 
-    if (c.size() >= 2) 
-    {
-        for (int j = 0; j < c.size(); j++)
-        {
-            a = p[c[j]].first;
-            b = p[c[j]].second;
-
-            for (int i = j + 1; i < c.size(); i++)
-            {
-                if ((p[c[i]].first == a || p[c[i]].second == a) || (p[c[i]].first == b || p[c[i]].second == b))
-                {
-                    return true;
-                }
-            }
-        }
-    }
-    
-    return false;
+    return cnt >= 3;
 }
 
 pair<int, int> p[6];
+
+multiset<int> t;
+set<pair<int, int>> visisted;   
+
+int cnt = 0;
 
 int main()
 {
@@ -75,7 +35,11 @@ int main()
 
     for (int i = 0; i < 6; i++)
     {
-        cin >> p[i].first >> p[i].second;
+        int x, y;
+        cin >> x >> y;
+
+        p[i].first = min(x, y);
+        p[i].second = max(x, y);
     }
 
     for (int i = 0; i < 6; i++)
@@ -84,16 +48,30 @@ int main()
         {
             if (IsEqual(p[i], p[j]))
             {
-                if (Check(p, i, j))
+
+                if (visisted.count(make_pair(i, j)) == 0)
                 {
-                    cout << "YES";
-                    return 0;
-                }
+                    t.insert(p[i].first);
+                    t.insert(p[i].second);
+
+                    visisted.insert(make_pair(i, j));
+
+                    cnt++;
+                } 
             }
         }
     }
 
-    cout << "NO";
+    cout << cnt;
+
+    if (Check(t) || cnt == 3)
+    {
+        cout << "YES";
+    }
+    else
+    {
+        cout << "NO";
+    }
     
     return 0;
 }

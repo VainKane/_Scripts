@@ -43,11 +43,61 @@ int main()
 
     int u = Search(s, c); // nam den 
 
-    if (c == can)
+    if (c == "can")
     {
         int v = n % 10; // nam dang xet
 
-        if ()
+        if (u == v)
+        {
+            cout << n;
+            return 0;
+        }
+        else
+        {
+            int x = min(abs(v - u), min(10 - v + u, v + 10 - u));
+            
+            int a = n + x;
+            int b = n - x;
+
+            if (b % 10 == u)
+            {
+                cout << b;
+                return 0;
+            }
+            else
+            {
+                cout << a;
+                return 0;
+            }
+        }
+    }
+    else
+    {
+        int v = n % 12; // nam dang xet
+
+        if (u == v)
+        {
+            cout << n;
+            return 0;
+        }
+        else
+        {
+            int x = min(abs(v - u), min(12 - v + u, v + 12 - u));
+            
+            int a = n + x;
+            int b = n - x;
+
+            if (b % 12 == u)
+            {
+                cout << b;
+                return 0;
+            }
+            else
+            {
+                cout << a;
+                return 0;
+            }
+        }
     }
 
     return 0;
