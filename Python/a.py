@@ -1,23 +1,50 @@
-def removeKDigits(S, K):
-    stack = []
-    for char in S:
-        while stack and K > 0 and stack[-1] > char:
-            stack.pop()
-            K -= 1
-        stack.append(char)
-    
-    # Nếu vẫn còn K ký tự cần xóa, xóa từ cuối ngăn xếp
-    if K > 0:
-        stack = stack[:-K]
-    
-    # Loại bỏ các số 0 ở đầu (nếu có)
-    result = ''.join(stack).lstrip('0')
-    
-    return result if result else "0"
+import sys
 
-# Đọc input
-S = input().strip()
-K = int(input())
+def main():
+    input = sys.stdin.read
+    data = input().split()
+    
+    m = int(data[0])
+    n = int(data[1])
+    c = []
+    index = 2
+    for i in range(m):
+        c.append(list(map(int, data[index:index + m])))
+        index += m
+    
+    k = m // n  # Số chương trình con mỗi máy
+    best_cost = float('inf')
+    assignment = [-1] * m  # Gán mỗi chương trình con vào máy nào
+    
+    def backtrack(prog_idx, current_cost):
+        nonlocal best_cost
+        if prog_idx == m:
+            # Đã gán xong tất cả chương trình con
+            best_cost = min(best_cost, current_cost)
+            return
+        
+        for machine in range(n):
+            # Kiểm tra xem máy này đã đủ k chương trình con chưa
+            if assignment.count(machine) >= k:
+                continue
+            
+            # Tính chi phí tăng thêm khi gán chương trình con này vào máy
+            added_cost = 0
+            for other_prog in range(prog_idx):
+                if assignment[other_prog] != machine:
+                    added_cost += c[prog_idx][other_prog]
+            
+            # Nếu chi phí hiện tại + chi phí tăng thêm >= best_cost, bỏ qua
+            if current_cost + added_cost >= best_cost:
+                continue
+            
+            # Gán chương trình con này vào máy
+            assignment[prog_idx] = machine
+            backtrack(prog_idx + 1, current_cost + added_cost)
+            assignment[prog_idx] = -1  # Quay lui
+    
+    backtrack(0, 0)
+    print(best_cost)
 
-# Tính toán và in ra kết quả
-print(removeKDigits(S, K))
+if __name__ == "__main__":
+    main()
