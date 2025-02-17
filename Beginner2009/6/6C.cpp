@@ -113,6 +113,7 @@ int main()
     Try(1, 1);
 
     cout << res << '\n';
+    cout << cnt;
 
     return 0;
 }

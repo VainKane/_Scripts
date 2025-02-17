@@ -9,7 +9,7 @@ bool Go(int &d, pair<char, int> &pos, pair<char, int> a[], int n, set<pair<char,
         visisted.insert(pos);
         pos.second -= 1;
 
-        if (pos.second < 1 || visisted.count(pos) != 0)
+        if (visisted.count(pos) != 0)
         {
             return false;
         }
@@ -25,7 +25,7 @@ bool Go(int &d, pair<char, int> &pos, pair<char, int> a[], int n, set<pair<char,
         visisted.insert(pos);
         pos.first += 1;
 
-        if (pos.first > 'H' || visisted.count(pos) != 0)
+        if (visisted.count(pos) != 0)
         {
             return false;
         }
@@ -41,7 +41,7 @@ bool Go(int &d, pair<char, int> &pos, pair<char, int> a[], int n, set<pair<char,
         visisted.insert(pos);
         pos.second += 1;
 
-        if (pos.second > 8 || visisted.count(pos) != 0)
+        if (visisted.count(pos) != 0)
         {
             return false;
         }
@@ -57,7 +57,7 @@ bool Go(int &d, pair<char, int> &pos, pair<char, int> a[], int n, set<pair<char,
         visisted.insert(pos);
         pos.first -= 1;
 
-        if (pos.first < 'A' || visisted.count(pos) != 0)
+        if (visisted.count(pos) != 0)
         {
             return false;
         }
