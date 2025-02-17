@@ -14,7 +14,7 @@ int x[20][20];
 
 int cnt = 0;
 bool used[20];
-int cmin [20];
+int cmin = INT_MAX;
 
 int sum = 0;
 
@@ -37,28 +37,32 @@ void Try(int i, int k)
                 }
             }
 
-            if (i == w)
+            if (sum + cmin * w * (m - w) * (n - k +) >= res)
             {
-                int s = sum;
-
-                for (int u = 1; u <= k; u++)
+                used[j] = false;
+            
+                for (int u = 1; u <= k - 1; u++)
                 {
                     for (int p = 1; p <= w; p++)
                     {
-                        s += cmin[x[u][p]];
+                        sum -= a[x[u][p]][x[k][i]];
                     }
                 }
+                continue;
+            }
 
+            if (i == w)
+            {
                 if (k == n)
                 {
                     res = min(res, sum);
                 }
-                else if (s < res)
+                else
                 {
                     Try(1, k + 1);
                 }
             }
-            else
+            else 
             {
                 Try(i + 1, k);
             }
@@ -86,18 +90,13 @@ int main()
 
     for (int i = 1; i <= m; i++)
     {
-        cmin[i] = INT_MAX;
-    }
-
-    for (int i = 1; i <= m; i++)
-    {
         for (int j = 1; j <= m; j++)
         {
             cin >> a[i][j];
 
             if (i != j)
             {
-                cmin[i] = min(cmin[i], a[i][j]);
+                cmin = min(cmin, a[i][j]);
             }
         }
     }

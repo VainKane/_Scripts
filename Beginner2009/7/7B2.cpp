@@ -3,26 +3,52 @@
 using namespace std;
 
 int n;
-int b[10][10];
 
+int b[10][10];
 pair<int, int> pos = make_pair(0, 0);
 
-void TurnLeft();
-
-void Go(int d, pair<int, int> pos)
+void TurnLeft(int &d)
 {
+    d -= 1;
+
+    if (d == -1)
+    {
+        d = 3;
+    }
+}
+
+void TurnRight(int &d)
+{
+    d += 2;
+    d %= 3;
+}
+
+int Go(int d, pair<int, int> pos)
+{
+    int s = 0;
+
     if (d == 0)
     {
         while (pos.first > 0)
         {
             pos.first -= 1;
+            s++;
+            b[pos.first][pos.second] = -1;
 
-            if (b[pos.first][pos.second] == 1)
+            if (b[pos.first][pos.second] == 1|| b[pos.first - 1][pos.second] == 1)
             {
+                int s1 = 0;
+                int s2 = 0;
 
+                TurnLeft(d);
+                s1 = Go(d, pos);
+                TurnRight(d);
+                s2 = Go(d, pos);
             }
         }
     }
+
+    return s;
 }
 
 int main()
