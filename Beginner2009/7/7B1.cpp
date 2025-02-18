@@ -2,83 +2,35 @@
 
 using namespace std;
 
-bool Go(int &d, pair<char, int> &pos, pair<char, int> a[], int n, set<pair<char, int>> &visisted)
-{
-    if (d == 0)
-    {
-        visisted.insert(pos);
-        pos.second -= 1;
-
-        if (visisted.count(pos) != 0)
-        {
-            return false;
-        }
-        if (binary_search(a, a + n, pos) || pos.second < 1)
-        {
-            pos.second += 1;
-            d = 3;
-            return Go(d, pos, a, n, visisted);
-        }
-    }
-    else if (d == 1)
-    {
-        visisted.insert(pos);
-        pos.first += 1;
-
-        if (visisted.count(pos) != 0)
-        {
-            return false;
-        }
-        if (binary_search(a, a + n, pos) || pos.first > 'H')
-        {
-            pos.first -= 1;
-            d -= 1;
-            return Go(d, pos, a, n, visisted);
-        }
-    }
-    else if (d == 2)
-    {
-        visisted.insert(pos);
-        pos.second += 1;
-
-        if (visisted.count(pos) != 0)
-        {
-            return false;
-        }
-        if (binary_search(a, a + n, pos) || pos.second > 8)
-        {
-            pos.second -= 1;
-            d -= 1;
-            return Go(d, pos, a, n, visisted);
-        }
-    }
-    else
-    {
-        visisted.insert(pos);
-        pos.first -= 1;
-
-        if (visisted.count(pos) != 0)
-        {
-            return false;
-        }
-        if (binary_search(a, a + n, pos) || pos.first < 'A')
-        {
-            pos.first += 1;
-            d -= 1;
-            return Go(d, pos, a, n, visisted);
-        }
-    }
-
-    return true;
-}
-
 int n;
-pair<char, int> a[40];
-pair<char, int> pos = make_pair('A', 1);
-set<pair<char, int>> visisted;
+
+int c[10][10];
+int dx[] {-1, 0, 1, 0};
+int dy[] {0, 1, 0, -1};
+
+int x = 1;
+int y = 1;
+
+int d = 2;
 
 int res = 0;
-int d = 2;
+
+int Go(int &d, int &x, int &y)
+{
+    int nextx = x + dx[d];
+    int nexty = y + dy[d];
+
+    if (c[nextx][nexty] == -1) return res;
+    if (c[nextx][nexty] == 1)
+    {
+        d = (d + 3) % 4;
+        return Go(d, x, y);
+    }
+
+    res++;
+    c[x][y] = -1;
+    return Go(d, nextx, nexty);
+}
 
 int main()
 {
@@ -92,21 +44,16 @@ int main()
         string s;
         cin >> s;
 
-        a[i].first = s[0];
-        a[i].second = s[1] - '0';
+        c[s[1] - '0'][s[0] - 'A' + 1] = 1;
     }
 
-    sort(a, a + n);
-
-    while (Go(d, pos, a, n, visisted))
+    for (int i = 0; i <= 9; i++)
     {
-        res++;
+        c[i][0] = c[i][9] = 1;
+        c[0][i] = c[9][i] = 1;
     }
-    
-    // for (auto val : visisted) cout << val.first << val.second << ' ';
-    // cout << '\n';
 
-    cout << res;
+    cout << Go(d, x, y);
 
     return 0;
 }

@@ -7,7 +7,7 @@ int n;
 
 int a[15];
 int x[15];
-bool used[15];
+
 long double avg;
 long double res;
 long double sum;

@@ -4,51 +4,32 @@ using namespace std;
 
 int n;
 
-int b[10][10];
-pair<int, int> pos = make_pair(0, 0);
+int c[10][10];
+int dx[] {-1, 0, 1, 0};
+int dy[] {0, 1, 0, -1};
 
-void TurnLeft(int &d)
+int x = 1;
+int y = 1;
+
+int d = 2;
+
+int res = 0;
+
+int Go(int &d, int &x, int &y)
 {
-    d -= 1;
+    int nextx = x + dx[d];
+    int nexty = y + dy[d];
 
-    if (d == -1)
+    if (c[nextx][nexty] == -1) return res;
+    if (c[nextx][nexty] == 1)
     {
-        d = 3;
-    }
-}
-
-void TurnRight(int &d)
-{
-    d += 2;
-    d %= 3;
-}
-
-int Go(int d, pair<int, int> pos)
-{
-    int s = 0;
-
-    if (d == 0)
-    {
-        while (pos.first > 0)
-        {
-            pos.first -= 1;
-            s++;
-            b[pos.first][pos.second] = -1;
-
-            if (b[pos.first][pos.second] == 1|| b[pos.first - 1][pos.second] == 1)
-            {
-                int s1 = 0;
-                int s2 = 0;
-
-                TurnLeft(d);
-                s1 = Go(d, pos);
-                TurnRight(d);
-                s2 = Go(d, pos);
-            }
-        }
+        d = (d + 3) % 4;
+        return Go(d, x, y);
     }
 
-    return s;
+    res++;
+    c[x][y] = -1;
+    return Go(d, nextx, nexty);
 }
 
 int main()
@@ -63,18 +44,16 @@ int main()
         string s;
         cin >> s;
 
-        b[s[1] - '1'][s[0] - 'A'] = true;
+        c[s[1] - '0'][s[0] - 'A' + 1] = 1;
     }
 
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i <= 9; i++)
     {
-        for (int j = 0; j < 8; j++)
-        {
-            cout << b[i][j] << ' ';
-        }
-
-        cout << '\n';
+        c[i][0] = c[i][9] = 1;
+        c[0][i] = c[9][i] = 1;
     }
+
+    cout << Go(d, x, y);
 
     return 0;
 }
