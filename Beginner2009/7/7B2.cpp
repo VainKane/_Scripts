@@ -15,21 +15,51 @@ int d = 2;
 
 int res = 0;
 
-int Go(int &d, int &x, int &y)
+void Go(int &d, int &x, int &y, int cnt)
 {
     int nextx = x + dx[d];
     int nexty = y + dy[d];
 
-    if (c[nextx][nexty] == -1) return res;
+    // cout << cnt << ' ' << x << ' ' << y << '\n';
+    c[x][y] = 2;
+    res = max(res, cnt);
+
+    if (c[nextx][nexty] == 0)
+    {
+        Go(d, nextx, nexty, cnt + 1);
+    }
     if (c[nextx][nexty] == 1)
     {
-        d = (d + 3) % 4;
-        return Go(d, x, y);
-    }
+        for (int i = 1; i <= 3; i += 2)
+        {
+            int d1 = (d + i) % 4;
+            nextx = x + dx[d1];
+            nexty = y + dy[d1];
 
-    res++;
-    c[x][y] = -1;
-    return Go(d, nextx, nexty);
+            int tmp[10][10];
+
+            for (int i = 0; i <= 9; i++)
+            {
+                for (int j = 0; j <= 9; j++)
+                {
+                    tmp[i][j] = c[i][j];
+                }
+            }
+
+            if (c[nextx][nexty] == 0)
+            {
+                Go(d1, nextx, nexty, cnt + 1);
+            }
+
+            for (int i = 0; i <= 9; i++)
+            {
+                for (int j = 0; j <= 9; j++)
+                {
+                    c[i][j] = tmp[i][j];
+                }
+            }
+        }
+    }
 }
 
 int main()
@@ -53,7 +83,21 @@ int main()
         c[0][i] = c[9][i] = 1;
     }
 
-    cout << Go(d, x, y);
+    Go(d, x, y, 0);
+
+    // cout << '\n';
+
+    // for (int i = 0; i <= 9; i++)
+    // {
+    //     for (int j = 0; j <= 9; j++)
+    //     {
+    //         cout << c[i][j] << ' ';
+    //     }
+
+    //     cout << '\n';
+    // }
+
+    cout << res;
 
     return 0;
 }
