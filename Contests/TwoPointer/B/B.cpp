@@ -10,7 +10,6 @@ int s;
 int nums[(int)1e4 + 10];
 
 long long cnt = 0;
-
 long long sum;
 
 int l;
