@@ -4,7 +4,7 @@ using namespace std;
 
 int n;
 int m;
-int k;
+long long k;
 
 int a[1009];
 int b[1009];
@@ -95,29 +95,7 @@ int main()
         }
     }
 
-    // vector<int> t;
-    // int s = 0;
-    // for (int i = 0; i < c.size(); i++)
-    // {
-    //     for (int j = 0; j < d.size(); j++)
-    //     {
-    //         t.push_back(c[i] + d[j]);
-    //         s += t.front();
-    //     }
-    // }
-
-    // sort(t.begin(), t.end(), greater<int> ());
-
-    // for (auto val : t) cout << val << ' ';
-    // cout << '\n';
-    // cout << "s = " << s << '\n';
-    // cout << "size = " << t.size() << '\n';
-
     long long a = Greater(x, res);
-    // cout << "a = " << a << '\n';
-    // cout << "k - a = " << k - a << '\n';
-    // cout << "x = " << x << '\n';
-    // cout << "res = " << res << '\n';
     cout << res + (k - a) * x;
 
     return 0;
