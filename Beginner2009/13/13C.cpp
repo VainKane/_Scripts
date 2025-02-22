@@ -9,7 +9,7 @@ int r[(int)2e5 + 10];
 
 stack<int> st;
 
-int res = 0;
+long long res = 0;
 
 int main()
 {
@@ -52,13 +52,9 @@ int main()
 
     for (int i = 0; i < n; i++)
     {
-        int a = i - l[i];
-        int b = r[i] - i;
-
-        if (l[i] == -1) a = 1;
-        if (r[i] == -1) b = 1;
-
-        if (l[i] != -1 || r[i] != -1) res += a * b;
+        if (r[i] == -1) r[i] = n;
+        res += 1ll * i - l[i] - 1;
+        res += 1ll * r[i] - i - 1;
     }
 
     cout << res;
