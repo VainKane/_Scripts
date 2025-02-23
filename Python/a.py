@@ -1,41 +1,38 @@
-def can_fit(words, w, h, k):
-    lines = 0
-    current_width = 0
-    max_height = 0
-    
-    for ai, bi in words:
-        scaled_width = ai * k
-        scaled_height = bi * k
+from collections import deque
+
+def max_total_service(n, k, L, R, D, A):
+    # Khởi tạo bảng DP với giá trị nhỏ để tìm max
+    dp = [[-float('inf')] * (k + 1) for _ in range(n + 1)]
+    dp[0][0] = 0  # Không chọn trạm nào thì giá trị phục vụ = 0
+
+    # Duyệt số lượng màn hình LED được chọn (từ 1 đến k)
+    for j in range(1, k + 1):
+        dq = deque()  # Deque dùng để tối ưu việc tìm giá trị lớn nhất
         
-        if current_width + scaled_width > w:  # Không đủ chỗ, xuống dòng mới
-            lines += max_height  # Cộng chiều cao dòng trước vào tổng chiều cao
-            if lines + scaled_height > h:  # Nếu quá chiều cao cửa sổ, không thể fit
-                return False
-            current_width = scaled_width
-            max_height = scaled_height
-        else:
-            current_width += scaled_width
-            max_height = max(max_height, scaled_height)
-    
-    lines += max_height  # Cộng dòng cuối
-    return lines <= h
+        for i in range(1, n + 1):  
+            # Loại bỏ các p không hợp lệ (quá xa so với a_i)
+            while dq and A[i - 1] - A[dq[0] - 1] > R:
+                dq.popleft()
 
-def max_scaling_factor(w, h, words):
-    left, right = 0, min(w / max(a for a, _ in words), h / max(b for _, b in words))
-    
-    while right - left > 1e-6:  # Dừng khi sai số đủ nhỏ
-        mid = (left + right) / 2
-        if can_fit(words, w, h, mid):
-            left = mid
-        else:
-            right = mid
-    
-    return left
+            # Chọn giá trị tốt nhất từ deque
+            if dq:
+                p = dq[0]
+                dp[i][j] = dp[p][j-1] + sum(abs(A[i - 1] - A[x - 1]) for x in range(1, n + 1))
 
-# Đọc dữ liệu vào
-n, w, h = map(int, input().split())
-words = [tuple(map(int, input().split())) for _ in range(n)]
+            # Loại bỏ các phần tử kém hiệu quả từ deque
+            while dq and dp[dq[-1]][j-1] < dp[i][j-1]:
+                dq.pop()
 
-# Tìm k lớn nhất
-result = max_scaling_factor(w, h, words)
-print(f"{result:.6f}")
+            # Thêm i vào deque
+            dq.append(i)
+
+    # Kết quả là giá trị lớn nhất khi chọn đúng k màn hình
+    return max(dp[i][k] for i in range(1, n + 1))
+
+# Ví dụ sử dụng
+n, k = 5, 3
+L, R = 2, 5
+D = 10
+A = [1, 3, 6, 7, 9]
+
+print(max_total_service(n, k, L, R, D, A))

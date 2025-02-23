@@ -2,7 +2,7 @@
 
 using namespace std;
 
-bool minp[(int)1e6 + 10];
+int minp[(int)1e6 + 10];
 
 int main()
 {
@@ -15,9 +15,12 @@ int main()
     {
         if (minp[i] == 0)
         {
-            for (int j = i * i; j <= 1e6; j++)
+            for (int j = i * i; j <= 1e6; j += i)
             {
-                minp[j] = i;
+                if (minp[j] == 0)
+                {
+                    minp[j] = i;
+                }
             }
 
             minp[i] = i;
