@@ -14,8 +14,6 @@ int a[5009];
 long long dp[5009][5009];
 long long res = 0;
 
-deque<int> q;
-
 int main()
 {
     ios_base::sync_with_stdio(false);
@@ -36,39 +34,30 @@ int main()
     {
         if (a[i] >= l && a[i] <= r)
         {
-            q.push_back(i);
             dp[i][1] = 0;
         }
     }
 
     for (int j = 2; j <= k; j++) 
     {
-        // if (j != 2)
-        // {
-        //     q = deque<int> ();
-        // }
-
         for (int i = j; i <= n; i++)
         {
             if (j != k || (j == k && d - a[i] >= l && d - a[i] <= r))
             {
-                while (!q.empty() && (a[i] - a[q.front()] > r || a[i] - a[q.front()] < l))
+                for (int m = 1; m < i; m++)
                 {
-                    q.pop_front();
+                    if (dp[m][j - 1] != -1)
+                    {
+                        if (j != 2 || (j == 2 && a[m] >= l && a[m] <= r))
+                        {
+                            if (a[i] - a[m] >= l && a[i] - a[m] <= r)
+                            {
+                                dp[i][j] = max(dp[i][j], dp[m][j - 1] + 2ll * (j - 1) * (k - j + 1) * (a[i] - a[m]));
+                            }
+                        }
+                    }
                 }
-                while (!q.empty() && j == 2 && (a[q.front()] > r || a[q.front()] < l))
-                {
-                    q.pop_front();
-                }
-                while (!q.empty() && dp[q.back()][j - 1] < dp[i][j - 1])
-                {
-                    q.pop_back();
-                }
-                q.push_back(i);
-
-                dp[i][j] = dp[q.front()][j - 1] + 2ll * (j - 1) * (k - j + 1) * (a[i] - a[q.front()]);
-            }
-            
+            }   
         }
     }
 
