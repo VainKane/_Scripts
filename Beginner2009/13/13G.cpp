@@ -2,18 +2,10 @@
 
 using namespace std;
 
-int n;
-int k;
-
-int l;
-int r;
-
-int d;
+int n, k, l, r, d;
 int a[5009];
-
 long long dp[5009][5009];
 long long res = 0;
-
 deque<int> q;
 
 int main()
@@ -41,16 +33,16 @@ int main()
         }
     }
 
-    for (int j = 2; j <= k; j++) 
+    for (int j = 2; j <= k; j++)
     {
-        // if (j != 2)
-        // {
-        //     q = deque<int> ();
-        // }
+        if (j != 2)
+        {
+            q.clear();
+        }
 
         for (int i = j; i <= n; i++)
         {
-            if (j != k || (j == k && d - a[i] >= l && d - a[i] <= r))
+            // if (j != k || (j == k && (d - a[i] >= l && d - a[i] <= r)))
             {
                 while (!q.empty() && (a[i] - a[q.front()] > r || a[i] - a[q.front()] < l))
                 {
@@ -60,27 +52,41 @@ int main()
                 {
                     q.pop_front();
                 }
-                while (!q.empty() && dp[q.back()][j - 1] < dp[i][j - 1])
+                while (!q.empty() && dp[q.front()][j - 1] == -1)
+                {
+                    q.pop_front();
+                }
+                while (!q.empty() && dp[q.back()][j - 1] == -1)
                 {
                     q.pop_back();
                 }
+                while (!q.empty() && dp[q.back()][j - 1] + 2ll * (j - 1) * (k - j + 1) * (a[i] - a[q.back()]) < dp[i][j - 1])
+                {
+                    q.pop_back();
+                }
+                
                 q.push_back(i);
-
-                dp[i][j] = dp[q.front()][j - 1] + 2ll * (j - 1) * (k - j + 1) * (a[i] - a[q.front()]);
+                if (j != k || (j == k && (d - a[i] >= l && d - a[i] <= r)))
+                {
+                    if (q.front() < i)
+                    {
+                        dp[i][j] = dp[q.front()][j - 1] + 2ll * (j - 1) * (k - j + 1) * (a[i] - a[q.front()]);
+                    }
+                }
+               
             }
-            
         }
-    }
+    }   
 
-    for (int i = 1; i <= n; i++)
-    {
-        for (int j = 1; j <= k; j++)
-        {
-            cout << dp[i][j] << ' ';
-        }
+    // for (int i = 1; i <= n; i++)
+    // {
+    //     for (int j = 1; j <= k; j++)
+    //     {
+    //         cout << dp[i][j] << ' ';
+    //     }
 
-        cout << '\n';
-    }
+    //     cout << '\n';
+    // }
 
     for (int i = 1; i <= n; i++)
     {
