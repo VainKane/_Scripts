@@ -5,8 +5,26 @@ using namespace std;
 int n;
 pair<int, int> a[(int)2e5 + 10];
 
-long long x, y;
-long long u, v;
+long long dp[(int)2e5 + 10][2];
+
+void Cal(int pos, long long cost, int x, int y, long long &d0, long long &d1)
+{
+    if (x <= pos && y <= pos)
+    {
+        d0 = min(d0, cost + pos - x);
+        d1 = min(d1, cost + pos - x + y - x);
+    }
+    else if (x >= pos && y >= pos)
+    {
+        d0 = min(d0, cost + y - pos + y - x);
+        d1 = min(d1, cost + y - pos); 
+    }
+    else
+    {
+        d0 = min(d0, cost + y - pos + y - x);
+        d1 = min(d1, cost + pos - x + y - x);
+    }
+}
 
 int main()
 {
@@ -20,24 +38,19 @@ int main()
         cin >> a[i].first >> a[i].second;
     }
 
-    x = a[1].second;
-    y = a[1].second - 1;
-
-    cout << "---------------\n";
-    cout << x << ' ' << y << '\n';
+    dp[1][0] = a[1].second - 1 + (a[1].second - a[1].first);
+    dp[1][1] = a[1].second - 1;
 
     for (int i = 2; i <= n; i++)
     {
-        int d = a[i].second - a[i].first;
-
-        long long u = x;
-        long long v = y;
-
-        x = v + abs(a[i - 1].second - a[i].second) + d + 1;
-        y = u + abs(a[i - 1].first - a[i].first) + d + 1;
-
-        cout << x << ' ' << y << '\n';
+        dp[i][0] = dp[i][1] = LLONG_MAX;
+        Cal(a[i - 1].first, dp[i - 1][0], a[i].first, a[i].second, dp[i][0], dp[i][1]);
+        Cal(a[i - 1].second, dp[i - 1][1], a[i].first, a[i].second, dp[i][0], dp[i][1]);
     }
+
+    // for (int i = 1; i <= n; i++) cout << dp[i][0] << ' ' << dp[i][1] << '\n';
+
+    cout << min(dp[n][0] + n - a[n].first, dp[n][1] + n - a[n].second) + n - 1;
 
     return 0;
 }

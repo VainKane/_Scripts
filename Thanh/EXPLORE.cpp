@@ -45,6 +45,7 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> n >> w;
+
     for (int i = 1; i <= n; i++)
     {
         cin >> a[i].first >> a[i].second;

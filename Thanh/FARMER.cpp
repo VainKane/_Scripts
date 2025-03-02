@@ -39,8 +39,8 @@ int main()
         s[i] = x;
     }
 
-    for (int i = 1; i <= n; i++) cout << s[i] << ' ';
-    cout << '\n';
+    // for (int i = 1; i <= n; i++) cout << s[i] << ' ';
+    // cout << '\n';
 
     while (q--)
     {
