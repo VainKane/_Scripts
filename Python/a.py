@@ -1,30 +1,40 @@
-def min_difference(n, a):
-    total_weight = sum(a)
-    target = total_weight // 3
-    dp = [[[False] * (target + 1) for _ in range(target + 1)] for _ in range(n + 1)]
-    dp[0][0][0] = True
-
-    for i in range(1, n + 1):
-        for j in range(target + 1):
-            for k in range(target + 1):
-                if dp[i - 1][j][k]:
-                    dp[i][j][k] = True
-                    if j + a[i - 1] <= target:
-                        dp[i][j + a[i - 1]][k] = True
-                    if k + a[i - 1] <= target:
-                        dp[i][j][k + a[i - 1]] = True
-
-    min_diff = float('inf')
-    for j in range(target + 1):
-        for k in range(target + 1):
-            if dp[n][j][k]:
-                l = total_weight - j - k
-                current_diff = max(j, k, l) - min(j, k, l)
-                if current_diff < min_diff:
-                    min_diff = current_diff
-
-    return min_diff
-
-n = int(input())
-a = [int(i) for i in input().split()]
-print(min_difference(n, a))
+def find_max_non_redundant_coalition(n, seats):
+    total_seats = sum(seats)
+    majority = (total_seats // 2) + 1  # Số ghế cần thiết để quá bán
+    
+    # DP lưu tổng số ghế lớn nhất có thể đạt được với tập hợp đảng
+    dp = [-1] * (total_seats + 1)
+    dp[0] = 0  # Khởi tạo trạng thái cơ bản
+    
+    # Truy vết backtracking
+    from_index = [-1] * (total_seats + 1)
+    used = [-1] * (total_seats + 1)
+    
+    for i in range(n):
+        a = seats[i]
+        for j in range(total_seats, a - 1, -1):
+            if dp[j - a] != -1 and dp[j] < dp[j - a] + a:
+                dp[j] = dp[j - a] + a
+                from_index[j] = j - a
+                used[j] = i
+    
+    # Tìm giá trị lớn nhất không dư
+    best_sum = -1
+    for s in range(majority, total_seats + 1):
+        if dp[s] >= majority:
+            best_sum = s
+    
+    # Tái tạo tập hợp liên minh
+    coalition = set()
+    while best_sum > 0:
+        coalition.add(used[best_sum] + 1)
+        best_sum = from_index[best_sum]
+    
+    # Xuất kết quả
+    print(len(coalition))
+    print(" ".join(map(str, sorted(coalition))))
+    
+# Đọc input
+n = int(input().strip())
+seats = list(map(int, input().strip().split()))
+find_max_non_redundant_coalition(n, seats)

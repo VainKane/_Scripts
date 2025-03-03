@@ -2,25 +2,15 @@
 
 using namespace std;
 
+int const M = 1e6 + 10;
+
 int n;
-int a[(int)1e6 + 10];
-
-int GCD(int a, int b)
-{
-    int r = a % b;
-    if (r == 0) return b;
-
-    while (r)
-    {
-        r = a % b;
-        a = b;
-        b = r;
-    }
-
-    return a;
-}
+pair<int, int> a[M];
+int b[M];
 
 pair<int, int> res;
+
+int p[M];
 
 int main()
 {
@@ -28,50 +18,17 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> n;
-    for (int i = 1; i <= n; i++) cin >> a[i];
-
-    // if (n <= 20)
-    // {
-    //     for (int i = 1; i <= n; i++)
-    //     {
-    //         for (int j = i + 1; j <= n; j++)
-    //         {
-    //             int u = GCD(a[i], a[j]);
-    //             if (u > ma)
-    //             {
-    //                 ma = u;
-    //                 res = make_pair(min(i, j), max(i, j));
-    //             }
-    //         }
-    //     }
-    // }
-    // else
-    // {
-
-    // }
-    for (int i = 1; i <= 50; i++)
+    for (int i = 1; i <= n; i++) 
     {
-        int cnt = 1;
-        int p[3];
-
-        for (int j = 1; j <= n; j++)
-        {
-            if (a[j] % i == 0)
-            {
-                p[cnt] = j;
-                cnt++;
-            }
-            if (cnt == 3) break;
-        }
-
-        if (cnt == 3)
-        {
-            res.first = p[1];
-            res.second = p[2];
-        }
+        cin >> a[i].first;
+        a[i].second = i;
+        b[i] = a[i].first;
     }
 
-    cout << res.first << ' ' << res.second;
+    sort(a + 1, a + n + 1);
+    sort(b + 1, b + n + 1);
+
+    
 
     return 0;    
 }

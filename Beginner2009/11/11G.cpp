@@ -2,11 +2,13 @@
 
 using namespace std;
 
+int const N = 5009;
+
 int n;
 
-int a[3009];
-int b[3009];
-int dp[3009][3000 * 6 + 10];
+int a[N];
+int b[N];
+int dp[N][N * 6];
 
 int s = 0;
 int sum = 0;
@@ -37,34 +39,32 @@ int main()
     {
         for (int j = 0; j <= s; j++)
         {
-            if (j >= a[i] && dp[i - 1][j - a[i]] != -1)
-            {
-                dp[i][j] = dp[i - 1][j - a[i]];
-            }
-            if (j >= b[i] && dp[i - 1][j - b[i]] != -1)
-            {
-                dp[i][j] = dp[i - 1][j - b[i]] + 1;
-            }
             if (j >= a[i] && j >= b[i] && dp[i - 1][j - a[i]] != -1 && dp[i - 1][j - b[i]] != -1)
             {
                 dp[i][j] = min(dp[i - 1][j - a[i]], dp[i - 1][j - b[i]] + 1);
+                continue;
+            }
+            else if (j >= a[i] && dp[i - 1][j - a[i]] != -1)
+            {
+                dp[i][j] = dp[i - 1][j - a[i]];
+            }
+            else if (j >= b[i] && dp[i - 1][j - b[i]] != -1)
+            {
+                dp[i][j] = dp[i - 1][j - b[i]] + 1;
             }
         }
     }
 
     int k;
 
-    for (int j = s; j >= 1; j--)
+    for (int j = sum; j >= 1; j--) 
     {
-        if (dp[n][j] != -1)
+        if (dp[n][j] != -1) 
         {
-            if (res > abs(j - (sum - j)))
+            int d = abs(j - (sum - j));
+            if (d < res || (d == res && dp[n][j] < dp[n][k])) 
             {
-                k = j;
-                res = abs(j - (sum - j));
-            }
-            else if (res == abs(j - (sum - j)) && dp[n][j] < dp[n][k])
-            {
+                res = d;
                 k = j;
             }
         }
@@ -72,27 +72,25 @@ int main()
 
     for (int i = n; i >= 1; i--)
     {
-        if (k < 0) break;
-        if (k >= b[i] && dp[i - 1][k - b[i]] != -1)
+        if (k >= a[i] && k >= b[i] && dp[i - 1][k - a[i]] != -1 && dp[i - 1][k - b[i]] != -1)
         {
-            if (dp[i - 1][k - a[i]] == -1 || dp[i - 1][k - b[i]] < dp[i - 1][k - a[i]])
+            if (dp[i - 1][k - b[i]] + 1 < dp[i - 1][k - a[i]])
             {
                 mark.push_back(i);
                 k -= b[i];
             }
-            else if (dp[i - 1][k - a[i]] != -1) k -= a[i];
+            else k -= a[i];
         }
-        else if (dp[i - 1][k - a[i]] != -1) k -= a[i];
-    }
-
-    for (int i = 1; i <= n; i++)
-    {
-        for (int j = 1; j <= s; j++)
+        else if (k >= a[i] && dp[i - 1][k - a[i]] != -1)
         {
-            cout << dp[i][j] << ' ';
+            k -= a[i];
         }
-
-        cout << '\n';
+        else if (k >= b[i] && dp[i - 1][k - b[i]] != -1)
+        {
+            mark.push_back(i);
+            k -= b[i];
+        }
+        else break;
     }
     
     cout << res << '\n';    
