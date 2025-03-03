@@ -27,20 +27,7 @@ int main()
     {
         for (int j = 2; j <= k; j++)
         {
-            dp[i][j] = INT_MAX;
-            
-            for (int p = 1; p <= min(j - 1, i - 1); p++)
-            {
-                long double avg = (long double)(pre[i] - pre[p]) / (i - p);
-                long double var = 0;
-                
-                for (int u = p + 1; u <= i; u++)
-                {
-                    var += ((long double)a[u] - avg) * ((long double)a[u] - avg);
-                }
-
-                dp[i][j] = min(dp[i][j], dp[i][p] + var / (i - p));
-            }
+                        
         }
     }
 

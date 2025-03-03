@@ -54,7 +54,7 @@ int main()
 
     int k;
 
-    for (int j = 1; j <= s; j++)
+    for (int j = s; j >= 1; j--)
     {
         if (dp[n][j] != -1)
         {
@@ -63,12 +63,16 @@ int main()
                 k = j;
                 res = abs(j - (sum - j));
             }
+            else if (res == abs(j - (sum - j)) && dp[n][j] < dp[n][k])
+            {
+                k = j;
+            }
         }
     }
 
     for (int i = n; i >= 1; i--)
     {
-        if (k < a[i] && k < b[i]) break;
+        if (k < 0) break;
         if (k >= b[i] && dp[i - 1][k - b[i]] != -1)
         {
             if (dp[i - 1][k - a[i]] == -1 || dp[i - 1][k - b[i]] < dp[i - 1][k - a[i]])
@@ -79,6 +83,16 @@ int main()
             else if (dp[i - 1][k - a[i]] != -1) k -= a[i];
         }
         else if (dp[i - 1][k - a[i]] != -1) k -= a[i];
+    }
+
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= s; j++)
+        {
+            cout << dp[i][j] << ' ';
+        }
+
+        cout << '\n';
     }
     
     cout << res << '\n';    

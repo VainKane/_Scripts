@@ -3,13 +3,13 @@
 using namespace std;
 
 int const M = 1e6 + 10;
-
 string s;
-long long res = 0;
 
 int cntLower[M];
 int cntUpper[M];
 int cntNum[M];
+
+long long res = 0;
 
 bool Check(int l, int r)
 {
@@ -38,20 +38,28 @@ int main()
         if (s[i] >= '0' && s[i] <= '9') cntNum[i]++;
     }
 
-    int l = 0;
-    int r = 7;
+    int l = 0; 
+    int r = s.length() - 1;
 
-    while (l <= r && r < s.length() && l < s.length())
+    for (int i = 0; i <= s.length(); i++)
     {
-        if (Check(l, r))
+        int l = i + 7;
+        int r = s.length() - 1;
+
+        int k = s.length();
+
+        while (l <= r)
         {
-            res += 1ll * s.length() - r;
-            l++;
+            int mid = (l + r) / 2;
+            if (Check(i, mid))
+            {
+                k = mid;
+                r = mid - 1;
+            }
+            else l = mid + 1;
         }
-        else
-        {
-            r++;
-        }
+
+        res += s.length() - k;
     }
 
     cout << res;
