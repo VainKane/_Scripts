@@ -13,13 +13,15 @@ pair<int, int> b[109][109];
 deque<int> mark;
 int lastPos;
 
+// code 60 diem
+
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
     // freopen("12B.inp", "r", stdin);
-    // freopen("12B.out", "w", stdout);
+    // freopen("12B.ans", "w", stdout);
 
     cin >> f >> v;
 
@@ -31,14 +33,7 @@ int main()
         }
     }
 
-    memset(dp, -0x3f, sizeof dp);
-
-    int ma = INT_MIN;
-    for (int j = 1; j <= v - f + 1; j++)
-    {
-        if (ma < a[1][j]) ma = a[1][j];
-        dp[1][j] = ma;
-    }
+    for (int j = 1; j <= v; j++) dp[1][j] = a[1][j];
 
     for (int i = 2; i <= f; i++)
     {
@@ -70,16 +65,6 @@ int main()
         pos = b[pos.first][pos.second];
     }
     mark.push_back(lastPos);
-
-    // cout << '\n';
-    // for (int i = 1; i <= f; i++)
-    // {
-    //     for (int j = 1; j <= v; j++)
-    //     {
-    //         cout << dp[i][j] << ' ';
-    //     }
-    //     cout << '\n';
-    // }
 
     cout << dp[f][v] << '\n';
     for (auto val : mark) cout << val << ' ';

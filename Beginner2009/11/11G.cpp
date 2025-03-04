@@ -23,6 +23,9 @@ int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
+
+    // freopen("11G.inp", "r", stdin);
+    // freopen("11G.out", "w", stdout);
     
     cin >> n;
 
@@ -36,9 +39,12 @@ int main()
     }
 
     dp[1][a[1]] = 0;
-    dp[1][b[1]] = 1;
 
-    mark[1][b[1]] = true;
+    if (a[1] != b[1])
+    {
+        dp[1][b[1]] = 1;
+        mark[1][b[1]] = true;
+    }
 
     for (int i = 2; i <= n; i++)
     {
@@ -122,14 +128,14 @@ int main()
     //     cout << '\n';
     // }
 
-    for (int i = 1; i <= n; i++)
-    {
-        for (int j = 1; j <= k; j++)
-        {
-            cout << mark[i][j] << ' ';
-        }
-        cout << '\n';
-    }
+    // for (int i = 1; i <= n; i++)
+    // {
+    //     for (int j = 1; j <= k; j++)
+    //     {
+    //         cout << mark[i][j] << ' ';
+    //     }
+    //     cout << '\n';
+    // }
     
     cout << res << '\n';;    
     cout << m.size() << '\n';
