@@ -9,6 +9,7 @@ int a[109][109];
 int dp[109][109];
 
 int res = INT_MAX;
+deque<int> mark;
 
 int main()
 {
@@ -28,33 +29,36 @@ int main()
         dp[i][1] = a[i][1];
     }
 
-    dp[1][0] = 0;
-    for (int j = 1; j <= n; j++)
+
+    for (int j = 2; j <= n; j++)
     {
-        dp[1][j] = dp[1][j - 1] + a[1][j];
+        for (int i = 1; i <= m; i++)
+        {
+            dp[i][j] = min({dp[i - 1][j - 1], dp[i][j - 1], dp[i + 1][j - 1]}) + a[i][j];
+        }
+    }      
+
+    int k;
+    for (int i = 0; i <= m + 1; i++)
+    {
+        if (res > dp[i][n])
+        {
+            res = dp[i][n];
+            k = i;
+        }
     }
 
-    for (int i = 2; i <= m; i++)
+    for (int j = n; j >= 1; j--)
     {
-        for (int j = 2; j <= n; j++)
-        {
-            if (i != 1 || j != 1)
-            {
-                dp[i][j] = min({dp[i - 1][j - 1], dp[i][j - 1], dp[i + 1][j - 1]}) + a[i][j];
-            }
-        }
-    }    
-
-    for (int i = 1; i <= m; i++)
-    {
-        for (int j = 1; j <= n; j++)
-        {
-            cout << dp[i][j] << ' ';
-        }
-        cout << '\n';
+        mark.push_front(k);
+        int mi = min({dp[k - 1][j - 1], dp[k][j - 1], dp[k + 1][j - 1]});
+        
+        if (mi == dp[k - 1][j - 1]) k -= 1;
+        else if (mi == dp[k + 1][j - 1]) k += 1;
     }
 
-    cout << res;
+    cout << res << '\n';
+    for (auto val : mark) cout << val << ' ';
 
     return 0;
 }

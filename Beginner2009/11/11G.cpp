@@ -2,7 +2,7 @@
 
 using namespace std;
 
-int const N = 5009;
+int const N = 3009;
 
 int n;
 
@@ -14,7 +14,10 @@ int s = 0;
 int sum = 0;
 
 int res = INT_MAX;
-vector<int> mark;
+pair<int, int> c[N][N * 6];
+bool mark[N][N * 6];
+
+vector<int> m;
 
 int main()
 {
@@ -35,22 +38,45 @@ int main()
     dp[1][a[1]] = 0;
     dp[1][b[1]] = 1;
 
+    mark[1][b[1]] = true;
+
     for (int i = 2; i <= n; i++)
     {
         for (int j = 0; j <= s; j++)
         {
             if (j >= a[i] && j >= b[i] && dp[i - 1][j - a[i]] != -1 && dp[i - 1][j - b[i]] != -1)
             {
-                dp[i][j] = min(dp[i - 1][j - a[i]], dp[i - 1][j - b[i]] + 1);
+                if (dp[i - 1][j - b[i]] + 1 < dp[i - 1][j - a[i]])
+                {
+                    c[i][j].first = i - 1;
+                    c[i][j].second = j - b[i];
+                    mark[i][j] = true;
+
+                    dp[i][j] = dp[i - 1][j - b[i]] + 1;
+                }
+                else
+                {
+                    c[i][j].first = i - 1;
+                    c[i][j].second = j - a[i];
+
+                    dp[i][j] = dp[i - 1][j - a[i]];
+                }
                 continue;
             }
             else if (j >= a[i] && dp[i - 1][j - a[i]] != -1)
             {
                 dp[i][j] = dp[i - 1][j - a[i]];
+
+                c[i][j].first = i - 1;
+                c[i][j].second = j - a[i];
             }
             else if (j >= b[i] && dp[i - 1][j - b[i]] != -1)
             {
                 dp[i][j] = dp[i - 1][j - b[i]] + 1;
+
+                c[i][j].first = i - 1;
+                c[i][j].second = j - b[i];
+                mark[i][j] = true;
             }
         }
     }
@@ -70,32 +96,44 @@ int main()
         }
     }
 
-    for (int i = n; i >= 1; i--)
+    pair<int, int> pos = c[n][k];
+
+    while (pos.first != 0 && pos.second != 0)
     {
-        if (k >= a[i] && k >= b[i] && dp[i - 1][k - a[i]] != -1 && dp[i - 1][k - b[i]] != -1)
+        if (mark[pos.first][pos.second]) m.push_back(pos.first);
+        pos = c[pos.first][pos.second];
+    }
+
+    // for (int i = 1; i <= n; i++)
+    // {
+    //     for (int j = 1; j <= k; j++)
+    //     {
+    //         cout << c[i][j].first << ' ' << c[i][j].second << ' ' << mark[i][j] << " | ";
+    //     }
+    //     cout << '\n';
+    // }
+
+    // for (int i = 1; i <= n; i++)
+    // {
+    //     for (int j = 1; j <= k; j++)
+    //     {
+    //         cout << dp[i][j] << ' ';
+    //     }
+    //     cout << '\n';
+    // }
+
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= k; j++)
         {
-            if (dp[i - 1][k - b[i]] + 1 < dp[i - 1][k - a[i]])
-            {
-                mark.push_back(i);
-                k -= b[i];
-            }
-            else k -= a[i];
+            cout << mark[i][j] << ' ';
         }
-        else if (k >= a[i] && dp[i - 1][k - a[i]] != -1)
-        {
-            k -= a[i];
-        }
-        else if (k >= b[i] && dp[i - 1][k - b[i]] != -1)
-        {
-            mark.push_back(i);
-            k -= b[i];
-        }
-        else break;
+        cout << '\n';
     }
     
-    cout << res << '\n';    
-    cout << mark.size() << '\n';
-    for (auto val : mark) cout << val << '\n';
+    cout << res << '\n';;    
+    cout << m.size() << '\n';
+    for (auto val : m) cout << val << '\n';
     
     return 0;
 }
