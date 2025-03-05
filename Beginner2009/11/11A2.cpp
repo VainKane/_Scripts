@@ -5,7 +5,9 @@ using namespace std;
 int n;
 int a[309];
 
-vector<int> res;
+bool dp[309][91000];
+int s1 = 0;
+int s2 = 0;
 
 int main()
 {
@@ -17,25 +19,30 @@ int main()
     for (int i = 1; i <= n; i++)
     {
         cin >> a[i];
+        if (a[i] < 0) s1 += a[i];
+        else s2 += a[i];
+
     }
 
-    res.push_back(0);
+    int d = abs(s1);
+    dp[0][d] = 1;
 
     for (int i = 1; i <= n; i++)
     {
-        unordered_set<int> tmp;
-        tmp.insert(res.begin(), res.end());
-
-        for (auto s : tmp)
+        for (int j = s2; j >= s1; j--)
         {
-            res.push_back(s + a[i]);
+            if (dp[i - 1][j + d])
+            {
+                dp[i][j + d] = 1;     
+                dp[i][j + a[i] + d] = 1;  
+            }
         }
+    }
 
-        sort(res.begin(), res.end());
-        res.erase(unique(res.begin(), res.end()), res.end());
-    }   
-
-    for (auto val : res) cout << val << ' ';
+    for (int j = s1; j <= s2; j++)
+    {
+        if (dp[n][j + d]) cout << j << ' ';
+    }
 
     return 0;
 }

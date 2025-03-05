@@ -3,10 +3,10 @@
 using namespace std;
 
 int n;
-int a[309];
+int a[109];
 
 int s = 0;
-bool dp[309][(int)1e4 + 10];
+bool dp[109][(int)1e4 + 10];
 
 int main()
 {
@@ -39,6 +39,16 @@ int main()
             }
         }
     }
+
+    // for (int i = 1; i <= n; i++)
+    // {
+    //     for (int j = 1; j <= s; j++)
+    //     {
+    //         cout << dp[i][j] << ' ';
+    //     }
+
+    //     cout << '\n';
+    // }
 
     for (int j = 1; j <= s; j++)
     {

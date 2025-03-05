@@ -5,7 +5,7 @@ using namespace std;
 int n;
 int a[40];
 
-int dp[40][40][40];
+int dp[40][649][649];
 
 int s = 0;
 int res = INT_MAX;

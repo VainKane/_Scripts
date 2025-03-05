@@ -1,40 +1,24 @@
-def find_max_non_redundant_coalition(n, seats):
-    total_seats = sum(seats)
-    majority = (total_seats // 2) + 1  # Số ghế cần thiết để quá bán
-    
-    # DP lưu tổng số ghế lớn nhất có thể đạt được với tập hợp đảng
-    dp = [-1] * (total_seats + 1)
-    dp[0] = 0  # Khởi tạo trạng thái cơ bản
-    
-    # Truy vết backtracking
-    from_index = [-1] * (total_seats + 1)
-    used = [-1] * (total_seats + 1)
-    
-    for i in range(n):
-        a = seats[i]
-        for j in range(total_seats, a - 1, -1):
-            if dp[j - a] != -1 and dp[j] < dp[j - a] + a:
-                dp[j] = dp[j - a] + a
-                from_index[j] = j - a
-                used[j] = i
-    
-    # Tìm giá trị lớn nhất không dư
-    best_sum = -1
-    for s in range(majority, total_seats + 1):
-        if dp[s] >= majority:
-            best_sum = s
-    
-    # Tái tạo tập hợp liên minh
-    coalition = set()
-    while best_sum > 0:
-        coalition.add(used[best_sum] + 1)
-        best_sum = from_index[best_sum]
-    
-    # Xuất kết quả
-    print(len(coalition))
-    print(" ".join(map(str, sorted(coalition))))
-    
+def min_insertions_to_palindrome(n, s):
+    s_reverse = s[::-1]  # Chuỗi đảo ngược
+
+    # Khởi tạo bảng DP
+    dp = [[0] * (n + 1) for _ in range(n + 1)]
+
+    # Tính LCS giữa s và s_reverse
+    for i in range(1, n + 1):
+        for j in range(1, n + 1):
+            if s[i - 1] == s_reverse[j - 1]:
+                dp[i][j] = dp[i - 1][j - 1] + 1
+            else:
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
+
+    # Số ký tự cần chèn vào
+    return n - dp[n][n]
+
+
 # Đọc input
 n = int(input().strip())
-seats = list(map(int, input().strip().split()))
-find_max_non_redundant_coalition(n, seats)
+s = input().strip()
+
+# Xuất kết quả
+print(min_insertions_to_palindrome(n, s))

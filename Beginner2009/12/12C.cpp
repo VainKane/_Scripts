@@ -3,9 +3,12 @@
 using namespace std;
 
 int n;
-string s;
+string s1;
+string s2= "";
 
-int res = 5009;
+int res = 0;
+
+int dp[5009][5009];
 
 int main()
 {
@@ -13,31 +16,28 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> n;
-    cin >> s;
+    cin >> s1;
 
-    s = " " + s;
+    for (auto chr : s1) s2 = chr + s2;
+    s1 = " " + s1;
+    s2 = " " + s2;
 
     for (int i = 1; i <= n; i++)
     {
-        int cnt = 0;
-        for (int j = 1; j <= min(i - 1, n - i); j++)
+        for (int j = 1; j <= n; j++)
         {
-            if (s[i - j] == s[i + j]) cnt++;
-        }
-        res = min(res, n - cnt);
-
-        cnt = 0;
-        if (s[i] == s[i - 1])
-        {
-            for (int j = 1; j <= min(i - 2, n - i); j++)
+            if (s1[i] == s2[j])
             {
-                if (s[i - j - 1] != s[i + j])cnt++;
+                dp[i][j] = dp[i - 1][j - 1] + 1;
             }
-            res = min(res, n - 2 - cnt);
+            else
+            {
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+            }
         }
     }
 
-    cout << res;
+    cout << n - dp[n][n];
 
     return 0;
 }
