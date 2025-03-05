@@ -5,7 +5,7 @@ using namespace std;
 int n;
 int a[309];
 
-set<int> res;
+vector<int> res;
 
 int main()
 {
@@ -19,19 +19,23 @@ int main()
         cin >> a[i];
     }
 
-    res.insert(0);
+    res.push_back(0);
 
     for (int i = 1; i <= n; i++)
     {
-        set<int> tmp;
+        unordered_set<int> tmp;
+        tmp.insert(res.begin(), res.end());
 
-        for (auto s : res)
+        for (auto s : tmp)
         {
-            tmp.insert(s + a[i]);
+            res.push_back(s + a[i]);
         }
 
-        res.insert(tmp.begin(), tmp.end());
-    }
+        sort(res.begin(), res.end());
+        res.erase(unique(res.begin(), res.end()), res.end());
+    }   
+
+    for (auto val : res) cout << val << ' ';
 
     return 0;
 }
