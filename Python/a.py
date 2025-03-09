@@ -1,24 +1,55 @@
-def min_insertions_to_palindrome(n, s):
-    s_reverse = s[::-1]  # Chuỗi đảo ngược
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.count = 0
 
-    # Khởi tạo bảng DP
-    dp = [[0] * (n + 1) for _ in range(n + 1)]
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
+        self.BITS = 30  # Vì a[i] ≤ 10^9, nên tối đa 30 bit là đủ
 
-    # Tính LCS giữa s và s_reverse
-    for i in range(1, n + 1):
-        for j in range(1, n + 1):
-            if s[i - 1] == s_reverse[j - 1]:
-                dp[i][j] = dp[i - 1][j - 1] + 1
+    def insert(self, num):
+        node = self.root
+        for i in range(self.BITS, -1, -1):
+            bit = (num >> i) & 1
+            if bit not in node.children:
+                node.children[bit] = TrieNode()
+            node = node.children[bit]
+            node.count += 1
+
+    def count_less_than(self, num, K):
+        node = self.root
+        count = 0
+        for i in range(self.BITS, -1, -1):
+            if not node:
+                break
+            bit_num = (num >> i) & 1
+            bit_K = (K >> i) & 1
+
+            if bit_K == 1:
+                if bit_num in node.children:
+                    count += node.children[bit_num].count
+                node = node.children.get(1 - bit_num, None)
             else:
-                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
+                node = node.children.get(bit_num, None)
+        return count
 
-    # Số ký tự cần chèn vào
-    return n - dp[n][n]
+def count_subarrays(n, K, arr):
+    trie = Trie()
+    trie.insert(0)  # Khởi tạo với prefix = 0
+    prefix = 0
+    result = 0
 
+    for num in arr:
+        prefix ^= num
+        result += trie.count_less_than(prefix, K)
+        trie.insert(prefix)
+
+    return result
 
 # Đọc input
-n = int(input().strip())
-s = input().strip()
+n, K = map(int, input().split())
+arr = list(map(int, input().split()))
 
 # Xuất kết quả
-print(min_insertions_to_palindrome(n, s))
+print(count_subarrays(n, K, arr))

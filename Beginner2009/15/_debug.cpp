@@ -2,10 +2,10 @@
 
 using namespace std;
 
-mt19937_64 rd(time(0));
-
-#define name "12F"
+#define name "15C"
 int const ntest = 1e6;
+
+mt19937_64 rd(time(0));
 
 long long Rand(long long l, long long r)
 {
@@ -13,18 +13,16 @@ long long Rand(long long l, long long r)
 }
 
 void GenTest()
-{   
+{
     ofstream cout(name".inp");
 
-    int n = Rand(1, 50);
-    int s = Rand(1, n);
-
-    cout << n << ' ' << s << '\n';
+    int n = Rand(1, (int)3e5);
+    cout << n << '\n';
 
     for (int i = 1; i <= n; i++)
     {
-        int a = Rand(1, (int)1e6);
-        cout << a << ' ';
+        int a = Rand(1, (int)1e8);
+        cout << a << '\n';
     }
 }
 
@@ -36,11 +34,11 @@ int main()
         system(name".exe");
         system(name"_trau.exe");
 
-        if (system("fc "name".ans "name".out") != 0)
+        if (system("fc "name".out "name".ans") != 0)
         {
-            cout << "Test " << itest << " WRONG!\n";
+            cout << "Test:  " << itest << " WRONG!\n";
             return 0;
         }
-        else cout << "Test " << itest << " CORRECT!\n";
+        cout << "Test: " << itest << " CORRECT!\n";
     }
 }

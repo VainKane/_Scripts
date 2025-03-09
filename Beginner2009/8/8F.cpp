@@ -7,13 +7,7 @@ int w;
 int h;
 
 pair<int, int> a[(int)1e5 + 10];
-
-bool cmp(pair<int, int> a, pair<int, int> b)
-{
-    if (a.second > b.second) return true;
-    else if (a.second == b.second) return a.first < b.first;
-    return false;
-}
+long double const pre = 1e-7;
 
 bool Check(long double k)
 {
@@ -42,7 +36,7 @@ bool Check(long double k)
         }
     }
 
-    return (height + maxh * k <= h);
+    return (height + maxh * k) <= h;
 }
 
 int main()
@@ -66,7 +60,7 @@ int main()
     long double mid;
     long double res = 0;
 
-    while (r - l > 1e-7)
+    while (r - l > pre)
     {
         mid = l + (r - l) / 2;
 
