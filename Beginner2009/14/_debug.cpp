@@ -16,18 +16,46 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int n = Rand(1, (int)3e5);
+    int n = Rand(1, 30000);
+    int q = Rand(1, n);
+
+    string s[n + 3];
+
     cout << n << '\n';
-    int cnt = 0;
     for (int i = 1; i <= n; i++)
     {
-        int type = 1;
-        if (i != 1) type = Rand(1, 2);
-        int x = Rand(1, (int)1e9);
-        if (type == 2) x = Rand(1, cnt);
-        else cnt++;
+        int l = Rand(1, 30);
+        s[i] = "";
+        for (int j = 1; j <= l; j++)
+        {
+            int a = Rand('a', 'z');
+            cout << (char)a;
+            s[i] += (char)a;
+        }
+        cout << '\n';
+    }
 
-        cout << type << ' ' << x << '\n';
+    cout << q << '\n';
+
+    for (int i = 1; i <= q; i++)
+    {
+        int type = Rand(1, 3);
+
+        if (type == 1)
+        {
+            int k = Rand(1, n);
+            cout << s[k] << '\n';
+        }
+        else
+        {
+            int l = Rand(1, 30);
+            for (int j = 1; j <= l; j++)
+            {
+                int a = Rand('a', 'z');
+                cout << (char)a;
+            }
+            cout << '\n';
+        }
     }
 }
 
