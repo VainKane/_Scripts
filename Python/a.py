@@ -1,55 +1,49 @@
+MOD = 1000000007
+
 class TrieNode:
     def __init__(self):
         self.children = {}
-        self.count = 0
+        self.is_end = False
 
 class Trie:
     def __init__(self):
         self.root = TrieNode()
-        self.BITS = 30  # Vì a[i] ≤ 10^9, nên tối đa 30 bit là đủ
-
-    def insert(self, num):
+    
+    def insert(self, word):
         node = self.root
-        for i in range(self.BITS, -1, -1):
-            bit = (num >> i) & 1
-            if bit not in node.children:
-                node.children[bit] = TrieNode()
-            node = node.children[bit]
-            node.count += 1
+        for char in word:
+            if char not in node.children:
+                node.children[char] = TrieNode()
+            node = node.children[char]
+        node.is_end = True
 
-    def count_less_than(self, num, K):
+    def search_prefix(self, text, start, dp):
         node = self.root
-        count = 0
-        for i in range(self.BITS, -1, -1):
-            if not node:
-                break
-            bit_num = (num >> i) & 1
-            bit_K = (K >> i) & 1
+        for i in range(start, len(text)):
+            if text[i] not in node.children:
+                return
+            node = node.children[text[i]]
+            if node.is_end:
+                dp[i + 1] = (dp[i + 1] + dp[start]) % MOD
 
-            if bit_K == 1:
-                if bit_num in node.children:
-                    count += node.children[bit_num].count
-                node = node.children.get(1 - bit_num, None)
-            else:
-                node = node.children.get(bit_num, None)
-        return count
-
-def count_subarrays(n, K, arr):
+def count_ways(n, S, X):
     trie = Trie()
-    trie.insert(0)  # Khởi tạo với prefix = 0
-    prefix = 0
-    result = 0
+    for word in S:
+        trie.insert(word)
+    
+    dp = [0] * (len(X) + 1)
+    dp[0] = 1
+    
+    for i in range(len(X)):
+        if dp[i] > 0:
+            trie.search_prefix(X, i, dp)
 
-    for num in arr:
-        prefix ^= num
-        result += trie.count_less_than(prefix, K)
-        trie.insert(prefix)
-
-    return result
+    return dp[len(X)]
 
 # Đọc input
-n, K = map(int, input().split())
-arr = list(map(int, input().split()))
+n = int(input().strip())
+S = [input().strip() for _ in range(n)]
+X = input().strip()
 
 # Xuất kết quả
-print(count_subarrays(n, K, arr))
+print(count_ways(n, S, X))
