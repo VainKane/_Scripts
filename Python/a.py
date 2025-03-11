@@ -1,4 +1,5 @@
-MOD = 1000000007
+import sys
+from collections import defaultdict, Counter
 
 class TrieNode:
     def __init__(self):
@@ -8,7 +9,7 @@ class TrieNode:
 class Trie:
     def __init__(self):
         self.root = TrieNode()
-    
+
     def insert(self, word):
         node = self.root
         for char in word:
@@ -17,33 +18,44 @@ class Trie:
             node = node.children[char]
         node.is_end = True
 
-    def search_prefix(self, text, start, dp):
-        node = self.root
-        for i in range(start, len(text)):
-            if text[i] not in node.children:
-                return
-            node = node.children[text[i]]
+    def search_best_word(self, letters):
+        letter_count = Counter(letters)
+        best_word = "IMPOSSIBLE"
+        
+        def dfs(node, current_word):
+            nonlocal best_word
+            
             if node.is_end:
-                dp[i + 1] = (dp[i + 1] + dp[start]) % MOD
-
-def count_ways(n, S, X):
-    trie = Trie()
-    for word in S:
-        trie.insert(word)
-    
-    dp = [0] * (len(X) + 1)
-    dp[0] = 1
-    
-    for i in range(len(X)):
-        if dp[i] > 0:
-            trie.search_prefix(X, i, dp)
-
-    return dp[len(X)]
+                if (len(current_word) > len(best_word) or 
+                    (len(current_word) == len(best_word) and current_word < best_word)):
+                    best_word = current_word
+            
+            for char, child in node.children.items():
+                if letter_count[char] > 0:
+                    letter_count[char] -= 1
+                    dfs(child, current_word + char)
+                    letter_count[char] += 1
+        
+        dfs(self.root, "")
+        return best_word
 
 # Đọc input
-n = int(input().strip())
-S = [input().strip() for _ in range(n)]
-X = input().strip()
+def main():
+    n = int(input().strip())
+    trie = Trie()
+    
+    for _ in range(n):
+        trie.insert(input().strip())
+    
+    t = int(input().strip())
+    results = []
+    
+    for _ in range(t):
+        letters = input().strip()
+        results.append(trie.search_best_word(letters))
+    
+    # Xuất kết quả ra màn hình
+    print("\n".join(results))
 
-# Xuất kết quả
-print(count_ways(n, S, X))
+if __name__ == "__main__":
+    main()
