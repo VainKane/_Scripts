@@ -26,20 +26,20 @@ void GenTest()
         for (int j = 1; j <= l; j++)
         {
             int a = Rand('a', 'z');
-            cout << a;
+            cout << (char)a;
         }
         cout << '\n';
     }
 
-    int t = Rand(1, (int)3e4);
+    int t = Rand(1, (int)1e5);
     cout << t << '\n';
     for (int i = 1; i <= t; i++)
     {
-        int l = Rand(1, 10);
+        int l = Rand(1, 5);
         for (int j = 1; j <= l; j++)
         {
             int a = Rand('a', 'z');
-            cout << a;
+            cout << (char)a;
         }
         cout << '\n';
     }

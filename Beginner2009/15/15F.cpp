@@ -4,8 +4,7 @@ using namespace std;
 
 int const N = 1e5 + 10;
 
-int child[N][30];
-bool isEnd[N];
+int child[N * 10][30];
 int cnt = 1;
 
 int n;
@@ -21,8 +20,7 @@ int k;
 int u;
 
 string res;
-int pre[15];
-string dict[N];
+string dict[N * 10];
 
 //
 
@@ -37,8 +35,8 @@ void Add(string &s)
         if (!child[u][k]) child[u][k] = ++cnt;
         u = child[u][k];
     }
-    isEnd[u] = true;
-    dict[u] = str;
+    if (dict[u] == "") dict[u] = str;
+    else if (dict[u] > str) dict[u] = str;
 }
 
 void Try(int pos)
@@ -49,13 +47,14 @@ void Try(int pos)
         {
             res = dict[u];
         }
-        else if (res.size() == dict[u].size())
+        if (res.size() == dict[u].size() && res > dict[u])
         {
-            res = min(res, dict[u]);
+            res = dict[u];
         }
         return;
     }
 
+    int pre = u;
     for (int i = x[pos - 1] + 1; i <= m - k + pos; i++)
     {
         x[pos] = i;
@@ -63,13 +62,11 @@ void Try(int pos)
         int p = str[x[pos]] - 'a';
         if (child[u][p]) 
         {
-            pre[pos] = u;
             u = child[u][p];
         }
-        else continue;
-        
+
         Try(pos + 1);
-        u = pre[pos - 1];
+        u = pre;
     }
 }
 
@@ -78,8 +75,8 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    freopen("15F.inp", "r", stdin);
-    freopen("15F.out", "w", stdout);
+    // freopen("15F.inp", "r", stdin);
+    // freopen("15F.out", "w", stdout);
 
     cin >> n;
 
@@ -108,7 +105,7 @@ int main()
             k++;
         }
 
-        if (res == "") res = "IMPOSSIPLE";
+        if (res == "") res = "IMPOSSIBLE";
 
         cout << res << '\n';
     }
