@@ -59,6 +59,9 @@ private:
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(0);
+
+    freopen("15F.inp", "r", stdin);
+    freopen("15F.ans", "w", stdout);
     
     int n, t;
     cin >> n;

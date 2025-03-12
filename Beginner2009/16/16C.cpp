@@ -43,10 +43,8 @@ int main()
             for (int j = 1; j + (1 << p) - 1 <= n; j++)
             {
                 st[i][j][p] = min(st[i][j][p - 1], st[i][j + (1 << (p - 1))][p - 1]);
-                cout << st[i][j][p] << ' ';
             }
         }
-        cout << '\n';
     }
 
     cin >> q;
@@ -60,7 +58,7 @@ int main()
         for (int i = x1; i <= x2; i++)
         {
             int k = lg[y2 - y1 + 1];
-            res = min({res, st[1][y1][k], st[i][y2 - (1 << k) + 1][k]});
+            res = min({res, st[i][y1][k], st[i][y2 - (1 << k) + 1][k]});
         }
 
         cout << res << '\n';
