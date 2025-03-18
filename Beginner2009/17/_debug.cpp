@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#define name "16E"
+#define name "17E"
 int const ntest = 1e6;
 
 mt19937_64 rd(time(0));
@@ -16,17 +16,22 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int n = Rand(1, (int)20);
-    int k = Rand(1, (int)10);
-    cout << n << ' ' << k << '\n';
+    int n = Rand(3, 1000);
+    int m = Rand(3, 1000);
+    int a = Rand(2, m);
+    int b = Rand(2, n);
+    cout << m << ' ' << n << '\n';
 
-    for (int i = 1; i <= k; i++)
+    for (int i = 1; i <= m; i++)
     {
-        int l = Rand(1, k);
-        int r = Rand(1, n);
-
-        cout << l << ' ' << r << '\n';
+        for (int j = 1; j <= n; j++)
+        {
+            int t = Rand('a', 'z');
+            cout << (char)t;
+        }
+        cout << '\n';
     }
+    cout << a << ' ' << b;
 }
 
 int main()
@@ -37,7 +42,7 @@ int main()
         system(name".exe");
         system(name"_trau.exe");
 
-        if (system("fc "name".ans "name".out") != 0)
+        if (system("fc "name".out "name".ans") != 0)
         {
             cout << "Test: " << itest << " WRONG!\n";
             return 0;

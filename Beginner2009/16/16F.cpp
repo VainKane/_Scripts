@@ -20,7 +20,6 @@ int par[N];
 int up[N][maxLog];
 int cnt = 0;
 int ind = 0;
-int cntP = 0;
 
 int n;
 
@@ -38,18 +37,15 @@ void Type(char &ch)
     }
 }
 
-void Undo(char &k)
+void Undo(int &k)
 {
-    k -= '0';
     pos[ind] = pos[ind - 1 - k];
 }
 
-char Get(char x, int ind)
+char Get(int &x, int ind)
 {
     ind = pos[ind];
-
-    int u = node[ind].depth;
-    int k = node[ind].depth - (x - '0') - 1;
+    int k = node[ind].depth - x - 1;
 
     for (int i = 0; i <= maxLog; i++)
     {
@@ -70,28 +66,35 @@ int main()
     cin >> n;
     for (int i = 1; i <= n; i++)
     {
-        char type, x;
-        cin >> type >> x;
+        char type;
+        cin >> type;
 
         up[i][0] = par[i];
 
-        ind++;
+        if (type == 'T') 
+        {
+            char x;
+            cin >> x;
 
-        if (type == 'T') Type(x);
-        else if (type == 'U') Undo(x);
+            ind++;
+            Type(x);
+        }
+        else if (type == 'U') 
+        {
+            int k;
+            cin >> k;
+
+            ind++;
+            Undo(k);
+        }
         else
         {
-            ind--;
-            cntP++;
-            cout << Get(x, i - cntP) << '\n';
-        }
-        
-    }
+            int k;
+            cin >> k;
 
-    // for (int i = 1; i <= n; i++) 
-    // {
-    //     cout << i << ' ' << pos[i] << '\n';
-    // }
+            cout << Get(k, ind) << '\n';
+        }
+    }
 
     return 0;
 }
