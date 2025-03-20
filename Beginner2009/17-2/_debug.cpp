@@ -22,16 +22,17 @@ void GenTest()
 
     for (int i = 1; i <= n; i++)
     {
-        int a = Rand(1, 10);
+        long long a = Rand(1, 1e18);
         cout << a << ' ';
     }
     cout << '\n';
     for (int i = 1; i <= m; i++)
     {
+        long long t = Rand(1, 1e18);
         int l = Rand(1, n);
         int r = Rand(l, n);
 
-        cout << l << ' ' << r << '\n';
+        cout << t << ' ' << l << ' ' << r << '\n';
     }
 }
 
@@ -40,10 +41,10 @@ int main()
     for (int itest = 1; itest <= ntest; itest++)
     {
         GenTest();
-        system(name".exe");
-        system(name"_trau.exe");
+        system("./" name);
+        system("./" name "_trau");
 
-        if (system("fc "name".ans "name".out") != 0)
+        if (system("diff " name ".ans " name ".out") != 0)
         {
             cout << "Test: " << itest << " WRONG!\n";
             return 0;

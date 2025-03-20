@@ -34,10 +34,10 @@ int main()
     for (int itest = 1; itest <= ntest; itest++)
     {
         GenTest();
-        system(name".exe");
-        system(name"_trau.exe");
+        system("./"name);
+        system("./"name"_trau");
 
-        if (system("fc "name".ans "name".out") != 0)
+        if (system("diff "name".ans "name".out") != 0)
         {
             cout << "Test: " << itest << " WRONG!\n";
             return 0;

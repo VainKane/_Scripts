@@ -2,7 +2,7 @@
 
 using namespace std;
 
-int const N = 1e2;
+int const N = 1e6;
 int const maxLog = 20;
 
 struct Rope
@@ -25,8 +25,8 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    freopen("16E.inp", "r", stdin);
-    freopen("16E.out", "w", stdout);
+    // freopen("16E.inp", "r", stdin);
+    // freopen("16E.out", "w", stdout);
 
     cin >> n >> k;
 

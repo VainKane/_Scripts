@@ -2,8 +2,6 @@
 
 using namespace std;
 
-#define max(a, b) ((a) > (b) ? (a) : (b))
-
 int const N = 1e6 + 10;
 
 struct Rope
@@ -25,8 +23,8 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    freopen("16E.inp", "r", stdin);
-    freopen("16E.ans", "w", stdout);
+    // freopen("16E.inp", "r", stdin);
+    // freopen("16E.ans", "w", stdout);
 
     cin >> n >> k;
     for (int i = 1; i <= k; i++)
