@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#define name "17-2A"
+#define name "17-2B"
 int const ntest = 1e6;
 
 mt19937_64 rd(time(0));
@@ -17,7 +17,8 @@ void GenTest()
     ofstream cout(name".inp");
 
     int n = Rand(1, (int)20);
-    cout << n << '\n';
+    int m = Rand(1, (int)20);
+    cout << n << ' ' << m <<'\n';
 
     for (int i = 1; i <= n; i++)
     {
@@ -25,10 +26,12 @@ void GenTest()
         cout << a << ' ';
     }
     cout << '\n';
-    for (int i = 1; i <= n; i++)
+    for (int i = 1; i <= m; i++)
     {
-        int a = Rand(1, 10);
-        cout << a << ' ';
+        int l = Rand(1, n);
+        int r = Rand(l, n);
+
+        cout << l << ' ' << r << '\n';
     }
 }
 

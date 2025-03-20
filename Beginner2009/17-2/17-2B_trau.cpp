@@ -7,7 +7,7 @@ int const N = 2e5 + 10;
 int n;
 int m;
 
-int a[N];
+long long a[N];
 
 int main()
 {
@@ -24,7 +24,12 @@ int main()
 
         cin >> t >> l >> r;
 
-        
+        for (int i = l; i <= r; i++)
+        {
+            t %= a[i];
+        }
+
+        cout << t << '\n';
     }
 
     return 0;
