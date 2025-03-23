@@ -6,33 +6,16 @@ int const N = 1e5 + 10;
 
 int n;
 int m;
-int s;
-int t;
 
 vector<int> adj[N];
 int trace[N];
-bool visisted[N];
 
-vector<int> res;
+int res = 0;
 
-void DFS(int u)
-{
-    visisted[u] = true;
-
-    for (auto v : adj[u])
-    {
-        if (!visisted[v])
-        {
-            trace[v] = u;
-            DFS(v);
-        }
-    }
-}
-
-void BFS(int s)
+void BFS(int start)
 {
     queue<int> q;
-    q.push(s);
+    q.push(start);
 
     while (!q.empty())
     {
@@ -50,13 +33,24 @@ void BFS(int s)
     }
 }
 
+void DFS(int u)
+{
+    for (auto v : adj[u])
+    {
+        if (!trace[v])
+        {
+            trace[v] = u;
+            DFS(v);
+        }
+    }
+}
+
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    cin >> n >> m >> s >> t;
-
+    cin >> n >> m;
     for (int i = 1; i <= m; i++)
     {
         int u, v;
@@ -66,26 +60,16 @@ int main()
         adj[v].push_back(u);
     }
 
-    BFS(s);
-    int pos = t;
-    while (pos != s && pos != 0)
+    for (int i = 1; i <= n; i++)
     {
-        res.push_back(pos);
-        pos = trace[pos];
-    }
-    res.push_back(s);
-
-    if (!trace[t])
-    {
-        cout << -1;
-        return 0;
+        if (!trace[i])
+        {
+            DFS(i);
+            res++;
+        }
     }
 
-    cout << res.size() << '\n';
-    for (int i = res.size() - 1; i >= 0; i--)
-    {
-        cout << res[i] << ' ';
-    }
+    cout << res;
 
     return 0;
 }

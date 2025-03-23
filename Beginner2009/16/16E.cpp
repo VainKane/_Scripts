@@ -5,18 +5,11 @@ using namespace std;
 int const N = 1e6;
 int const maxLog = 20;
 
-struct Rope
-{
-    int l = 0;
-    int r = 0;
-};
-
 int n;
 int k;
-Rope a[N + 5];
 
 int p[2 * N + 2];
-int st[2 * N + 5][maxLog + 5];
+int st[2 * N + 3][maxLog + 3];
 
 int res = 1e7;
 
@@ -32,28 +25,31 @@ int main()
 
     for (int i = 1; i <= k; i++)
     {
-        cin >> a[i].l >> a[i].r;
-        if (a[i].l > a[i].r) a[i].r += n;
+        int l, r;
+        cin >> l >> r;
 
-        p[a[i].l] = max(p[a[i].l], a[i].r);
+        if (l > r) r += n;
+
+        p[l] = max(p[l], r);
+        if (l <= r) p[l + n] = max(p[l + n], r + n);
     }
 
     for (int i = 1; i <= 2 * n; i++)
     {
         p[i] = max(p[i], p[i - 1]);
-        st[i][0] = p[i];
+        st[i][0] = p[i] + 1;
     }
 
-    for (int i = 1; i <= 2 * n; i++)
+    for (int j = 1; j <= maxLog; j++)
     {
-        for (int j = 1; (1 << j) <= k; j++)
+        for (int i = 1; i <= 2 * n; i++)
         {
-            st[i][j] = st[st[i][j - 1] + 1][j - 1];
-            if (st[i][j] <= st[i][j - 1]) st[i][j] = 0;
+            st[i][j] = st[st[i][j - 1]][j - 1];
         }
     }
 
-    for (int i = 1; i <= 2 * n; i++)
+
+    for (int i = 1; i <= n; i++)
     {
         int x = i;
         int end = i + n;
@@ -61,38 +57,15 @@ int main()
         
         for (int j = maxLog; j >= 0; j--)
         {
-            if (x >= end)
+            if (st[x][j] < end && st[x][j] > x)
             {
-                res = min(res, cnt);
-                break;
-            }
-            if (st[x][j] != 0)
-            {
-                if (st[x][j] < end)
-                {
-                    x = st[x][j] + 1;
-                    cnt += (1 << j);
-                }
-                else if (st[x][j] >= end)
-                {
-                    res = min(res, cnt + (1 << j));
-                }
+                x = st[x][j];
+                cnt += (1 << j);
             }
         }
 
-        if (x >= end)
-        {
-            res = min(res, cnt);
-        }
+        if (st[x][0] >= end) res = min(res, cnt + 1);
     }
-
-    // for (int i = 1; i <= 2 * n; i++)
-    // {
-    //     for (int j = 0; (1 << j) <= k; j++)
-    //     {
-    //         cout << i << ' ' << j << ' ' << st[i][j] << '\n';
-    //     }
-    // }
 
     if (res == 1e7)
     {

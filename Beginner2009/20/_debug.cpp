@@ -2,8 +2,8 @@
 
 using namespace std;
 
-#define name "16E"
-int const ntest = 1e6;
+#define name "20C"
+int const ntest = 1e4;
 
 mt19937_64 rd(time(0));
 
@@ -16,16 +16,24 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int n = Rand(1, (int)20);
-    int k = Rand(1, (int)10);
-    cout << n << ' ' << k << '\n';
+    int n = Rand(1, 18);
+    int m = Rand(1, 18);
 
-    for (int i = 1; i <= k; i++)
+    cout << n << ' ' << m << '\n';
+
+    for (int i = 1; i <= n; i++)
     {
-        int l = Rand(1, n);
-        int r = Rand(1, n);
+        int a = Rand(1, 100);
+        cout << a << ' ';
+    }
+    cout << '\n';
+    for (int i = 1; i <= m; i++)
+    {
+        int u = Rand(1, 100);
+        int v = Rand(1, 100);
+        while (v == u) v = Rand(1, 100);
 
-        cout << l << ' ' << r << '\n';
+        cout << u << ' ' << v << '\n';
     }
 }
 
