@@ -42,23 +42,22 @@ int main()
     {
         for (int i = j; i <= n; i++)
         {
-            if (j != k || (j == k && d - a[i] >= l && d - a[i] <= r))
+            if (j == k && (d - a[i] < l || d - a[i] > r)) continue;
+            for (int m = 1; m < i; m++)
             {
-                for (int m = 1; m < i; m++)
-                {
-                    if (dp[m][j - 1] != -1)
-                    {
-                        if (j != 2 || (j == 2 && a[m] >= l && a[m] <= r))
-                        {
-                            if (a[i] - a[m] >= l && a[i] - a[m] <= r)
-                            {
-                                dp[i][j] = max(dp[i][j], dp[m][j - 1] + 2ll * (j - 1) * (k - j + 1) * (a[i] - a[m]));
-                            }
-                        }
-                    }
-                }
-            }   
+                if (dp[m][j - 1] == -1) continue;
+                if (j == 2 && (a[m] < l || a[m] > r)) continue;
+                if (a[i] - a[m] < l || a[i] - a[m] > r) continue;
+
+                long long d = 2 * (j - 1) * (k - j + 1);
+                dp[i][j] = max(dp[i][j], dp[m][j - 1] + d * (a[i] - a[m]));
+            }
         }
+    }
+
+    for (int i = 1; i <= n; i++)
+    {
+        res = max(res, dp[i][k]);
     }
 
     for (int i = 1; i <= n; i++)
@@ -67,13 +66,7 @@ int main()
         {
             cout << dp[i][j] << ' ';
         }
-
         cout << '\n';
-    }
-
-    for (int i = 1; i <= n; i++)
-    {
-        res = max(res, dp[i][k]);
     }
 
     cout << res;

@@ -13,19 +13,26 @@ int main()
 {
     ofstream cout("testcase.inp");
 
-    int n = Rand(1e5, 1e5);
-    int m = Rand(1e5, n);
-    int s = Rand(1, n);
-    int t = Rand(1, n);
+    int n = 5000;
+    int m = 10000;
 
-    cout << n << ' ' << m << ' ' << s << ' ' << t << '\n';
+    cout << n << '\n';
+    for (int i = 1; i <= n; i++)
+    {
+        int a = Rand(0, 1e4);
+        int b = Rand(0, 1e4);
+
+        cout << a << ' ' << b << '\n';
+    }
+    cout << m << '\n';
+
     while (m--)
     {
-        int u = Rand(1, n);
-        int v = Rand(1, n);
-        int w = Rand(1, 1e9);
+        int a = Rand(1, n);
+        int b = Rand(1, n);
 
-        cout << u << ' ' << v << ' ' << w << '\n';
+        while (b == a) b = Rand(1, n);
+        cout << a << ' ' << b << '\n';
     }
 
     return 0;

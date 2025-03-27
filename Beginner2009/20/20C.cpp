@@ -60,8 +60,8 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    freopen("20C.inp", "r", stdin);
-    freopen("20C.out", "w", stdout);
+    // freopen("20C.inp", "r", stdin);
+    // freopen("20C.out", "w", stdout);
 
     cin >> n >> m;
     for (int i = 1; i <= n; i++)
@@ -84,6 +84,7 @@ int main()
     memset(res, -1, sizeof res);
     MakeSet();
 
+    res[1] = a[1].val;
     for (int i = 1; i <= n; i++)
     {
         int u = a[i].ind;
@@ -100,7 +101,7 @@ int main()
         }
     }
 
-    res[1] = a[1].val;
+    for (int i = n; i >= 1; i--) res[i] = max(res[i], res[i + 1]);
     for (int i = 1; i <= n; i++) cout << res[i] << ' ';
 
     return 0;

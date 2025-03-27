@@ -2,11 +2,17 @@
 
 using namespace std;
 
-int n, k, l, r, d;
+int n;
+int k;
+
+int l;
+int r;
+
+int sg;
 int a[5009];
+
 long long dp[5009][5009];
 long long res = 0;
-deque<int> q;
 
 int main()
 {
@@ -15,7 +21,7 @@ int main()
 
     cin >> n >> k;
     cin >> l >> r;
-    cin >> d;
+    cin >> sg;
 
     for (int i = 1; i <= n; i++)
     {
@@ -28,69 +34,41 @@ int main()
     {
         if (a[i] >= l && a[i] <= r)
         {
-            q.push_back(i);
             dp[i][1] = 0;
         }
     }
 
-    for (int j = 2; j <= k; j++)
+    for (int j = 2; j <= k; j++) 
     {
-        if (j != 2)
+        deque<int> qu;
+        long long d = 2 * (j - 1) * (k - j + 1);
+
+        for (int i = 1; i <= n; i++)
         {
-            q.clear();
+            if (j == k && (sg - a[i] < l || sg - a[i] > r)) continue;
+
+            while (!qu.empty() && (a[i] - a[qu.front()] > r || a[i] - a[qu.front()] < l)) qu.pop_front();
+            while (!qu.empty() && j == 2 && (a[qu.front()] < l || a[qu.front()] > r)) qu.pop_front();
+            while (!qu.empty() && dp[qu.front()][j - 1] == -1) qu.pop_front();
+            while (!qu.empty() && dp[qu.back()][j - 1] - d * a[qu.back()] <= dp[i][j - 1] - d * a[i]) qu.pop_back();
+
+            qu.push_back(i);
+            dp[i][j] = dp[qu.front()][j - 1] + d * (a[i] - a[qu.front()]);
         }
-
-        for (int i = j; i <= n; i++)
-        {
-            // if (j != k || (j == k && (d - a[i] >= l && d - a[i] <= r)))
-            {
-                while (!q.empty() && (a[i] - a[q.front()] > r || a[i] - a[q.front()] < l))
-                {
-                    q.pop_front();
-                }
-                while (!q.empty() && j == 2 && (a[q.front()] > r || a[q.front()] < l))
-                {
-                    q.pop_front();
-                }
-                while (!q.empty() && dp[q.front()][j - 1] == -1)
-                {
-                    q.pop_front();
-                }
-                while (!q.empty() && dp[q.back()][j - 1] == -1)
-                {
-                    q.pop_back();
-                }
-                while (!q.empty() && dp[q.back()][j - 1] + 2ll * (j - 1) * (k - j + 1) * (a[i] - a[q.back()]) < dp[i][j - 1])
-                {
-                    q.pop_back();
-                }
-                
-                q.push_back(i);
-                if (j != k || (j == k && (d - a[i] >= l && d - a[i] <= r)))
-                {
-                    if (q.front() < i)
-                    {
-                        dp[i][j] = dp[q.front()][j - 1] + 2ll * (j - 1) * (k - j + 1) * (a[i] - a[q.front()]);
-                    }
-                }
-               
-            }
-        }
-    }   
-
-    // for (int i = 1; i <= n; i++)
-    // {
-    //     for (int j = 1; j <= k; j++)
-    //     {
-    //         cout << dp[i][j] << ' ';
-    //     }
-
-    //     cout << '\n';
-    // }
+    }
 
     for (int i = 1; i <= n; i++)
     {
         res = max(res, dp[i][k]);
+    }
+
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= k; j++)
+        {
+            cout << dp[i][j] << ' ';
+        }
+        cout << '\n';
     }
 
     cout << res;

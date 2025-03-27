@@ -16,22 +16,22 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int n = Rand(1, 18);
-    int m = Rand(1, 18);
+    int n = Rand(2, 1e2);
+    int m = Rand(1, 2 * n);
 
     cout << n << ' ' << m << '\n';
 
     for (int i = 1; i <= n; i++)
     {
-        int a = Rand(1, 100);
+        int a = Rand(1, 1e9);
         cout << a << ' ';
     }
     cout << '\n';
     for (int i = 1; i <= m; i++)
     {
-        int u = Rand(1, 100);
-        int v = Rand(1, 100);
-        while (v == u) v = Rand(1, 100);
+        int u = Rand(1, n);
+        int v = Rand(1, n);
+        while (v == u) v = Rand(1, n);
 
         cout << u << ' ' << v << '\n';
     }
@@ -42,10 +42,10 @@ int main()
     for (int itest = 1; itest <= ntest; itest++)
     {
         GenTest();
-        system(name".exe");
-        system(name"_trau.exe");
+        system("./"name);
+        system("./"name"_trau");
 
-        if (system("fc "name".ans "name".out") != 0)
+        if (system("diff "name".ans "name".out") != 0)
         {
             cout << "Test: " << itest << " WRONG!\n";
             return 0;

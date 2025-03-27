@@ -72,14 +72,21 @@
         "typeinfo": "cpp",
         "valarray": "cpp"
     },
-    "files.exclude": {
-        "**/*.exe": true
+        "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/*.exe": true,
+        "**/*.e:": true,    
     },
     "C_Cpp.errorSquiggles": "disabled",
 
     "editor.fontFamily": "Fira Code, monospace",
     "terminal.integrated.fontFamily": "Fira Code",
     "editor.fontVariations": false,
-    "editor.fontWeight": "460",
+    "editor.fontWeight": "540",
 
 }

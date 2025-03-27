@@ -1,95 +1,110 @@
 #include <bits/stdc++.h>
+
 using namespace std;
 
-struct DSU {
-    vector<int> parent, size;
-    vector<bool> activated;
+int const N = 2e5 + 10;
 
-    DSU(int n) {
-        parent.resize(n + 1);
-        size.resize(n + 1, 1);
-        activated.resize(n + 1, false);
-        for (int i = 0; i <= n; i++) {
-            parent[i] = i;
-        }
-    }
-
-    int find(int u) {
-        if (parent[u] != u) {
-            parent[u] = find(parent[u]);
-        }
-        return parent[u];
-    }
-
-    void unite(int u, int v) {
-        int root_u = find(u);
-        int root_v = find(v);
-        if (root_u == root_v) return;
-        if (size[root_u] < size[root_v]) {
-            swap(root_u, root_v);
-        }
-        parent[root_v] = root_u;
-        size[root_u] += size[root_v];
-    }
+struct Node
+{
+    int ind = 0;
+    int val = 0;
 };
 
-int main() {
+int n;
+int m;
+
+vector<int> adj[N];
+Node a[N];
+bool visisted[N];
+int parent[N];
+int sz[N];
+int res[N];
+
+bool cmp(Node a, Node b)
+{
+    return a.val > b.val;
+}
+
+void MakeSet()
+{
+    for (int i = 1; i <= n; i++)
+    {
+        parent[i] = i;
+        sz[i] = 1;
+    }
+}
+
+int Find(int v)
+{
+    if (v == parent[v]) return v;
+    return parent[v] = Find(parent[v]);
+}
+
+int Union(int a, int b)
+{
+    a = Find(a);
+    b = Find(b);
+
+    if (a != b)
+    {
+        if (sz[a] < sz[b]) swap(a, b);
+        parent[b] = a;
+        sz[a] += sz[b];
+    }
+
+    return sz[a];
+}
+
+int main()
+{
     ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
+    cin.tie(0); cout.tie(0);
 
     freopen("20C.inp", "r", stdin);
     freopen("20C.ans", "w", stdout);
 
-    int n, m;
     cin >> n >> m;
-
-    vector<int> p(n + 1);
-    for (int i = 1; i <= n; ++i) {
-        cin >> p[i];
+    for (int i = 1; i <= n; i++)
+    {
+        int x;
+        cin >> x;
+        a[i].ind = i;
+        a[i].val = x;
     }
 
-    vector<vector<int>> adj(n + 1);
-    for (int i = 0; i < m; ++i) {
+    for (int i = 1; i <= m; i++)
+    {
         int u, v;
         cin >> u >> v;
         adj[u].push_back(v);
         adj[v].push_back(u);
     }
 
-    vector<int> order(n);
-    iota(order.begin(), order.end(), 1);
-    sort(order.begin(), order.end(), [&p](int a, int b) {
-        return p[a] > p[b];
-    });
+    sort(a + 1, a + n + 1, cmp);
+    memset(res, -1, sizeof res);
+    MakeSet();
 
-    DSU dsu(n);
-    vector<int> ans(n + 1, -1);
+    res[1] = a[1].val;
+    for (int i = 1; i <= n; i++)
+    {
+        int u = a[i].ind;
+        int val = a[i].val;
+        visisted[u] = true;
 
-    for (int u : order) {
-        dsu.activated[u] = true;
-        if (ans[1] == -1) {
-            ans[1] = p[u];
-        }
-        for (int v : adj[u]) {
-            if (dsu.activated[v]) {
-                int root_u = dsu.find(u);
-                int root_v = dsu.find(v);
-                if (root_u != root_v) {
-                    int a = dsu.size[root_u];
-                    int b = dsu.size[root_v];
-                    int new_size = a + b;
-                    if (ans[new_size] == -1) {
-                        ans[new_size] = p[u];
-                    }
-                    dsu.unite(root_u, root_v);
+        for (auto v : adj[u])
+        {
+            if (visisted[v])
+            {
+                int k = Union(u, v);
+                for (int j = 1; j <= k; j++)
+                {
+                    res[j] = max(res[j], val);
                 }
             }
         }
     }
 
-    for (int k = 1; k <= n; ++k) {
-        cout << ans[k] << ' ';
-    }
+    for (int i = 1; i <= n; i++) cout << res[i] << ' ';
 
     return 0;
 }
