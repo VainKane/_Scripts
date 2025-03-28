@@ -1,83 +1,118 @@
-//Dai Ca Di Hoc
-#include <bits/stdc++.h>
-#define sz(x) int(x.size())
-#define reset(x) memset(x, 0,sizeof(x))
-#define MIN(x,y) if (x > (y)) x = (y)
-#define MAX(x,y) if (x < (y)) x = (y)
-#define PB push_back
-#define mp make_pair
-#define F first
-#define S second
-#define Task "mintree"
-#define maxn 30005
-#define MOD 1000000007
-#define remain(x) if (x > MOD) x -= MOD
-#define pii pair<int, int>
-
+#include <iostream>
+#include <vector>
+#include <climits>
+#include <algorithm>
 using namespace std;
 
-int n, m;
-
-vector <pii> a[maxn];
-int d[maxn];//khoang cach ngan nhat tu dinh u -> cay da co
-int connect[maxn];
-long long ans = 0;
-bool used[maxn];
-
-void Push(int u)
-{
-	used[u] = 1;
-	for (int i = 0; i < a[u].size(); i++){
-		int v = a[u][i].F;
-		int w = a[u][i].S;
-		if (used[v]==0 && d[v] > w){
-			d[v] = w; // cập nhật khoảng cách v tới MST
-			connect[v] = u;
-		}
-	}
-}
-
-void Prim(){
-    fill(d, d+n+1, 1e9);
-	// d[u] là khoảng cách từ u tới MST hiện có
-    reset(used); 	
-	Push(1);
-    d[1] = 0;	
-	int socanh = 0;
-    while (1){
-		// tìm đỉnh có khoảng cách tới cây khung nhỏ nhất;
-        int u = 0;
-        for (int i = 1; i <= n; i++)
-            if (used[i] == 0 && d[i] < d[u]) u = i;
-		
-        if (u == 0) break; // khong con dinh tu do noi duoc
-        socanh++;        
-        ans += d[u];
-		// đưa đỉnh u vào cây khung
-		Push(u);        
+class SegmentTree {
+public:
+    SegmentTree(int _n, vector<int>& _pos) : n(_n), pos(_pos) {
+        min_pos.resize(4 * n);
+        max_pos.resize(4 * n);
+        build(1, 1, n);
     }
-    if (socanh != n-1){
-        cout << "-1";
-        return;
-    }
-    cout << ans << endl;
-    for (int i = 2; i <= n; i++)
-        cout << i << " " << connect[i] << "\n";
-}
 
-int main()
-{
-	ios_base::sync_with_stdio(0);
-    // freopen(Task".inp", "r", stdin);
-    // freopen(Task".out", "w", stdout);
+    void update(int val) {
+        internal_update(1, 1, n, val);
+    }
+
+    pair<int, int> query(int a, int b) {
+        return internal_query(1, 1, n, a, b);
+    }
+
+private:
+    int n;
+    vector<int>& pos;
+    vector<int> min_pos;
+    vector<int> max_pos;
+
+    void build(int node, int l, int r) {
+        if (l == r) {
+            min_pos[node] = pos[l];
+            max_pos[node] = pos[l];
+            return;
+        }
+        int mid = (l + r) / 2;
+        build(2*node, l, mid);
+        build(2*node+1, mid+1, r);
+        min_pos[node] = min(min_pos[2*node], min_pos[2*node+1]);
+        max_pos[node] = max(max_pos[2*node], max_pos[2*node+1]);
+    }
+
+    void internal_update(int node, int l, int r, int val) {
+        if (l == r) {
+            min_pos[node] = pos[val];
+            max_pos[node] = pos[val];
+            return;
+        }
+        int mid = (l + r) / 2;
+        if (val <= mid) {
+            internal_update(2*node, l, mid, val);
+        } else {
+            internal_update(2*node+1, mid+1, r, val);
+        }
+        min_pos[node] = min(min_pos[2*node], min_pos[2*node+1]);
+        max_pos[node] = max(max_pos[2*node], max_pos[2*node+1]);
+    }
+
+    pair<int, int> internal_query(int node, int l, int r, int a, int b) {
+        if (r < a || l > b) {
+            return {INT_MAX, INT_MIN};
+        }
+        if (a <= l && r <= b) {
+            return {min_pos[node], max_pos[node]};
+        }
+        int mid = (l + r) / 2;
+        auto left = internal_query(2*node, l, mid, a, b);
+        auto right = internal_query(2*node+1, mid+1, r, a, b);
+        return {min(left.first, right.first), max(left.second, right.second)};
+    }
+};
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    int n, m;
     cin >> n >> m;
-    for (int u, v, w, i = 1; i <= m; i++){
-        cin >> u >> v >> w;
-        a[u].PB(mp(v,w));
-        a[v].PB(mp(u,w));
+
+    vector<int> arr(n);
+    for (int i = 0; i < n; ++i) {
+        cin >> arr[i];
     }
 
-    Prim();
+    vector<int> pos(n+1); // pos[value] = index in arr (0-based)
+    for (int i = 0; i < n; ++i) {
+        pos[arr[i]] = i;
+    }
+
+    SegmentTree st(n, pos);
+
+    while (m--) {
+        int type;
+        cin >> type;
+        if (type == 1) {
+            int x, y;
+            cin >> x >> y;
+            x--; y--; // convert to 0-based indices
+            int a = arr[x];
+            int b = arr[y];
+            swap(arr[x], arr[y]);
+            pos[a] = y;
+            pos[b] = x;
+            st.update(a);
+            st.update(b);
+        } else {
+            int a, b;
+            cin >> a >> b;
+            auto [min_p, max_p] = st.query(a, b);
+            if (max_p - min_p + 1 == b - a + 1) {
+                cout << "YES\n";
+            } else {
+                cout << "NO\n";
+            }
+        }
+    }
+
     return 0;
 }
-
