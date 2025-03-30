@@ -17,8 +17,8 @@ void Build(int v, int l, int r)
 {
     if (l == r)
     {
-        tmin[v] = a[l];
-        tmax[v] = a[l];
+        tmin[v] = pos[l];
+        tmax[v] = pos[l];
     }
     else
     {
@@ -43,14 +43,8 @@ void Update(int v, int l, int r, int pos, int val)
     {
         int mid = l + (r - l) / 2;
 
-        if (pos <= mid)
-        {
-            Update(2 * v, l, mid, pos, val);
-        }
-        else
-        {
-            Update(2 * v + 1, mid + 1, r, pos, val);
-        }
+        if (pos <= mid) Update(2 * v, l, mid, pos, val);
+        else Update(2 * v + 1, mid + 1, r, pos, val);
 
         tmin[v] = min(tmin[2 * v], tmin[2 * v + 1]);
         tmax[v] = max(tmax[2 * v], tmax[2 * v + 1]);
@@ -98,8 +92,8 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    freopen("30B.inp", "r", stdin);
-    freopen("30B.out", "w", stdout);
+    // freopen("30B.inp", "r", stdin);
+    // freopen("30B.out", "w", stdout);
 
     cin >> n >> m;
     for (int i = 1; i <= n; i++) 
@@ -120,31 +114,27 @@ int main()
             int x, y;
             cin >> x >> y;
 
-            int u = GetMin(1, 1, n, x, x);
-            int v = GetMin(1, 1, n, y, y);
+            int u = pos[a[x]];
+            int v = pos[a[y]];
 
-            Update(1, 1, n, x, v);
-            Update(1, 1, n, y, u);
+            pos[a[x]] = v;
+            pos[a[y]] = u;
 
-            pos[v] = x;
-            pos[u] = y;
+            Update(1, 1, n, a[x], v);
+            Update(1, 1, n, a[y], u);
+
+            swap(a[x], a[y]);
         }
         else
         {   
             int l, r;
             cin >> l >> r;
 
-            int u = l;
-            int v = r;
-
-            l = pos[l];
-            r = pos[r];
-
-            if (GetMin(1, 1, n, l, r) != u || GetMax(1, 1, n, l, r) != v) 
+            if (GetMax(1, 1, n, l, r) - GetMin(1, 1, n, l, r) == r - l)
             {
-                cout << "NO\n";
+                cout << "YES\n";
             }
-            else cout << "YES\n";
+            else cout << "NO\n";
         }
     }
 

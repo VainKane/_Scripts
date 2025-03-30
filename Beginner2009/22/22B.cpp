@@ -16,6 +16,8 @@ int bit(int i, long long x)
     return (x >> i) & 1;
 }
 
+long long res = -1e18;
+
 int main()
 {
     ios_base::sync_with_stdio(false);
@@ -30,13 +32,16 @@ int main()
         for (int j = 0; j < 4; j++)
         {
             cin >> a[i][j];
-            dp[0][j] = 0;
+            res = max(res, 1ll * a[i][j]);
+
+            if (a[i][j] >= 0) res = 0;
         }
     }
 
     for (int x = 0; x < M; x++)
     {
         ok[x] = true;
+        dp[0][x] = 0;
         for (int i = 1; i < 4; i++)
         {
             if (bit(i, x) && bit(i - 1, x))
@@ -52,25 +57,27 @@ int main()
         {
             for (int u = 0; u < M; u++)
             {
-                if (!ok[u] || !ok[x]) continue;
+                if (!ok[x] || !ok[u]) continue;
                 if ((u & x) != 0) continue;
-                if (dp[i - 1][u] == -0x3f) continue;
+                if (dp[i - 1][u] == -1e18) continue;
 
                 int s = 0;
                 for (int k = 0; k < 4; k++)
                 {
                     if (bit(k, x)) s += a[i][k];
                 }
-                
+
                 dp[i][x] = max(dp[i][x], dp[i - 1][u] + s);
             }
         }
     }
 
-    long long res = -1e18;
-    for (int j = 0; j < M; j++)
+    if (!res)
     {
-        res = max(res, dp[n][j]);
+        for (int j = 0; j < M; j++)
+        {
+            res = max(res, dp[n][j]);
+        }
     }
 
     cout << res;

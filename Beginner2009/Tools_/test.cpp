@@ -4,5 +4,5 @@ using namespace std;
 
 int main()
 {
-    cout << sizeof(double);
+    cout << (1 << 0);
 }
