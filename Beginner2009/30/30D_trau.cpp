@@ -24,8 +24,8 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    freopen("30D.inp", "r", stdin);
-    freopen("30D.ans", "w", stdout);
+    // freopen("30D.inp", "r", stdin);
+    // freopen("30D.ans", "w", stdout);
 
     cin >> n;
     for (int i = 1; i <= n; i++)

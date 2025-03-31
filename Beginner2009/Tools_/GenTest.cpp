@@ -13,15 +13,12 @@ int main()
 {
     ofstream cout("testcase.inp");
 
-    int n = 5000;
-    int m = 10000;
+    int n = 10;
 
     cout << n << '\n';
     for (int i = 1; i <= n; i++)
     {
-        int a = Rand(0, 1e4);
-        int b = Rand(0, 1e4);
-
+        
         cout << a << ' ' << b << '\n';
     }
     cout << m << '\n';
