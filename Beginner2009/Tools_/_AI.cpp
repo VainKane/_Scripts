@@ -1,155 +1,111 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <set>
+#include <algorithm>
+
 using namespace std;
 
-const int MOD = 1e9 + 9;
-
-bool is_compatible_consecutive(int A, int B, int M) {
-    for (int a_row = 0; a_row < M; ++a_row) {
-        if ((A >> a_row) & 1) {
-            for (int b_row = 0; b_row < M; ++b_row) {
-                if ((B >> b_row) & 1) {
-                    if (abs(a_row - b_row) == 2) {
-                        return false;
-                    }
-                }
-            }
-        }
-    }
-    return true;
-}
-
-bool is_compatible_two_apart(int A, int C, int M) {
-    for (int a_row = 0; a_row < M; ++a_row) {
-        if ((A >> a_row) & 1) {
-            for (int c_row = 0; c_row < M; ++c_row) {
-                if ((C >> c_row) & 1) {
-                    if (abs(a_row - c_row) == 1) {
-                        return false;
-                    }
-                }
-            }
-        }
-    }
-    return true;
-}
-
-struct pair_hash {
-    template <class T1, class T2>
-    size_t operator () (const pair<T1, T2> &p) const {
-        auto h1 = hash<T1>{}(p.first);
-        auto h2 = hash<T2>{}(p.second);
-        return h1 ^ h2;
-    }
+struct Node {
+    int start;
+    int end;
+    Node* left;
+    Node* right;
+    int cover;
+    int total;
+    Node(int s, int e) : start(s), end(e), left(nullptr), right(nullptr), cover(0), total(0) {}
 };
 
-using Matrix = vector<vector<int>>;
+struct Event {
+    int x;
+    bool is_add;
+    int y1;
+    int y2;
+};
 
-Matrix multiply(const Matrix& A, const Matrix& B) {
-    int n = A.size();
-    Matrix result(n, vector<int>(n, 0));
-    for (int i = 0; i < n; ++i) {
-        for (int k = 0; k < n; ++k) {
-            if (A[i][k] == 0) continue;
-            for (int j = 0; j < n; ++j) {
-                result[i][j] = (result[i][j] + static_cast<long long>(A[i][k]) * B[k][j]) % MOD;
-            }
-        }
+Node* build(int l, int r, const vector<int>& ys) {
+    Node* node = new Node(ys[l], ys[r]);
+    if (l + 1 >= r) {
+        return node;
     }
-    return result;
+    int mid = (l + r) / 2;
+    node->left = build(l, mid, ys);
+    node->right = build(mid, r, ys);
+    return node;
 }
 
-Matrix matrix_pow(Matrix mat, int power) {
-    int n = mat.size();
-    Matrix result(n, vector<int>(n, 0));
-    for (int i = 0; i < n; ++i) {
-        result[i][i] = 1;
+void update(Node* node, int y1, int y2, int val) {
+    if (node->end <= y1 || node->start >= y2) {
+        return;
     }
-    while (power > 0) {
-        if (power & 1) {
-            result = multiply(result, mat);
-        }
-        mat = multiply(mat, mat);
-        power >>= 1;
+    if (y1 <= node->start && node->end <= y2) {
+        node->cover += val;
+    } else {
+        update(node->left, y1, y2, val);
+        update(node->right, y1, y2, val);
     }
-    return result;
+    if (node->cover > 0) {
+        node->total = node->end - node->start;
+    } else {
+        node->total = 0;
+        if (node->left) node->total += node->left->total;
+        if (node->right) node->total += node->right->total;
+    }
 }
 
 int main() {
     ios_base::sync_with_stdio(false);
-    cin.tie(0);
+    cin.tie(nullptr);
 
-    int M, N;
-    cin >> M >> N;
+    int n;
+    cin >> n;
 
-    if (N == 0) {
-        cout << 0 << endl;
+    set<int> y_set;
+    vector<Event> events;
+
+    for (int i = 0; i < n; ++i) {
+        int x1, x2, y1, y2;
+        cin >> x1 >> x2 >> y1 >> y2;
+        events.push_back({x1, true, y1, y2});
+        events.push_back({x2, false, y1, y2});
+        y_set.insert(y1);
+        y_set.insert(y2);
+    }
+
+    if (y_set.empty()) {
+        cout << 0 << '\n';
         return 0;
     }
 
-    if (N == 1) {
-        long long ans = 1;
-        for (int i = 0; i < M; ++i) {
-            ans = (ans * 2) % MOD;
+    vector<int> ys(y_set.begin(), y_set.end());
+    int m = ys.size();
+
+    Node* root = build(0, m - 1, ys);
+
+    sort(events.begin(), events.end(), [](const Event& a, const Event& b) {
+        if (a.x != b.x) return a.x < b.x;
+        return a.is_add > b.is_add;
+    });
+
+    long long total_area = 0;
+    int prev_x = -1;
+
+    for (const auto& event : events) {
+        int current_x = event.x;
+        if (prev_x != -1 && current_x > prev_x) {
+            long long delta_x = current_x - prev_x;
+            total_area += delta_x * root->total;
         }
-        cout << ans << endl;
-        return 0;
-    }
 
-    vector<int> masks;
-    for (int i = 0; i < (1 << M); ++i) {
-        masks.push_back(i);
-    }
-
-    vector<pair<int, int>> valid_pairs;
-    for (int A : masks) {
-        for (int B : masks) {
-            if (is_compatible_consecutive(A, B, M)) {
-                valid_pairs.emplace_back(A, B);
-            }
+        if (event.is_add) {
+            update(root, event.y1, event.y2, 1);
+        } else {
+            update(root, event.y1, event.y2, -1);
         }
+
+        prev_x = current_x;
     }
 
-    int K = valid_pairs.size();
-    if (N == 2) {
-        cout << K % MOD << endl;
-        return 0;
-    }
-
-    unordered_map<pair<int, int>, int, pair_hash> state_index;
-    for (int i = 0; i < K; ++i) {
-        state_index[valid_pairs[i]] = i;
-    }
-
-    Matrix T(K, vector<int>(K, 0));
-    for (int i = 0; i < K; ++i) {
-        int A = valid_pairs[i].first;
-        int B = valid_pairs[i].second;
-        for (int C : masks) {
-            if (!is_compatible_consecutive(B, C, M)) {
-                continue;
-            }
-            if (!is_compatible_two_apart(A, C, M)) {
-                continue;
-            }
-            pair<int, int> new_state(B, C);
-            auto it = state_index.find(new_state);
-            if (it != state_index.end()) {
-                int j = it->second;
-                T[i][j] = (T[i][j] + 1) % MOD;
-            }
-        }
-    }
-
-    Matrix mat_exp = matrix_pow(T, N - 2);
-
-    long long total = 0;
-    for (const auto& row : mat_exp) {
-        for (int val : row) {
-            total = (total + val) % MOD;
-        }
-    }
-
-    cout << total % MOD << endl;
+    cout << total_area << '\n';
 
     return 0;
 }

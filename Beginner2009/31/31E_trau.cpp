@@ -3,9 +3,6 @@
 using namespace std;
 
 int n;
-
-int res = 0;
-
 set<pair<int, int>> visisted;
 
 int main()
@@ -14,17 +11,16 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> n;
-
     while (n--)
     {
         int x1, x2, y1, y2;
-        cin >> x1 >> y1 >> x2 >> y2;
+        cin >> x1 >> x2 >> y1 >> y2;
 
         for (int i = x1; i < x2; i++)
         {
             for (int j = y1; j < y2; j++)
-            {   
-                visisted.insert(make_pair(i, j));
+            {
+                visisted.insert({i, j});
             }
         }
     }
