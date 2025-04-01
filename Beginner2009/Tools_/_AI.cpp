@@ -1,114 +1,155 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-const int MOD = 1e9 + 7;
+const int MOD = 1e9 + 9;
 
-struct SegmentTreeNode {
-    int l, r;
-    SegmentTreeNode *left, *right;
-    long long mul, add;
-    long long val; // Only for leaves
+bool is_compatible_consecutive(int A, int B, int M) {
+    for (int a_row = 0; a_row < M; ++a_row) {
+        if ((A >> a_row) & 1) {
+            for (int b_row = 0; b_row < M; ++b_row) {
+                if ((B >> b_row) & 1) {
+                    if (abs(a_row - b_row) == 2) {
+                        return false;
+                    }
+                }
+            }
+        }
+    }
+    return true;
+}
 
-    SegmentTreeNode(int l_, int r_) : l(l_), r(r_), left(nullptr), right(nullptr), mul(1), add(0), val(0) {}
+bool is_compatible_two_apart(int A, int C, int M) {
+    for (int a_row = 0; a_row < M; ++a_row) {
+        if ((A >> a_row) & 1) {
+            for (int c_row = 0; c_row < M; ++c_row) {
+                if ((C >> c_row) & 1) {
+                    if (abs(a_row - c_row) == 1) {
+                        return false;
+                    }
+                }
+            }
+        }
+    }
+    return true;
+}
 
-    bool is_leaf() const {
-        return l == r;
+struct pair_hash {
+    template <class T1, class T2>
+    size_t operator () (const pair<T1, T2> &p) const {
+        auto h1 = hash<T1>{}(p.first);
+        auto h2 = hash<T2>{}(p.second);
+        return h1 ^ h2;
     }
 };
 
-SegmentTreeNode* build(int l, int r, vector<int>& a) {
-    SegmentTreeNode* node = new SegmentTreeNode(l, r);
-    if (l == r) {
-        node->val = a[l] % MOD;
-    } else {
-        int mid = (l + r) / 2;
-        node->left = build(l, mid, a);
-        node->right = build(mid + 1, r, a);
+using Matrix = vector<vector<int>>;
+
+Matrix multiply(const Matrix& A, const Matrix& B) {
+    int n = A.size();
+    Matrix result(n, vector<int>(n, 0));
+    for (int i = 0; i < n; ++i) {
+        for (int k = 0; k < n; ++k) {
+            if (A[i][k] == 0) continue;
+            for (int j = 0; j < n; ++j) {
+                result[i][j] = (result[i][j] + static_cast<long long>(A[i][k]) * B[k][j]) % MOD;
+            }
+        }
     }
-    return node;
+    return result;
 }
 
-void propagate(SegmentTreeNode* node) {
-    if (!node->left) return;
-
-    // Propagate to left child
-    node->left->mul = (node->left->mul * node->mul) % MOD;
-    node->left->add = (node->left->add * node->mul + node->add) % MOD;
-
-    // Propagate to right child
-    node->right->mul = (node->right->mul * node->mul) % MOD;
-    node->right->add = (node->right->add * node->mul + node->add) % MOD;
-
-    // Reset current node's parameters
-    node->mul = 1;
-    node->add = 0;
-}
-
-void multiply_range(SegmentTreeNode* node, int u, int v, int d) {
-    if (node->r < u || node->l > v) return;
-    if (u <= node->l && node->r <= v) {
-        node->mul = (node->mul * d) % MOD;
-        node->add = (node->add * d) % MOD;
-        return;
+Matrix matrix_pow(Matrix mat, int power) {
+    int n = mat.size();
+    Matrix result(n, vector<int>(n, 0));
+    for (int i = 0; i < n; ++i) {
+        result[i][i] = 1;
     }
-    propagate(node);
-    multiply_range(node->left, u, v, d);
-    multiply_range(node->right, u, v, d);
-}
-
-void add_range(SegmentTreeNode* node, int u, int v, int d) {
-    if (node->r < u || node->l > v) return;
-    if (u <= node->l && node->r <= v) {
-        node->add = (node->add + d) % MOD;
-        return;
+    while (power > 0) {
+        if (power & 1) {
+            result = multiply(result, mat);
+        }
+        mat = multiply(mat, mat);
+        power >>= 1;
     }
-    propagate(node);
-    add_range(node->left, u, v, d);
-    add_range(node->right, u, v, d);
-}
-
-long long query_point(SegmentTreeNode* node, int p) {
-    if (node->is_leaf()) {
-        return (node->val * node->mul + node->add) % MOD;
-    }
-    propagate(node);
-    if (p <= node->left->r) {
-        return query_point(node->left, p);
-    } else {
-        return query_point(node->right, p);
-    }
+    return result;
 }
 
 int main() {
-    int n;
-    scanf("%d", &n);
-    vector<int> a(n);
-    for (int i = 0; i < n; ++i) {
-        scanf("%d", &a[i]);
-        a[i] %= MOD;
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+
+    int M, N;
+    cin >> M >> N;
+
+    if (N == 0) {
+        cout << 0 << endl;
+        return 0;
     }
-    SegmentTreeNode* root = build(0, n-1, a);
-    int m;
-    scanf("%d", &m);
-    while (m--) {
-        char op[2];
-        scanf("%s", op);
-        if (op[0] == '+' || op[0] == '*') {
-            int u, v, d;
-            scanf("%d %d %d", &u, &v, &d);
-            u--; v--;
-            if (op[0] == '+') {
-                add_range(root, u, v, d % MOD);
-            } else {
-                multiply_range(root, u, v, d % MOD);
+
+    if (N == 1) {
+        long long ans = 1;
+        for (int i = 0; i < M; ++i) {
+            ans = (ans * 2) % MOD;
+        }
+        cout << ans << endl;
+        return 0;
+    }
+
+    vector<int> masks;
+    for (int i = 0; i < (1 << M); ++i) {
+        masks.push_back(i);
+    }
+
+    vector<pair<int, int>> valid_pairs;
+    for (int A : masks) {
+        for (int B : masks) {
+            if (is_compatible_consecutive(A, B, M)) {
+                valid_pairs.emplace_back(A, B);
             }
-        } else {
-            int p;
-            scanf("%d", &p);
-            p--;
-            long long res = query_point(root, p);
-            printf("%lld\n", res % MOD);
         }
     }
+
+    int K = valid_pairs.size();
+    if (N == 2) {
+        cout << K % MOD << endl;
+        return 0;
+    }
+
+    unordered_map<pair<int, int>, int, pair_hash> state_index;
+    for (int i = 0; i < K; ++i) {
+        state_index[valid_pairs[i]] = i;
+    }
+
+    Matrix T(K, vector<int>(K, 0));
+    for (int i = 0; i < K; ++i) {
+        int A = valid_pairs[i].first;
+        int B = valid_pairs[i].second;
+        for (int C : masks) {
+            if (!is_compatible_consecutive(B, C, M)) {
+                continue;
+            }
+            if (!is_compatible_two_apart(A, C, M)) {
+                continue;
+            }
+            pair<int, int> new_state(B, C);
+            auto it = state_index.find(new_state);
+            if (it != state_index.end()) {
+                int j = it->second;
+                T[i][j] = (T[i][j] + 1) % MOD;
+            }
+        }
+    }
+
+    Matrix mat_exp = matrix_pow(T, N - 2);
+
+    long long total = 0;
+    for (const auto& row : mat_exp) {
+        for (int val : row) {
+            total = (total + val) % MOD;
+        }
+    }
+
+    cout << total % MOD << endl;
+
     return 0;
 }

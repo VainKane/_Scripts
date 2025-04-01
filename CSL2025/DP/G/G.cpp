@@ -24,7 +24,7 @@ matrix Multi(matrix &a, matrix &b)
         {
             for (int k = 0; k <= 2; k++)
             {
-                c.x[i][j] = ( (c.x[i][j] % mod) + ( ((a.x[i][k] % mod) * (b.x[k][j] % mod)) % mod ) )% mod;
+                c.x[i][j] = ( (c.x[i][j] % mod) + ( ((a.x[i][k] % mod) * (b.x[k][j] % mod)) % mod ) ) % mod;
             }
         }
     }

@@ -102,6 +102,11 @@ int main()
             if (type == '+') Update(1,1,n,u,v,1,d);
                 else Update(1,1,n,u,v,d,0);
         }
+
+        for (int i = 1; i < 4 * n; i++)
+        {
+            cout << T[i].F << ' ' << T[i].S << '\n';
+        }
     }
     return 0;
 }
