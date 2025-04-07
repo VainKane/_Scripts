@@ -34,7 +34,7 @@ int main()
 
     for (int x = 1; x < (1 << n); x++)
     {
-        int k = __builtin_popcount(x);
+        int k = __builtin_popcountll(x);
         for (int i = 0; i < n; i++)
         {
             if (Bit(i, x))

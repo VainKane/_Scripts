@@ -1,105 +1,62 @@
 MOD = 10**9 + 7
 
-class SegmentTreeNode:
-    def __init__(self, l, r):
-        self.l = l
-        self.r = r
-        self.left = None
-        self.right = None
-        self.mul = 1
-        self.add = 0
-        self.val = 0  # Only for leaves
+def multiply(a, b):
+    res = [[0] * 32 for _ in range(32)]
+    for i in range(32):
+        for k in range(32):
+            if a[i][k] == 0:
+                continue
+            for j in range(32):
+                res[i][j] = (res[i][j] + a[i][k] * b[k][j]) % MOD
+    return res
 
-    def is_leaf(self):
-        return self.l == self.r
+def matrix_power(mat, power):
+    result = [[0] * 32 for _ in range(32)]
+    for i in range(32):
+        result[i][i] = 1  # Ma trận đơn vị
+    while power > 0:
+        if power % 2 == 1:
+            result = multiply(result, mat)
+        mat = multiply(mat, mat)
+        power //= 2
+    return result
 
-def build(l, r, a):
-    node = SegmentTreeNode(l, r)
-    if l == r:
-        node.val = a[l] % MOD
-    else:
-        mid = (l + r) // 2
-        node.left = build(l, mid, a)
-        node.right = build(mid + 1, r, a)
-    return node
+n = int(input())
+if n == 0:
+    print(0)
+else:
+    # Xây dựng ma trận chuyển tiếp
+    transition = [[0] * 32 for _ in range(32)]
+    odd_digits = {1: 0, 3: 1, 5: 2, 7: 3, 9: 4}
+    for i in range(32):
+        # Thêm chữ số chẵn (0,2,4,6,8) → 5 cách, không đổi bitmask
+        transition[i][i] += 5
+        # Thêm chữ số lẻ → flip bit tương ứng
+        for d in odd_digits:
+            idx = odd_digits[d]
+            j = i ^ (1 << idx)
+            transition[i][j] += 1
+        # Modulo
+        for j in range(32):
+            transition[i][j] %= MOD
 
-def propagate(node):
-    if not node.left:
-        return
-    # Propagate to left child
-    left = node.left
-    left.mul = (left.mul * node.mul) % MOD
-    left.add = (left.add * node.mul + node.add) % MOD
-    # Propagate to right child
-    right = node.right
-    right.mul = (right.mul * node.mul) % MOD
-    right.add = (right.add * node.mul + node.add) % MOD
-    # Reset current node's parameters
-    node.mul = 1
-    node.add = 0
+    # Tính transition^(n-1)
+    powered = matrix_power(transition, n-1)
 
-def multiply_range(node, l, r, d):
-    if node.r < l or node.l > r:
-        return
-    if l <= node.l and node.r <= r:
-        node.mul = (node.mul * d) % MOD
-        node.add = (node.add * d) % MOD
-        return
-    propagate(node)
-    multiply_range(node.left, l, r, d)
-    multiply_range(node.right, l, r, d)
+    # Vector ban đầu: 4 cách chẵn, 5 cách lẻ (mỗi bit set 1)
+    initial = [0] * 32
+    initial[0] = 4  # Chữ số chẵn (2,4,6,8)
+    for bit in range(5):
+        initial[1 << bit] += 1  # Chữ số lẻ 1,3,5,7,9
 
-def add_range(node, l, r, d):
-    if node.r < l or node.l > r:
-        return
-    if l <= node.l and node.r <= r:
-        node.add = (node.add + d) % MOD
-        return
-    propagate(node)
-    add_range(node.left, l, r, d)
-    add_range(node.right, l, r, d)
+    # Nhân vector ban đầu với ma trận đã lũy thừa
+    result = [0] * 32
+    for i in range(32):
+        if initial[i] == 0:
+            continue
+        for j in range(32):
+            result[j] = (result[j] + initial[i] * powered[i][j]) % MOD
 
-def query_point(node, p):
-    if node.is_leaf():
-        return (node.val * node.mul + node.add) % MOD
-    propagate(node)
-    mid = (node.l + node.r) // 2
-    if p <= mid:
-        return query_point(node.left, p)
-    else:
-        return query_point(node.right, p)
-
-def main():
-    import sys
-    input = sys.stdin.read().split()
-    ptr = 0
-    n = int(input[ptr])
-    ptr += 1
-    a = list(map(int, input[ptr:ptr + n]))
-    ptr += n
-    a = [x % MOD for x in a]
-    root = build(0, n-1, a)
-    m = int(input[ptr])
-    ptr += 1
-    for _ in range(m):
-        cmd = input[ptr]
-        ptr += 1
-        if cmd in ('+', '*'):
-            u = int(input[ptr]) - 1
-            ptr += 1
-            v = int(input[ptr]) - 1
-            ptr += 1
-            d = int(input[ptr])
-            ptr += 1
-            if cmd == '+':
-                add_range(root, u, v, d)
-            else:
-                multiply_range(root, u, v, d % MOD)  # Ensure d is modulo MOD for multiplication
-        else:
-            p = int(input[ptr]) - 1
-            ptr += 1
-            res = query_point(root, p)
-            print(res % MOD)
-
-if __name__ == "__main__":
-    main()
+    # Tổng tất cả các trạng thái đều hợp lệ
+    total = sum(result) % MOD
+    print(total)

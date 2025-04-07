@@ -2,7 +2,12 @@
 
 using namespace std;
 
+bool bit(int i, int mask)
+{
+    return mask >> i; 
+}
+
 int main()
 {
-    cout << (1 << 0);
+    cout << bit(4, 15); 
 }

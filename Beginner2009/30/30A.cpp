@@ -15,15 +15,15 @@ void Build(int v, int l, int r)
     if (l == r)
     {
         t[v] = a[l];
+        return;
     }
-    else
-    {
-        int mid = l + (r - l) / 2;
-        Build(2 * v, l, mid);
-        Build(2 * v + 1, mid + 1, r);
 
-        t[v] = min(t[2 * v], t[2 * v + 1]);
-    }
+    int mid = l + (r - l) / 2;
+
+    Build(2 * v, l, mid);
+    Build(2 * v + 1, mid + 1, r);
+
+    t[v] = min(t[2 * v], t[2 * v + 1]);
 }
 
 void Update(int v, int l, int r, int pos, int val)
@@ -31,38 +31,26 @@ void Update(int v, int l, int r, int pos, int val)
     if (l == r)
     {
         t[v] = val;
+        return;
     }
-    else
-    {
-        int mid = l + (r - l) / 2;
-        if (pos <= mid) 
-        {
-            Update(2 * v, l, mid, pos, val);
-        }
-        else
-        {
-            Update(2 * v + 1, mid + 1, r, pos, val);
-        }
+    
+    int mid = l + (r - l) / 2;
+    if (pos <= mid) Update(2 * v, l, mid, pos, val);
+    else Update(2 * v + 1, mid + 1, r, pos, val);
 
-        t[v] = min(t[2 * v], t[2 * v + 1]);
-    }
+    t[v] = min(t[2 * v], t[2 * v + 1]);
 }
 
-int Query(int v, int tl, int tr, int l, int r)
+int GetMin(int v, int l, int r, int left, int right)
 {
-    if (l > r) return 1e9;
-    if (tl == l && tr == r)
-    {
-        return t[v];
-    }
-    else
-    {
-        int tmid = tl + (tr - tl) / 2;
-        int s1 = Query(2 * v, tl, tmid, l, min(tmid, r));
-        int s2 = Query(2 * v + 1, tmid + 1, tr, max(l, tmid + 1), r);
+    if (l > right || r < left) return 1e9;
+    if (left <= l && right >= r) return t[v];
+    
+    int mid = l + (r - l) / 2;
+    int min1 = GetMin(2 * v, l, mid, left, right);
+    int min2 = GetMin(2 * v + 1, mid + 1, r, left, right);
 
-        return min(s1, s2);
-    }
+    return min(min1, min2);
 }
 
 int main()
@@ -92,7 +80,7 @@ int main()
             int l, r;
             cin >> l >> r;
 
-            cout << Query(1, 1, n, l, r) << '\n';
+            cout << GetMin(1, 1, n, l, r) << '\n';
         }
     }
 
