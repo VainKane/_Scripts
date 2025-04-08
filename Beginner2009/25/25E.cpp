@@ -19,27 +19,55 @@ int trace[N];
 int up[N][LOG];
 int upMin[N][LOG];
 
-void DFS(int u)
-{
-    for (auto v : adj[u])
-    {
-        if (v == par[u]) continue;
+vector<int> res;
 
-        par[v] = u;
-        h[v] = h[u] + 1;
-        DFS(v);
+void BFSBuild(int start)
+{
+    queue<int> qu;
+    qu.push(start);
+    par[start] = -1;
+
+    while (!qu.empty())
+    {
+        int u = qu.front();
+        qu.pop();
+
+        for (auto v : adj[u])
+        {
+            if (par[v]) continue;
+            par[v] = u;
+            h[v] = h[u] + 1;
+
+            qu.push(v);
+        }
     }
 }
 
-int LCA(int u, int v)
+bool CompareLCA(int u, int v)
 {
-    
+    int uMin = 1e9;
+    int vMin = 1e9;
+
+    for (int i = LOG; i >= 0; i--)
+    {
+        if (up[u][i] != up[v][i])
+        {
+            uMin = min(uMin, upMin[u][i]);
+            vMin = min(vMin, upMin[v][i]);
+
+            u = up[u][i];
+            v = up[v][i];
+        }
+    }
+
+    uMin = min(uMin, u);
+    vMin = min(vMin, v);
+
+    return uMin < vMin;
 }
 
 void BFS(int root)
 {
-    memset(par, 0, sizeof par);
-
     queue<int> qu;
     qu.push(root);
 
@@ -51,14 +79,21 @@ void BFS(int root)
         for (auto v : adj[u])
         {
             if (h[v] != h[u] + 1) continue;
-            if (!par[v]) continue;
-            Update(u, par[v]);
+            if (CompareLCA(u, par[v])) par[v] = u;
 
-            for (int i = 1; i <= LOG; i++)
-            {
-                up[v][] 
-            }
+            qu.push(v);
         }
+
+        up[u][0] = u;
+        upMin[u][0] = min(u, u);
+
+        for (int i = 1; i <= LOG; i++)
+        {
+            int p = up[u][i - 1];
+            up[u][i] = up[p][i - 1];
+            upMin[u][i] = min(upMin[u][i - 1], upMin[p][i - 1]);
+        }
+
     }
 }
 
@@ -76,6 +111,20 @@ int main()
         adj[u].push_back(v);
         adj[v].push_back(u);
     }
+
+    BFSBuild(s);
+    BFS(s);
+
+    res.push_back(t);
+
+    while (s != t)
+    {
+        t = par[t];
+        res.push_back(t);
+    }
+
+    reverse(res.begin(), res.end());
+    for (auto val : res) cout << val << ' ';
 
     return 0;
 }
