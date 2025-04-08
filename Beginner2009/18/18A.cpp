@@ -10,7 +10,7 @@ int s;
 int t;
 
 vector<int> adj[N];
-int trace[N];
+int par[N];
 bool visisted[N];
 
 vector<int> res;
@@ -21,11 +21,11 @@ void DFS(int u)
 
     for (auto v : adj[u])
     {
-        if (!visisted[v])
-        {
-            trace[v] = u;
-            DFS(v);
-        }
+        // if (v == par[u]) continue;
+        if (visisted[v]) continue;
+
+        par[v] = u;
+        DFS(v);
     }
 }
 
@@ -41,9 +41,9 @@ void BFS(int s)
 
         for (auto v : adj[u])
         {
-            if (!trace[v])
+            if (!par[v])
             {
-                trace[v] = u;
+                par[v] = u;
                 q.push(v);
             }
         }
@@ -66,16 +66,16 @@ int main()
         adj[v].push_back(u);
     }
 
-    BFS(s);
+    DFS(s);
     int pos = t;
     while (pos != s && pos != 0)
     {
         res.push_back(pos);
-        pos = trace[pos];
+        pos = par[pos];
     }
     res.push_back(s);
 
-    if (!trace[t])
+    if (!par[t])
     {
         cout << -1;
         return 0;
