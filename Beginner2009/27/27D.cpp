@@ -10,7 +10,6 @@ struct Edge
     int j;
 };
 
-
 int n;
 int k;
 int a;
@@ -31,6 +30,7 @@ int main()
         int u, v, w;
         cin >> u >> v >> w;
 
+        
     }
 
     return 0;

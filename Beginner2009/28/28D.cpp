@@ -12,20 +12,19 @@ int const N = 1e5 + 5;
 int n;
 
 int a[N];
-int bit[N];
+pii bit[N];
 vector<int> b;
-
-int res = 1;
-
-vector<int> mark;
-int k = 0;
 
 void Update(int idx, int val)
 {
     int pos = idx;
     while (idx <= n)
     {
-        if (bit[idx], val);
+        if (bit[idx].fi < val)
+        {
+            bit[idx].fi = val;
+            bit[idx].se = pos;
+        }
         idx += idx & -idx;
     }
 }
@@ -36,7 +35,7 @@ int GetMax(int idx)
 
     while (idx)
     {
-        res = max(res, bit[idx]);
+        res = max(res, bit[idx].fi);
         idx -= idx & -idx;
     }
 
@@ -67,13 +66,12 @@ int main()
     for (int i = 1; i <= n; i++)
     {
         Update(a[i], GetMax(a[i] - 1) + 1);
-        int p = GetMax(i);
-        if (p > k) mark.push_back(b[a[i] - 1]);
-        k = p;
     }
 
     cout << GetMax(n) << '\n';
-    for (auto val : mark) cout << val << ' ';
+    
+    vector<int> mark;
+    
 
     return 0;
 }

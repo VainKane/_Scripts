@@ -2,6 +2,8 @@
 
 using namespace std;
 
+#define all(v) v.begin(), v.end()
+
 int const N = 1e5 + 5;
 int const LOG = 17;
 
@@ -14,72 +16,45 @@ vector<int> adj[N];
 int in[N];
 int out[N];
 int low[N];
-int up[N][LOG + 5];
-int h[N];
+int par[N];
+
+int ccc = 0;
+int ccId[N];
 
 bool cut[N];
-
 int cnt = 0;
 
-int bit(int i, int mask)
-{
-    return (mask >> i) & 1;
-}
-
-int LCA(int u, int v)
-{
-    if (h[u] < h[v]) swap(u, v);
-    int d = h[u] - h[v];
-
-    for (int i = 0; i <= LOG; i++)
-    {
-        if (bit(i, d))
-        {
-            u = up[u][i];
-        }
-    }
-
-    if (u == v) return u;
-
-    for (int i = LOG; i >= 0; i--)
-    {
-        if (up[u][i] != up[v][i])
-        {
-            u = up[u][i];
-            v = up[v][i];
-        }
-    }
-
-    return up[u][0];
-}
+vector<int> cc[N];
 
 void DFS(int u)
 {
     low[u] = in[u] = ++cnt;
-    int child = (up[u][0] != 0);
+    int child = (par[u] != 0);
+    ccId[u] = ccc;
 
     for (auto v : adj[u])
     {
-        if (v == up[u][0]) continue;
+        if (v == par[u]) continue;
         if (in[v]) low[u] = min(low[u], in[v]);
         else
         {
-            h[v] = h[u] + 1;
-            up[v][0] = u;
-
-            for (int i = 1; i <= LOG; i++)
-            {
-                up[v][i] = up[up[v][i - 1]][i - 1];
-            }
-
+            par[v] = u;
             DFS(v);
             low[u] = min(low[u], low[v]);
-
             child += (low[v] >= in[u]);
         }
     }
 
-    cut[u] = (child >= 2);
+    if (child >= 2)
+    {
+        cut[u] = true;
+        for (auto v : adj[u]) 
+        {
+            cc[u].push_back(v);
+        }
+
+        sort(all(cc[u]));
+    }
     out[u] = ++cnt;
 }
 
@@ -90,55 +65,33 @@ bool isChild(int v, int u)
 
 bool Query1(int a, int b, int c, int d)
 {
-    if (1ll * in[a] * in[b] == 0) return false;
-    if (1ll * in[c] * in[d] == 0) return false;
+    if (isChild(c, d)) swap(c, d);
+    if (ccId[a] != ccId[b]) return false;
+    
+    if (low[d] == in[d])
+    {
+        return (isChild(a, d) == isChild(b, d));
+    }
 
-    if (isChild(c, d))
-    {
-        if (up[c][0] == d && low[c] > in[d]) // cd la cau
-        {
-            bool c1 = isChild(a, c);
-            bool c2 = isChild(b, c);
-    
-            return (c1 == c2);
-        }
-    }
-    if (isChild(d, c))
-    {
-        if (up[d][0] == c && low[d] > in[c]) // cd la cau
-        {
-            bool c1 = isChild(a, d);
-            bool c2 = isChild(b, d);
-    
-            return (c1 == c2);
-        } 
-    }
-   
     return true;
 }
 
 bool Query2(int a, int b, int c)
 {
-    if (1ll * in[a] * in[b] * in[c] == 0) return false;
+    if (ccId[a] != ccId[b]) return false;
     if (!cut[c]) return true;
+    if (a == c || b == c) return false;
     
-    bool c1 = (low[a] < in[c]);
-    bool c2 = (low[b] < in[c]);
+    bool ca = isChild(a, c);
+    bool cb = isChild(b, c);
 
-    if (up[c][0] != 0)
-    {
-        if (c1 != c2) return false; // 1 cha, 1 con
-        if (c1 & c2) return true; // cung la cha
-    }
-    
-    for (auto v : adj[c])
-    {
-        if (isChild(a, v)) a = v;
-        if (isChild(b, v)) b = v;
-    }
+    if (!ca && !cb) return true;
+    if (!ca || !cb) return false;
 
-    return (a == b);
-    // return (LCA(a, b) != c);
+    auto it1 = upper_bound(all(cc[c]), in[a]);
+    auto it2 = upper_bound(all(cc[c]), in[b]);
+
+    return it1 == it2;
 }
 
 int main()
@@ -157,7 +110,12 @@ int main()
         adj[v].push_back(u);
     }
 
-    for (int i = 1; i <= n; i++) if (!in[i]) DFS(i);
+    for (int i = 1; i <= n; i++) 
+    {
+        if (in[i]) continue;
+        ccc++;
+        DFS(i);
+    }
 
     cin >> q;
     while (q--)
@@ -184,6 +142,8 @@ int main()
 
         // cout << "          par: " << up[2][0] << '\n';
         // cout << "          LCA: " << LCA(6, 2) << '\n';
+        // cout << "             " << ccc;
+        // cout << cnt;
     }
 
     return 0;

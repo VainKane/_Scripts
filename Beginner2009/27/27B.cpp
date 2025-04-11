@@ -13,7 +13,6 @@ int n;
 int m;
 
 vector<Edge> adj[N];
-vector<Edge> adjTmp[N];
 int a, b, c;
 
 int d1[N];
@@ -33,7 +32,7 @@ void Dijkstra(int s, int d[])
         int du = pq.top().first;
         pq.pop();
 
-        if (du != d[u]) continue;
+        if (du > d[u]) continue;
 
         for (auto &e : adj[u])
         {
@@ -63,9 +62,6 @@ int main()
 
         adj[u].push_back({v, w});
         adj[v].push_back({u, w});
-
-        adjTmp[u] = adj[u];
-        adjTmp[v] = adj[v];
     }
 
     cin >> a >> b >> c;
@@ -74,16 +70,15 @@ int main()
     memset(d2, 0x3f, sizeof d2);
     memset(d3, 0x3f, sizeof d3);
 
-    Dijkstra(a, d1, trace1);
-    Dijkstra(b, d2, trace2);
-    Dijkstra(c, d3, trace3);
+    Dijkstra(a, d1);
+    Dijkstra(b, d2);
+    Dijkstra(c, d3);
 
-    int res = 1e9;
+    long long res = 1e9;
 
     for (int v = 1; v <= n; v++)
     {
-        res = min(res, d1[v] + d2[v] + d3[v]);
-        if (v == 4) cout << d1[v] << ' ' << d2[v] << ' ' << d3[v] << '\n';
+        res = min(res, 1ll * d1[v] + d2[v] + d3[v]);
     }
 
     cout << res;

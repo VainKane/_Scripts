@@ -52,8 +52,7 @@ void DFS(int u)
 bool cmp(vector<int> a, vector<int> b)
 {
     if (a.size() != b.size()) return a.size() < b.size();
-    for (int i = 0; i < a.size(); i++) if (a[i] != b[i]) return a[i] < b[i];
-    return true;
+    return *a.begin() < *b.begin();
 }
 
 int main()
