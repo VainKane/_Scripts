@@ -12,20 +12,21 @@ int t;
 
 vector<int> adj[N];
 
-int par[N];
 int h[N];
-int trace[N];
+int par[N];
 
-int up[N][LOG];
-int upMin[N][LOG];
+int up[N][LOG + 5];
+int upMin[N][LOG + 5];
+
+bool visisted[N];
 
 vector<int> res;
 
-void BFSBuild(int start)
+void Build(int start)
 {
     queue<int> qu;
     qu.push(start);
-    par[start] = -1;
+    visisted[start] = true;
 
     while (!qu.empty())
     {
@@ -34,10 +35,12 @@ void BFSBuild(int start)
 
         for (auto v : adj[u])
         {
-            if (par[v]) continue;
-            par[v] = u;
+            if (visisted[v]) continue;
+            
+            visisted[v] = true;
             h[v] = h[u] + 1;
-
+            
+            if (v == t) return;
             qu.push(v);
         }
     }
@@ -68,6 +71,12 @@ bool CompareLCA(int u, int v)
 
 void BFS(int root)
 {
+    if (h[root] == 0)
+    {
+        cout << -1;
+        exit(0);
+    }
+
     queue<int> qu;
     qu.push(root);
 
@@ -76,16 +85,18 @@ void BFS(int root)
         int u = qu.front();
         qu.pop();
 
+        if (u == s) return;
+
         for (auto v : adj[u])
         {
-            if (h[v] != h[u] + 1) continue;
-            if (CompareLCA(u, par[v])) par[v] = u;
-
-            qu.push(v);
+            if (h[v] == h[u] - 1)
+            {
+                if (par[u] == 0 || CompareLCA(v, par[u])) par[u] = v;
+            }
         }
-
-        up[u][0] = u;
-        upMin[u][0] = min(u, u);
+        
+        up[u][0] = par[u];
+        upMin[u][0] = min(u, par[u]);
 
         for (int i = 1; i <= LOG; i++)
         {
@@ -94,6 +105,7 @@ void BFS(int root)
             upMin[u][i] = min(upMin[u][i - 1], upMin[p][i - 1]);
         }
 
+        qu.push(par[u]);
     }
 }
 
@@ -112,8 +124,8 @@ int main()
         adj[v].push_back(u);
     }
 
-    BFSBuild(s);
-    BFS(s);
+    Build(s);
+    BFS(t);
 
     res.push_back(t);
 

@@ -8,51 +8,44 @@ int n;
 int m;
 
 vector<int> adj[N];
+
 int par[N];
 int id[N];
 int low[N];
 
-int val[N];
-long long res[N];
-
 int cnt = 0;
+
+int cc = 0;
+int bridges;
+int nodes[N];
+int vertiecs[3];
+
+long long s2 = 0;
 
 void DFS(int u)
 {
     low[u] = id[u] = ++cnt;
-    int child = (par[u] != 0);
-    
-    int sum = 0;
-    val[u]++;
+    nodes[u]++;
+    vertiecs[cc]++;
 
     for (auto v : adj[u])
-    {
+    {   
         if (v == par[u]) continue;
-
         if (id[v]) low[u] = min(low[u], id[v]);
         else
         {
             par[v] = u;
             DFS(v);
             low[u] = min(low[u], low[v]);
+            nodes[u] += nodes[v];
 
-            val[u] += val[v];
-
-            if (low[v] >= id[u])
+            if (low[v] == id[v])
             {
-                child++;
-                sum += val[v];
-                res[u] += 1ll * val[v] * (n - val[v]);
+                bridges++;
+                s2 += 1ll * (n- nodes[v]) * nodes[v] - 1;
             }
         }
     }
-
-    if (child >= 2)
-    {
-        res[u] += (n - 1ll - sum) * (1 + sum);
-        res[u] += n - 1;
-    }
-    else res[u] = 2ll * (n - 1);
 }
 
 int main()
@@ -71,8 +64,26 @@ int main()
         adj[v].push_back(u);
     }
 
-    for (int i = 1; i <= n; i++) if (!id[i]) DFS(i);
-    for (int i = 1; i <= n; i++) cout << res[i] << '\n';
+    for (int i = 1; i <= n; i++)
+    {
+        if (!id[i])
+        {
+            cc++;
+            DFS(i);
+            if (cc > 2)
+            {
+                cout << 0;
+                exit(0);
+            }
+        }
+    }
+
+    if (cc == 1)
+    {
+        long long s1 = (m - bridges) * ( (n * (n - 1ll)) / 2 - m);
+        cout << s1 + s2;
+    }
+    else cout << (m - bridges) * 1ll * vertiecs[1] * vertiecs[2];
 
     return 0;
 }

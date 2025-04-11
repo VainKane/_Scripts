@@ -2,57 +2,49 @@
 
 using namespace std;
 
+struct Edge
+{
+    int v, i;
+};
+
 int const N = 1e5 + 5;
 
 int n;
 int m;
 
-vector<int> adj[N];
-int par[N];
-int id[N];
+vector<Edge> adj[N];
 int low[N];
+int id[N];
+int par[N];
 
-int val[N];
 long long res[N];
+int val[N];
 
 int cnt = 0;
 
 void DFS(int u)
 {
     low[u] = id[u] = ++cnt;
-    int child = (par[u] != 0);
-    
-    int sum = 0;
     val[u]++;
 
-    for (auto v : adj[u])
+    for (auto e : adj[u])
     {
+        int v = e.v;
         if (v == par[u]) continue;
-
         if (id[v]) low[u] = min(low[u], id[v]);
         else
         {
             par[v] = u;
             DFS(v);
             low[u] = min(low[u], low[v]);
-
             val[u] += val[v];
 
-            if (low[v] >= id[u])
+            if (low[v] == id[v])
             {
-                child++;
-                sum += val[v];
-                res[u] += 1ll * val[v] * (n - val[v]);
+                res[e.i] = 1ll * val[v] * (n - val[v]);
             }
         }
     }
-
-    if (child >= 2)
-    {
-        res[u] += (n - 1ll - sum) * (1 + sum);
-        res[u] += n - 1;
-    }
-    else res[u] = 2ll * (n - 1);
 }
 
 int main()
@@ -67,12 +59,12 @@ int main()
         int u, v;
         cin >> u >> v;
 
-        adj[u].push_back(v);
-        adj[v].push_back(u);
+        adj[u].push_back({v, i});
+        adj[v].push_back({u, i});
     }
 
     for (int i = 1; i <= n; i++) if (!id[i]) DFS(i);
-    for (int i = 1; i <= n; i++) cout << res[i] << '\n';
+    for (int i = 1; i <= m; i++) cout << res[i] << '\n';
 
     return 0;
 }

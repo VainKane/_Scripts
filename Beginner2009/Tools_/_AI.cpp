@@ -1,73 +1,88 @@
 #include <bits/stdc++.h>
-
 using namespace std;
 
-const int N = 1e5 + 5;
+const int MAXN = 1e5 + 5;
 
-int n, m, s, t;
-vector<int> adj[N];
-int parent[N];
-int dist[N];
-bool visited[N];
+int n;
+vector<int> a, compressed;
+int bit[MAXN];         // BIT lưu độ dài LIS
+int bit_pos[MAXN];     // BIT lưu chỉ số tương ứng với dp max
+int dp[MAXN], trace[MAXN];
 
-void bfs(int start) {
-    queue<int> q;
-    q.push(start);
-    visited[start] = true;
-    dist[start] = 0;
-    parent[start] = -1;
+// Nén tọa độ
+int getCompressedIndex(int x) {
+    return lower_bound(compressed.begin(), compressed.end(), x) - compressed.begin() + 1;
+}
 
-    while (!q.empty()) {
-        int u = q.front();
-        q.pop();
-
-        // Sort adjacent nodes to ensure lexicographical order
-        sort(adj[u].begin(), adj[u].end());
-
-        for (int v : adj[u]) {
-            if (!visited[v]) {
-                visited[v] = true;
-                dist[v] = dist[u] + 1;
-                parent[v] = u;
-                q.push(v);
-            } else if (dist[v] == dist[u] + 1 && u < parent[v]) {
-                // If same distance, choose the smaller parent for lex order
-                parent[v] = u;
-            }
+// Cập nhật BIT: lưu độ dài LIS và vị trí tương ứng
+void update(int idx, int val, int pos) {
+    while (idx < MAXN) {
+        if (bit[idx] < val) {
+            bit[idx] = val;
+            bit_pos[idx] = pos;
         }
+        idx += idx & -idx;
     }
 }
 
+// Truy vấn BIT: lấy độ dài max và vị trí tương ứng trong đoạn [1..idx]
+pair<int, int> query(int idx) {
+    int res = 0, pos = -1;
+    while (idx > 0) {
+        if (bit[idx] > res) {
+            res = bit[idx];
+            pos = bit_pos[idx];
+        }
+        idx -= idx & -idx;
+    }
+    return {res, pos};
+}
+
 int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(0); cout.tie(0);
+    ios::sync_with_stdio(0);
+    cin.tie(0);
 
-    cin >> n >> m >> s >> t;
-    for (int i = 0; i < m; ++i) {
-        int u, v;
-        cin >> u >> v;
-        adj[u].push_back(v);
-        adj[v].push_back(u);
+    cin >> n;
+    a.resize(n);
+    vector<int> original_a(n);
+    for (int i = 0; i < n; ++i) {
+        cin >> a[i];
+        original_a[i] = a[i];
     }
 
-    bfs(s);
+    // Nén tọa độ
+    compressed = a;
+    sort(compressed.begin(), compressed.end());
+    compressed.erase(unique(compressed.begin(), compressed.end()), compressed.end());
 
-    if (!visited[t]) {
-        cout << -1 << endl;
-        return 0;
+    // DP + BIT
+    int max_len = 0, last_idx = -1;
+    for (int i = 0; i < n; ++i) {
+        int cidx = getCompressedIndex(a[i]);
+        auto [prev_len, prev_pos] = query(cidx - 1);
+        dp[i] = prev_len + 1;
+        trace[i] = prev_pos;
+
+        if (dp[i] > max_len) {
+            max_len = dp[i];
+            last_idx = i;
+        }
+
+        update(cidx, dp[i], i);
     }
 
-    vector<int> path;
-    for (int v = t; v != -1; v = parent[v]) {
-        path.push_back(v);
+    // Truy vết dãy con
+    vector<int> lis;
+    while (last_idx != -1) {
+        lis.push_back(original_a[last_idx]);
+        last_idx = trace[last_idx];
     }
-    reverse(path.begin(), path.end());
+    reverse(lis.begin(), lis.end());
 
-    for (int i = 0; i < path.size(); ++i) {
-        if (i > 0) cout << " ";
-        cout << path[i];
-    }
-    cout << endl;
+    // In kết quả
+    cout << lis.size() << '\n';
+    for (int x : lis) cout << x << ' ';
+    cout << '\n';
 
     return 0;
 }
