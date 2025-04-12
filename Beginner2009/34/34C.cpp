@@ -5,7 +5,6 @@ using namespace std;
 #define all(v) v.begin(), v.end()
 
 int const N = 1e5 + 5;
-int const LOG = 17;
 
 int n;
 int m;
@@ -26,11 +25,14 @@ int cnt = 0;
 
 vector<int> cc[N];
 
+set<int> mark[N];
+
 void DFS(int u)
 {
     low[u] = in[u] = ++cnt;
-    int child = (par[u] != 0);
     ccId[u] = ccc;
+
+    int child = (par[u] != 0);
 
     for (auto v : adj[u])
     {
@@ -41,18 +43,17 @@ void DFS(int u)
             par[v] = u;
             DFS(v);
             low[u] = min(low[u], low[v]);
-            child += (low[v] >= in[u]);
+            if (low[v] >= in[u])
+            {
+                cc[u].push_back(in[v]);
+                child++;
+            }
         }
     }
 
     if (child >= 2)
     {
         cut[u] = true;
-        for (auto v : adj[u]) 
-        {
-            cc[u].push_back(v);
-        }
-
         sort(all(cc[u]));
     }
     out[u] = ++cnt;
@@ -60,20 +61,16 @@ void DFS(int u)
 
 bool isChild(int v, int u)
 {
-    return (in[u] <= in[v] && out[v] <= out[u]);
+    return (in[u] <= in[v] && out[v] < out[u]);
 }
 
 bool Query1(int a, int b, int c, int d)
 {
-    if (isChild(c, d)) swap(c, d);
+    if (in[c] > in[d]) swap(c, d);
     if (ccId[a] != ccId[b]) return false;
     
-    if (low[d] == in[d])
-    {
-        return (isChild(a, d) == isChild(b, d));
-    }
-
-    return true;
+    if (low[d] != in[d]) return true;
+    return (isChild(a, d) == isChild(b, d));
 }
 
 bool Query2(int a, int b, int c)
@@ -81,12 +78,12 @@ bool Query2(int a, int b, int c)
     if (ccId[a] != ccId[b]) return false;
     if (!cut[c]) return true;
     if (a == c || b == c) return false;
-    
+
     bool ca = isChild(a, c);
     bool cb = isChild(b, c);
 
     if (!ca && !cb) return true;
-    if (!ca || !cb) return false;
+    if (ca != cb) return false;
 
     auto it1 = upper_bound(all(cc[c]), in[a]);
     auto it2 = upper_bound(all(cc[c]), in[b]);
@@ -123,8 +120,6 @@ int main()
         int type, a, b, c, d;
         cin >> type;
 
-        // for (int i = 1; i <= n; i++) cout << i << ' ' << cut[i] << '\n';
-
         if (type == 1)
         {
             cin >> a >> b >> c >> d;
@@ -139,11 +134,6 @@ int main()
             if (Query2(a, b, c)) cout << "yes\n";
             else cout << "no\n";
         }
-
-        // cout << "          par: " << up[2][0] << '\n';
-        // cout << "          LCA: " << LCA(6, 2) << '\n';
-        // cout << "             " << ccc;
-        // cout << cnt;
     }
 
     return 0;

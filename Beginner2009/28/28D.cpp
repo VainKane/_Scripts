@@ -6,36 +6,43 @@ using namespace std;
 #define pii pair<int, int>
 #define fi first
 #define se second
+#define name "28D"
 
 int const N = 1e5 + 5;
 
 int n;
 
 int a[N];
-pii bit[N];
+int bit[N];
 vector<int> b;
 
-void Update(int idx, int val)
+int trace[N];
+int pos[N];
+
+void Update(int idx, int val, int k)
 {
-    int pos = idx;
     while (idx <= n)
     {
-        if (bit[idx].fi < val)
+        if (bit[idx] < val)
         {
-            bit[idx].fi = val;
-            bit[idx].se = pos;
+            bit[idx] = val;
+            pos[idx] = k;
         }
         idx += idx & -idx;
     }
 }
 
-int GetMax(int idx)
+int GetMax(int idx, int &p)
 {
     int res = 0;
 
     while (idx)
     {
-        res = max(res, bit[idx].fi);
+        if (res < bit[idx])
+        {
+            res = bit[idx];
+            p = pos[idx];
+        }
         idx -= idx & -idx;
     }
 
@@ -46,6 +53,9 @@ int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
+
+    // freopen(name".inp", "r", stdin);
+    // freopen(name".out", "w", stdout);
     
     cin >> n;
 
@@ -63,15 +73,36 @@ int main()
         a[i] = lower_bound(all(b), a[i]) - b.begin() + 1;
     }
 
+    int res = 0;
+    int idx;
+
     for (int i = 1; i <= n; i++)
     {
-        Update(a[i], GetMax(a[i] - 1) + 1);
+        int p = 0;
+        int val = GetMax(a[i] - 1, p) + 1;
+        Update(a[i], val, i);
+        
+        trace[i] = p;
+
+        if (val > res) 
+        {
+            idx = i;
+            res = val;
+        }
     }
 
-    cout << GetMax(n) << '\n';
-    
     vector<int> mark;
-    
+
+    while (idx)
+    {
+        mark.push_back(b[a[idx] - 1]);
+        idx = trace[idx];
+    }
+
+    reverse(all(mark));
+
+    cout << mark.size() << '\n';
+    for (auto val : mark) cout << val << ' ';
 
     return 0;
 }
