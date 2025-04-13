@@ -12,6 +12,8 @@ vector<int> b;
 
 int t[4 * N];
 
+int trace[N];
+
 void Update(int v, int l, int r, int pos, int val)
 {
     if (l == r)
@@ -55,13 +57,15 @@ int main()
     b.erase(unique(all(b)), b.end());
     for (int i = 1; i <= n; i++) a[i] = lower_bound(all(b), a[i]) - b.begin() + 1;
 
-    for (int i = 1; i <= n; i++)
+    Update(1, 1, n, a[1], 1);
+
+    for (int i = 2; i <= n; i++)
     {
         int val = GetMax(1, 1, n, 1, a[i] - 1) + 1;
         Update(1, 1, n, a[i], val);
     }
 
-    cout << GetMax(1, 1, n, 1, n);
+    cout << t[1];
 
     return 0;
 }

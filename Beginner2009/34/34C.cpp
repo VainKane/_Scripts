@@ -25,8 +25,6 @@ int cnt = 0;
 
 vector<int> cc[N];
 
-set<int> mark[N];
-
 void DFS(int u)
 {
     low[u] = in[u] = ++cnt;
@@ -61,7 +59,7 @@ void DFS(int u)
 
 bool isChild(int v, int u)
 {
-    return (in[u] <= in[v] && out[v] < out[u]);
+    return (in[u] <= in[v] && out[v] <= out[u]);
 }
 
 bool Query1(int a, int b, int c, int d)

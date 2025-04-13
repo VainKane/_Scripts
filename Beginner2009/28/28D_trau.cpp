@@ -18,8 +18,8 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    freopen(name".inp", "r", stdin);
-    freopen(name".ans", "w", stdout);
+    // freopen(name".inp", "r", stdin);
+    // freopen(name".ans", "w", stdout);
 
     cin >> n;
     for (int i = 1; i <= n; i++) 
