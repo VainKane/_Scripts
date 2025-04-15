@@ -56,13 +56,16 @@ int main()
     sort(a + 1, a + n + 1);
     Build(1, 1, n);
 
-    while (m--)
-    {
-        int i, j, k;
-        cin >> i >> j >> k;
+    // while (m--)
+    // {
+    //     int i, j, k;
+    //     cin >> i >> j >> k;
 
-        cout << Query(1, 1, n, i, j, k) << '\n';
-    }
+    //     cout << Query(1, 1, n, i, j, k) << '\n';
+    // }
+
+    // for (auto val : t[2]) cout << val << ' ';
+    cout << Query(1, 1, n, 1, 3, 2);
 
     return 0;
 }

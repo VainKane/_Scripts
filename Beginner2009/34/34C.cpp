@@ -5,6 +5,7 @@ using namespace std;
 #define all(v) v.begin(), v.end()
 
 int const N = 1e5 + 5;
+int const LOG = 17;
 
 int n;
 int m;
@@ -17,6 +18,9 @@ int out[N];
 int low[N];
 int par[N];
 
+int up[N][LOG + 5];
+int h[N];
+
 int ccc = 0;
 int ccId[N];
 
@@ -24,6 +28,17 @@ bool cut[N];
 int cnt = 0;
 
 vector<int> cc[N];
+
+int Find(int u, int anc)
+{
+    for (int i = LOG; i >= 0; i--)
+    {
+        if (h[up[u][i]] <= h[anc]) continue;
+        u = up[u][i];
+    }
+
+    return u;
+}
 
 void DFS(int u)
 {
@@ -39,6 +54,8 @@ void DFS(int u)
         else
         {
             par[v] = u;
+            up[v][0] = u;
+            h[v] = h[u] + 1;
             DFS(v);
             low[u] = min(low[u], low[v]);
             if (low[v] >= in[u])
@@ -54,12 +71,12 @@ void DFS(int u)
         cut[u] = true;
         sort(all(cc[u]));
     }
-    out[u] = ++cnt;
+    out[u] = cnt;
 }
 
 bool isChild(int v, int u)
 {
-    return (in[u] <= in[v] && out[v] <= out[u]);
+    return (in[u] <= in[v] && in[v] <= out[u]);
 }
 
 bool Query1(int a, int b, int c, int d)
@@ -77,16 +94,18 @@ bool Query2(int a, int b, int c)
     if (!cut[c]) return true;
     if (a == c || b == c) return false;
 
-    bool ca = isChild(a, c);
-    bool cb = isChild(b, c);
+    int parA = 0;
+    int parB = 0;
+    if (isChild(a, c)) parA = Find(a, c);
+    if (isChild(b, c)) parB = Find(b, c);
 
-    if (!ca && !cb) return true;
-    if (ca != cb) return false;
+    if (parA == parB) return true;
+    if (parA == 0 && low[parB] < in[c]) return true;
+    if (parB == 0 && low[parA] < in[c]) return true;
 
-    auto it1 = upper_bound(all(cc[c]), in[a]);
-    auto it2 = upper_bound(all(cc[c]), in[b]);
+    if (low[parA] < in[c] && low[parB] < in[c]) return true;
 
-    return it1 == it2;
+    return false;
 }
 
 int main()
@@ -110,6 +129,15 @@ int main()
         if (in[i]) continue;
         ccc++;
         DFS(i);
+    }
+
+    low[0] = 1e9;
+    for (int u = 1; u <= n; u++)
+    {
+        for (int i = 1; i <= LOG; i++)
+        {
+            up[u][i] = up[up[u][i - 1]][i - 1];
+        }
     }
 
     cin >> q;
