@@ -13,28 +13,25 @@ int q;
 
 vector<int> adj[N];
 
-int in[N];
-int out[N];
 int low[N];
+int id[N];
 int par[N];
+int out[N];
 
 int up[N][LOG + 5];
 int h[N];
 
-int ccc = 0;
-int ccId[N];
-
 bool cut[N];
 int cnt = 0;
 
-vector<int> cc[N];
-
-int Find(int u, int anc)
+int Find(int u, int par) 
 {
     for (int i = LOG; i >= 0; i--)
     {
-        if (h[up[u][i]] <= h[anc]) continue;
-        u = up[u][i];
+        if (h[up[u][i]] > h[par])
+        {
+            u = up[u][i];
+        }
     }
 
     return u;
@@ -42,15 +39,13 @@ int Find(int u, int anc)
 
 void DFS(int u)
 {
-    low[u] = in[u] = ++cnt;
-    ccId[u] = ccc;
-
+    low[u] = id[u] = ++cnt;
     int child = (par[u] != 0);
 
     for (auto v : adj[u])
     {
         if (v == par[u]) continue;
-        if (in[v]) low[u] = min(low[u], in[v]);
+        if (id[v]) low[u] = min(low[u], id[v]);
         else
         {
             par[v] = u;
@@ -58,9 +53,9 @@ void DFS(int u)
             h[v] = h[u] + 1;
             DFS(v);
             low[u] = min(low[u], low[v]);
-            if (low[v] >= in[u])
+
+            if (low[v] >= id[u])
             {
-                cc[u].push_back(in[v]);
                 child++;
             }
         }
@@ -69,41 +64,34 @@ void DFS(int u)
     if (child >= 2)
     {
         cut[u] = true;
-        sort(all(cc[u]));
     }
+
     out[u] = cnt;
 }
 
-bool isChild(int v, int u)
+bool child(int v, int u)
 {
-    return (in[u] <= in[v] && in[v] <= out[u]);
+    return id[u] <= id[v] && id[v] <= out[u];
 }
 
 bool Query1(int a, int b, int c, int d)
 {
-    if (in[c] > in[d]) swap(c, d);
-    if (ccId[a] != ccId[b]) return false;
-    
-    if (low[d] != in[d]) return true;
-    return (isChild(a, d) == isChild(b, d));
+    if (id[c] > id[d]) swap(c, d);
+    if (low[d] != id[d]) return true;
+    return (child(a, d) == child(b, d));
 }
 
-bool Query2(int a, int b, int c)
+bool Query2(int a, int b, int c) 
 {
-    if (ccId[a] != ccId[b]) return false;
     if (!cut[c]) return true;
-    if (a == c || b == c) return false;
+    int pa = 0, pb = 0;
+    if (child(a, c)) pa = Find(a, c);
+    if (child(b, c)) pb = Find(b, c);
 
-    int parA = 0;
-    int parB = 0;
-    if (isChild(a, c)) parA = Find(a, c);
-    if (isChild(b, c)) parB = Find(b, c);
-
-    if (parA == parB) return true;
-    if (parA == 0 && low[parB] < in[c]) return true;
-    if (parB == 0 && low[parA] < in[c]) return true;
-
-    if (low[parA] < in[c] && low[parB] < in[c]) return true;
+    if (pa == pb) return true;
+    if (!pa && low[pb] < id[c]) return true;
+    if (!pb && low[pa] < id[c]) return true;
+    if (pa && pb && low[pa] < id[c] && low[pb] < id[c]) return true;
 
     return false;
 }
@@ -124,23 +112,26 @@ int main()
         adj[v].push_back(u);
     }
 
-    for (int i = 1; i <= n; i++) 
-    {
-        if (in[i]) continue;
-        ccc++;
-        DFS(i);
-    }
+    for (int i = 1; i <= n; i++) if (!id[i]) DFS(i);
+   
+    // for (int u = 1; u <= n; u++)
+    // {
+    //     for (int i = 1; i <= LOG; i++)
+    //     {
+    //         up[u][i] = up[up[u][i - 1]][i - 1];
+    //     }
+    // }
 
-    low[0] = 1e9;
-    for (int u = 1; u <= n; u++)
+    for (int i = 1; i <= LOG; i++)
     {
-        for (int i = 1; i <= LOG; i++)
+        for (int u = 1; u <= n; u++)
         {
             up[u][i] = up[up[u][i - 1]][i - 1];
         }
     }
 
     cin >> q;
+
     while (q--)
     {
         int type, a, b, c, d;
@@ -149,17 +140,15 @@ int main()
         if (type == 1)
         {
             cin >> a >> b >> c >> d;
-
-            if (Query1(a, b, c, d)) cout << "yes\n";
-            else cout << "no\n";
+            cout << (Query1(a, b, c, d) ? "yes\n" : "no\n");
         }
         else
         {
             cin >> a >> b >> c;
-
-            if (Query2(a, b, c)) cout << "yes\n";
-            else cout << "no\n";
+            cout << (Query2(a, b, c) ? "yes\n" : "no\n");
         }
+
+        // cout << cut[6];
     }
 
     return 0;

@@ -1,120 +1,112 @@
-#include <algorithm>
-#include <iostream>
-#include <cassert>
-#include <cstdio>
-#include <cstring>
-#include <vector>
+#include <bits/stdc++.h>
 
-#define NMAX 500010
-
-typedef long long lli;
 using namespace std;
 
-vector<int> inc[NMAX];
-vector<int> out[NMAX];
+const int maxN  = 100010;
 
-int cost[NMAX];
-int stop[NMAX];
+int n, m, q;
+int timeDfs = 0;
+int low[maxN], num[maxN], tail[maxN];
+int depth[maxN], p[maxN][20];
+bool joint[maxN];
+vector <int> g[maxN];
 
-int scc[NMAX];
-lli tot[NMAX];
-int can_stop[NMAX];
-lli longest[NMAX];
-
-int visited[NMAX];
-int stack[NMAX];
-int S,C;
-
-vector<int> adj[NMAX];
-
-void dfs(int v){
-	if(visited[v]) return;
-	visited[v] = 1;
-	int i;
-
-	for(i =0 ; i < (int)out[v].size(); ++i){
-		dfs(out[v][i]);
-	}
-
-	stack[S++] = v;
+/* Tính mảng p */
+void calP() {
+    p[1][0] = 1;
+    for (int j = 1; j <= 19; j++)
+        for (int i = 1; i <= n; i++)
+            p[i][j] = p[p[i][j - 1]][j - 1];
 }
 
-void dfs2(int v){
-	if(visited[v]) return;
-	visited[v] = 1;
-	int i;
-
-	for(i = 0; i < (int)inc[v].size(); ++i){
-		dfs2(inc[v][i]);
-	}
-
-	scc[v] = C;
-	tot[C] += cost[v];
-	can_stop[C] |= stop[v];
+/* Tìm tổ tiên của đỉnh u là con trực tiếp của đỉnh par */
+int findParent(int u, int par) {
+    for (int i = 19; i >= 0; i--)
+        if (depth[p[u][i]] > depth[par]) u = p[u][i];
+    return u;
 }
 
-lli dp(int v){
-	if(longest[v] >= 0) return longest[v];
-
-	longest[v] = can_stop[v] ? tot[v] : -(1e15);
-
-	int i;
-
-	for(i = 0; i < (int)adj[v].size(); ++i){
-		longest[v] = max(longest[v],dp(adj[v][i])+tot[v]);
-	}
-
-	return longest[v];
+/* Tìm khớp cầu */
+void dfs(int u, int pre) {
+    int child = 0;
+    num[u] = low[u] = ++timeDfs;
+    for (int v : g[u]){
+        if (v == pre) continue;
+        if (!num[v]) {
+            child++;
+            p[v][0] = u;
+            depth[v] = depth[u] + 1;
+            dfs(v, u);
+            low[u] = min(low[u], low[v]);
+            if (u == pre) {
+                if (child > 1) joint[u] = true;
+            }
+            else if (low[v] >= num[u]) joint[u] = true;
+        }
+        else low[u] = min(low[u], num[v]);
+    }
+    tail[u] = timeDfs;
 }
 
-int N,M;
+/* Kiểm tra xem đỉnh u có nằm trong cây con DFS gốc root hay không? */
+bool checkInSubtree(int u, int root) {
+    return num[root] <= num[u] && num[u] <= tail[root];
+}
 
-int main(){
-	int v,u,i;
+/* Xử lí truy vấn 1 */
+bool solve1(int a, int b, int g1, int g2) {
+    /* Vì ta coi g2 là con trực tiếp của g1 nên khi g1 là con của g2,
+    ta phải đổi chỗ 2 giá trị g1 và g2 cho nhau */
+    if (num[g1] > num[g2]) swap(g1, g2);
 
-	scanf("%d%d",&N,&M);
+    /* Kiểm tra nếu cạnh (g1, g2) không phải là cầu */
+    if (low[g2] != num[g2]) return true;
 
-	while(M--){
-		scanf("%d%d",&u,&v);
-		--u,--v;
-		out[u].push_back(v);
-		inc[v].push_back(u);
-	}
+    if (checkInSubtree(a, g2) && !checkInSubtree(b, g2)) return false;
+    if (checkInSubtree(b, g2) && !checkInSubtree(a, g2)) return false;
+    return true;
+}
 
-	for(i = 0; i < N ; ++i){
-		scanf("%d",&cost[i]);
-	}
+/* Xử lí truy vấn 2 */
+bool solve2(int a, int b, int c) {
+    if (!joint[c]) return true;
+    int pa = 0, pb = 0;
+    if (checkInSubtree(a, c)) pa = findParent(a, c);
+    if (checkInSubtree(b, c)) pb = findParent(b, c);
 
-	scanf("%d%d",&u,&M);
-	--u;
+    if (!pa && !pb) return true;
+    if (pa == pb) return true;
+    if (!pa && low[pb] < num[c]) return true;
+    if (!pb && low[pa] < num[c]) return true;
+    if (pa && pb && low[pa] < num[c] && low[pb] < num[c]) return true;
 
-	while(M--){
-		scanf("%d",&i);
-		stop[--i] = 1;
-	}
+    return false;
+}
 
-	for(i = 0; i < N; ++i){
-		dfs(i);
-	}
-
-	memset(visited,0,sizeof(visited));
-
-	while(S--){
-		if(visited[stack[S]]) continue;
-		dfs2(stack[S]);
-		++C;
-	}
-
-
-	memset(longest,-1,sizeof(longest));
-	for(v = 0; v < N; ++v){
-		for(i = 0; i < (int)out[v].size(); ++i){
-			if(scc[v] == scc[out[v][i]]) continue;
-			adj[scc[v]].push_back(scc[out[v][i]]);
-		}
-	}
-
-	printf("%lld\n",dp(scc[u]));
-
-	return 0;
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cin >> n >> m;
+    for (int i = 1; i <= m; i++) {
+        int u, v;
+        cin >> u >> v;
+        g[u].push_back(v);
+        g[v].push_back(u);
+    }
+    depth[1] = 1;
+    dfs(1, 1);
+    calP();
+    cin >> q;
+    while (q--) {
+        int type, a, b, c, g1, g2;
+        cin >> type;
+        if (type == 1) {
+            cin >> a >> b >> g1 >> g2;
+            cout << (solve1(a, b, g1, g2) ? "yes\n" : "no\n");
+        }
+        else {
+            cin >> a >> b >> c;
+            cout << (solve2(a, b, c) ? "yes\n" : "no\n");
+        }
+    }
 }

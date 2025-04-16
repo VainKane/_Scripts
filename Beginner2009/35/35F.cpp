@@ -10,31 +10,58 @@ int n;
 int m;
 
 vector<int> adj[N];
-vector<int> adj2[N];
+set<int> dagAdj[N];
+stack<int> st;
 
 int inDeg[N];
 int outDeg[N];
-bool visisted[N];
+
+int low[N];
+int id[N];
+int in[N];
+
+int cnt = 0;
+
+void Tarjan(int u) // khu chu ki
+{
+    low[u] = id[u] = ++cnt;
+    st.push(u);
+    
+    for (auto v : adj[u])
+    {
+        if (id[v]) low[u] = min(low[u], id[v]);
+        else
+        {
+            Tarjan(v);
+            low[u] = min(low[u], low[v]);
+        }
+    }
+
+    if (low[u] == id[u])
+    {
+        int v = 0;
+        while (v != u)
+        {
+            v = st.top();
+            st.pop();
+
+            id[v] = n + 1;
+            in[v] = u;
+        }
+    }
+}
 
 void Reset()
 {
     for (int i = 1; i <= n; i++) adj[i].clear();
-    for (int i = 1; i <= n; i++) adj2[i].clear();
+    for (int i = 1; i <= n; i++) dagAdj[i].clear();
     memset(inDeg, 0, sizeof inDeg);
     memset(outDeg, 0, sizeof outDeg);
-    memset(visisted, 1, sizeof visisted);
+    memset(id, 0, sizeof id);
+    cnt = 0;
 }
 
-void DFS(int u)
-{
-    visisted[u] = true;
-    for (auto v : adj2[u])
-    {
-        if (!visisted[v]) DFS(v);
-    }
-}
-
-bool Check() // kiem tra duong di Euler
+bool Check() // co ton tai duong di Euler ko?
 {
     int s = 0;
     int t = 0;
@@ -67,41 +94,21 @@ int main()
             cin >> u >> v;
 
             adj[u].push_back(v);
-            adj2[u].push_back(v);
-            adj2[v].push_back(u);
-
-            inDeg[v]++;
-            outDeg[u]++;
         }
 
-        int s = 0;
-        bool cc = true;
+        for (int i = 1; i <= n; i++) if (!id[i]) Tarjan(i);
 
         for (int u = 1; u <= n; u++)
         {
-            if (inDeg[u] + outDeg[u] > 0)
+            for (auto v : adj[u])
             {
-                s = u;
-                break;
+                if (in[u] == in[v]) continue;
+                if (dagAdj[in[u]].count(in[v])) continue;
+                
+                dagAdj[in[u]].insert(in[v]);
+                inDeg[in[v]]++;
+                outDeg[in[u]]++;
             }
-        }
-
-        if (s)
-        {
-            DFS(s);
-            for (int u = 1; u <= n; u++)
-            {
-                if (inDeg[u] + outDeg[u] > 0 && !visisted[u])
-                {
-                    cc = false;
-                }
-            }
-        }
-       
-        if (!cc) 
-        {
-            cout << "NO\n";
-            continue;
         }
 
         if (Check()) cout << "YES\n";
