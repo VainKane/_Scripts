@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#define bit(i, x) ((x >> i) & 1)
+#define bit(i, x) (((x) >> (i)) & 1)
 
 int const maxBit = 30;
 

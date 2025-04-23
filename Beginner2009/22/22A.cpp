@@ -8,14 +8,14 @@ int n;
 int a[N][N];
 long long dp[(1 << 20) + 10];
 
-int Bit(int i, int x)
+int bit(int i, int mask)
 {
-    return (x >> i) & 1;
+    return (mask >> i) & 1;
 }
 
-int TurnOff(int i, int x)
+int on(int i, int mask)
 {
-    return x & (~(1 << i));
+    return mask | (1 << i);
 }
 
 int main()
@@ -32,15 +32,13 @@ int main()
         }
     }
 
-    for (int x = 1; x < (1 << n); x++)
+    for (int mask = 0; mask < (1 << n); mask++)
     {
-        int k = __builtin_popcountll(x);
+        int k = __builtin_popcount(mask);
         for (int i = 0; i < n; i++)
         {
-            if (Bit(i, x))
-            {
-                dp[x] = max(dp[x], dp[TurnOff(i, x)] + a[i][k]);
-            }
+            if (bit(i, mask)) continue;
+            dp[on(i, mask)] = max(dp[on(i, mask)], dp[mask] + a[i][k + 1]);
         }
     }
 

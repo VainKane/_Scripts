@@ -4,7 +4,7 @@ using namespace std;
 
 struct Edge
 {
-    int v, w;
+    int u, v, w;
 };
 
 #define name "QKGRAPH"
@@ -14,34 +14,44 @@ int const N = 1e5 + 5;
 int n;
 int q;
 
-vector<Edge> adj[N];
-bool visited[N];
+Edge a[N];
+Edge b[N];
 
-void BFS(int &s, int &k)
+int par[N];
+int sz[N];
+
+int res[N];
+
+bool cmp(Edge a, Edge b)
 {
-    queue<int> qu;
-    qu.push(s);
+    return a.w > b.w;
+}
 
-    visited[s] = true;
-
-    while (!qu.empty())
+void MakeSet()
+{
+    for (int i = 1; i <= n; i++)
     {
-        int u = qu.front();
-        qu.pop();
-
-        for (auto e : adj[u])
-        {
-            int v = e.v;
-            int w = e.w;
-
-            if (visited[v]) continue;
-            if (w >= k)
-            {
-                visited[v] = true;
-                qu.push(v);
-            }
-        }
+        par[i] = i;
+        sz[i] = 1;
     }
+}  
+
+int Find(int v)
+{
+    if (par[v] == v) return v;
+    return par[v] = Find(par[v]);
+}
+
+void Union(int a, int b)
+{
+    a = Find(a);
+    b = Find(b);
+
+    if (a == b) return;
+
+    if (sz[b] > sz[a]) swap(a, b);
+    par[b] = a;
+    sz[a] += sz[b];
 }
 
 int main()
@@ -59,22 +69,37 @@ int main()
         int u, v, w;
         cin >> u >> v >> w;
 
-        adj[u].push_back({v, w});
-        adj[v].push_back({u, w});
+        a[i] = {u, v, w};
     }
 
-    while (q--)
+
+    for (int i = 1; i <= q; i++)
     {
         int k, v;
         cin >> k >> v;
 
-        memset(visited, 0, sizeof visited);
-        BFS(v, k);
-        int res = 0;
-
-        for (int u = 1; u <= n; u++) if (visited[u]) res++;
-        cout << res - 1 << '\n';
+        b[i] = {i, v, k};
     }
+
+    sort(a + 1, a + n, cmp);
+    sort(b + 1, b + q + 1, cmp);
+
+    MakeSet();
+
+    int j = 1;
+
+    for (int i = 1; i <= q; i++)
+    {
+        while (j < n && a[j].w >= b[i].w)
+        {
+            Union(a[j].u, a[j].v);
+            j++;
+        }
+
+        res[b[i].u] = sz[Find(b[i].v)] - 1;
+    }
+
+    for (int i = 1; i <= q; i++) cout << res[i] << '\n';
 
     return 0;
 }

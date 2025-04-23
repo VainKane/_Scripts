@@ -2,6 +2,11 @@
 
 using namespace std;
 
+#define all(v) v.begin(), v.end()
+#define pii pair<int, int>
+#define F first
+#define S second
+
 struct Edge
 {
     int v, w;
@@ -19,39 +24,37 @@ long long d[N][109];
 void Dijkstra(int s)
 {
     memset(d, 0x3f, sizeof d);
-    for (int i = 1; i <= k; i++) d[s][i] = 0;
+    d[s][1] = 0;
 
-    vector<pair<int, int>> pq;
-    pq.push_back({0, s});
+    priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> pq;
+    pq.push({0, s});
 
     while (!pq.empty())
     {
-        int u = (*pq.begin()).second;
-        int du = (*pq.begin()).first;
-        pq.erase(pq.begin());
+        int u = pq.top().S;
+        long long du = pq.top().F;
+        pq.pop();
 
-        for (int i = 1; i <= k; i++)
+        if (du > d[u][k]) continue;
+
+        for (auto e : adj[u])
         {
-            if (du > d[u][i]) continue;
+            int v = e.v;
+            int w = e.w;
 
-            for (auto e : adj[u])
+            long long l = du + w;
+            int p = lower_bound(d[v] + 1, d[v] + k + 1, l) - d[v];
+
+            if (p > k) continue;
+            if (d[v][p] == l) continue;
+
+            for (int j = k; j >= p; j--)
             {
-                int v = e.v;
-                int w = e.w;
-
-                int p = lower_bound(pq.begin(), pq.end(), make_pair(du + w, 0)) - pq.begin();
-                if (pq[p].first == du + w) continue;
-
-                d[v][p + 1] = du + w;
-                
-                int j = pq.size() - 1;
-                while (j != p && j >= 0) 
-                {
-                    swap(pq[j], pq[j + 1]);
-                    j--;
-                }
-                pq[p] = {du + w, v};
+                d[v][j] = d[v][j - 1];
             }
+
+            d[v][p] = l;
+            pq.push({d[v][p], v});
         }
     }
 }
@@ -73,8 +76,20 @@ int main()
     }
 
     Dijkstra(1);
+
+    if (d[n][1] == d[n][101])
+    {
+        cout << -1;
+        exit(0);
+    }
+
     for (int i = 1; i <= k; i++)
     {
+        if (d[n][i] == d[n][101])
+        {
+            d[n][i] = d[n][i - 1] + 2ll * d[n][1];
+        }
+
         cout << d[n][i] << ' ';
     }
 

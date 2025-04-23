@@ -1,62 +1,41 @@
-MOD = 10**9 + 7
+def solve():
+    with open("MICOST.INP", "r") as f:
+        n, c = map(int, f.readline().split())
+        h = [int(f.readline()) for _ in range(n)]
 
-def multiply(a, b):
-    res = [[0] * 32 for _ in range(32)]
-    for i in range(32):
-        for k in range(32):
-            if a[i][k] == 0:
-                continue
-            for j in range(32):
-                res[i][j] = (res[i][j] + a[i][k] * b[k][j]) % MOD
-    return res
+    hmax = 1000
+    INF = float('inf')
 
-def matrix_power(mat, power):
-    result = [[0] * 32 for _ in range(32)]
-    for i in range(32):
-        result[i][i] = 1  # Ma trận đơn vị
-    while power > 0:
-        if power % 2 == 1:
-            result = multiply(result, mat)
-        mat = multiply(mat, mat)
-        power //= 2
-    return result
+    # F[i][x] = chi phí thấp nhất để chỉnh sửa tòa nhà thứ i có chiều cao x
+    F_prev = [0] * (hmax + 1)
+    for x in range(hmax + 1):
+        if x < h[0]:
+            F_prev[x] = INF
+        else:
+            F_prev[x] = (x - h[0]) ** 2
 
-n = int(input())
-if n == 0:
-    print(0)
-else:
-    # Xây dựng ma trận chuyển tiếp
-    transition = [[0] * 32 for _ in range(32)]
-    odd_digits = {1: 0, 3: 1, 5: 2, 7: 3, 9: 4}
-    for i in range(32):
-        # Thêm chữ số chẵn (0,2,4,6,8) → 5 cách, không đổi bitmask
-        transition[i][i] += 5
-        # Thêm chữ số lẻ → flip bit tương ứng
-        for d in odd_digits:
-            idx = odd_digits[d]
-            j = i ^ (1 << idx)
-            transition[i][j] += 1
-        # Modulo
-        for j in range(32):
-            transition[i][j] %= MOD
+    for i in range(1, n):
+        Low = [INF] * (hmax + 2)
+        High = [INF] * (hmax + 2)
 
-    # Tính transition^(n-1)
-    powered = matrix_power(transition, n-1)
+        # Tính mảng Low và High từ F_prev
+        for x in range(1, hmax + 1):
+            Low[x] = min(Low[x - 1], F_prev[x] - c * x)
+        for x in range(hmax, -1, -1):
+            High[x] = min(High[x + 1], F_prev[x] + c * x)
 
-    # Vector ban đầu: 4 cách chẵn, 5 cách lẻ (mỗi bit set 1)
-    initial = [0] * 32
-    initial[0] = 4  # Chữ số chẵn (2,4,6,8)
-    for bit in range(5):
-        initial[1 << bit] += 1  # Chữ số lẻ 1,3,5,7,9
+        F_curr = [INF] * (hmax + 1)
+        for x in range(h[i], hmax + 1):  # Chỉ xét chiều cao >= h[i]
+            option1 = Low[x] + c * x
+            option2 = High[x] - c * x
+            F_curr[x] = min(option1, option2) + (x - h[i]) ** 2
 
-    # Nhân vector ban đầu với ma trận đã lũy thừa
-    result = [0] * 32
-    for i in range(32):
-        if initial[i] == 0:
-            continue
-        for j in range(32):
-            result[j] = (result[j] + initial[i] * powered[i][j]) % MOD
+        F_prev = F_curr  # Chuẩn bị cho vòng lặp tiếp theo
 
-    # Tổng tất cả các trạng thái đều hợp lệ
-    total = sum(result) % MOD
-    print(total)
+    result = min(F_prev)
+    with open("MICOST.OUT", "w") as f:
+        f.write(str(result))
+
+
+# Gọi hàm giải
+solve()
