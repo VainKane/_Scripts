@@ -62,7 +62,7 @@ bool Solve(int k)
 {
     MakeSet();
 
-    for (int i = 1; i <= m; i++)
+    for (int i = 1; i <= m; i++) 
     {
         if (a[i].w >= a[k].w) continue;
         Union(a[i].u, a[i].v);

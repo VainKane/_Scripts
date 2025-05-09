@@ -12,17 +12,10 @@ int const MOD = 1e9 + 7;
 int n;
 int a[N];
 
-bool isEnd[N];
-bool isExist[N];
-
 vector<int> b;
 
 int f[N];
 int g[N];
-int cnt[N][N];
-
-int d = 0;
-int k = 0;
 
 int main()
 {
@@ -44,26 +37,11 @@ int main()
         a[i] = lower_bound(all(b), a[i]) - b.begin() + 1;
     }
 
-    for (int i = n; i >= 1; i--)
-    {
-        if (!isExist[a[i]]) isEnd[i] = true;
-        isExist[a[i]] = true;
-    }
-
-    for (int i = 1; i <= n; i++)
-    {
-        if (isEnd[i])
-        {
-            f[i] = g[i] = 1;
-        }
-    }
-
     for (int i = 1; i <= n; i++)
     {
         for (int j = 1; j < i; j++)
         {
             if (a[i] <= a[j]) continue;
-            if (!isEnd[j]) continue;
 
             if (f[i] < f[j] + 1) g[i] = g[j];
             else if (f[i] == f[j] + 1) 
@@ -73,20 +51,8 @@ int main()
             }  
 
             f[i] = max(f[i], f[j] + 1);
-            d = max(d, f[i]);
         }
     }
-
-    for (int i = 1; i <= n; i++)
-    {
-        if (f[i] != d) continue;
-        if (!isEnd[i]) continue;
-
-        k += g[i];
-        k %= MOD;
-    }
-
-    cout << k;
 
     return 0;
 }

@@ -16,7 +16,7 @@ int sum = 0;
 int res = INT_MAX;
 vector<int> mark;
 
-// code nay 82 diem thoi
+// code wa(82p)
 
 int main()
 {

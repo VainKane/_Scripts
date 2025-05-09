@@ -2,18 +2,38 @@
 
 using namespace std;
 
-bool bit(int i, int mask)
+int cnt = 0;
+
+long long GCD(long long a, long long b)
 {
-    return mask >> i; 
+    long long r = a % b;
+    if (!r) return b;
+
+    while (b)
+    {
+        cnt++;
+        r = a % b;
+        a = b;
+        b = r;
+    }
+
+    return a;
 }
 
-int d[100][100];
+int a[23] = {0, 1, 2, 3};
 
 int main()
 {
-    // cout << bit(4, 15); 
+    // GCD(1e18, 4352345234231234);
+    // cout << cnt;
 
-    memset(d, 0x7f, sizeof d);
-    // cout << d[0] << '\n' << (1ll << 31) - 1 << '\n' << (1ll << 63) - 1;
-    cout << d[0][0];
+    int n; cin >> n;
+
+    for (int i = 1; i <= n; i++) a[i] = i;
+    
+    do
+    {
+        for (int i = 1; i <= n; i++) cout << a[i] << ' ';
+        cout << '\n';
+    } while (next_permutation(a + 1, a + n + 1));
 }
