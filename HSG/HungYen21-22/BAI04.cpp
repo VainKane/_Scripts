@@ -28,59 +28,7 @@ void Sub1()
     cout << res;
 }
 
-void Sub2()
-{
-    long long res = 0;
 
-    int last1 = 0;
-    int last2 = 0;
-    int last3 = 0;
-
-    for (int i = 1; i <= n; i++)
-    {
-        cnt1[i] = cnt1[i - 1];
-        cnt2[i] = cnt2[i - 1];
-        cnt3[i] = cnt3[i - 1];
-
-        if (a[i] == 1) cnt1[i]++;
-        if (a[i] == 2) cnt2[i]++;
-        if (a[i] == 3) cnt3[i]++;
-    }
-
-    for (int i = 1; i <= n; i++)
-    {
-        if (a[i] == 3)
-        {
-            if (last1) res += cnt2[last1];
-            else res += cnt2[i];
-
-
-            last3 = i;
-        }
-        if (a[i] == 2)
-        {
-            if (last3) res += cnt1[last3];
-            else res += cnt1[i];
-
-            if (last1) res += cnt3[last1];
-            else res += cnt3[i];
-
-            last2 = i;
-        }
-        if (a[i] == 1)
-        {
-            if (last3) res += cnt2[last3];
-            else res += cnt2[i];
-
-            if (last2) res += cnt1[last2];
-            else res += cnt1[i - 1];
-
-            last1 = i;
-        }
-    }
-
-    cout << ( 1ll * n * (n - 1) ) / 2 + n - res;
-}
 
 int main()
 {

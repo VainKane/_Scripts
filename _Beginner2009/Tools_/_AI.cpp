@@ -1,45 +1,67 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-const int MAX = 1005;
+const int MAXN = 1e6 + 5;
+int a[MAXN], freq[MAXN];
+unordered_map<int, int> cnt;
+int answer[MAXN];
+int current_xor = 0;
 
-int M, N, D, K;
-char grid[MAX][MAX];
-int sum[MAX][MAX]; // mảng tổng siêu thị
+struct Query {
+    int l, r, id;
+};
+
+int block_size;
+
+bool cmp(Query a, Query b) {
+    if (a.l / block_size != b.l / block_size)
+        return a.l < b.l;
+    return ((a.l / block_size) & 1) ? (a.r < b.r) : (a.r > b.r);
+}
+
+void add(int x) {
+    cnt[x]++;
+    if (cnt[x] % 2 == 0)
+        current_xor ^= x;
+    else if (cnt[x] > 1)
+        current_xor ^= x;
+}
+
+void remove(int x) {
+    if (cnt[x] % 2 == 0)
+        current_xor ^= x;
+    else if (cnt[x] > 1)
+        current_xor ^= x;
+    cnt[x]--;
+}
 
 int main() {
-    // freopen("KHUDANCU.INP", "r", stdin);
-    // freopen("KHUDANCU.OUT", "w", stdout);
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
 
-    cin >> M >> N >> D >> K;
-    for (int i = 1; i <= M; ++i)
-        for (int j = 1; j <= N; ++j)
-            cin >> grid[i][j];
+    int t, n, q;
+    cin >> t >> n;
+    for (int i = 0; i < n; ++i) cin >> a[i];
+    cin >> q;
 
-    // Tạo prefix sum: đếm số siêu thị 'M' từ (1,1) đến (i,j)
-    for (int i = 1; i <= M; ++i) {
-        for (int j = 1; j <= N; ++j) {
-            sum[i][j] = sum[i-1][j] + sum[i][j-1] - sum[i-1][j-1];
-            if (grid[i][j] == 'M')
-                sum[i][j]++;
-        }
+    vector<Query> queries(q);
+    for (int i = 0; i < q; ++i) {
+        cin >> queries[i].l >> queries[i].r;
+        queries[i].l--, queries[i].r--;
+        queries[i].id = i;
     }
 
-    int ans = 0;
-    for (int i = 1; i <= M; ++i) {
-        for (int j = 1; j <= N; ++j) {
-            if (grid[i][j] != 'P') continue;
+    block_size = sqrt(n);
+    sort(queries.begin(), queries.end(), cmp);
 
-            int x1 = max(1, i - D), y1 = max(1, j - D);
-            int x2 = min(M, i + D), y2 = min(N, j + D);
-
-            int countM = sum[x2][y2] - sum[x1 - 1][y2] - sum[x2][y1 - 1] + sum[x1 - 1][y1 - 1];
-
-            if (countM == K)
-                ans++;
-        }
+    int L = 0, R = -1;
+    for (auto query : queries) {
+        while (R < query.r) add(a[++R]);
+        while (L > query.l) add(a[--L]);
+        while (R > query.r) remove(a[R--]);
+        while (L < query.l) remove(a[L++]);
+        answer[query.id] = current_xor;
     }
 
-    cout << ans << '\n';
-    return 0;
+    for (int i = 0; i < q; ++i) cout << answer[i] << ' ';
 }
