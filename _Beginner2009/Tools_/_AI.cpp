@@ -1,67 +1,45 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-const int MAXN = 1e6 + 5;
-int a[MAXN], freq[MAXN];
-unordered_map<int, int> cnt;
-int answer[MAXN];
-int current_xor = 0;
+string t, p;
+int n, m;
+vector<int> pattern_code;
+vector<int> text_code;
+vector<int> res;
 
-struct Query {
-    int l, r, id;
-};
-
-int block_size;
-
-bool cmp(Query a, Query b) {
-    if (a.l / block_size != b.l / block_size)
-        return a.l < b.l;
-    return ((a.l / block_size) & 1) ? (a.r < b.r) : (a.r > b.r);
-}
-
-void add(int x) {
-    cnt[x]++;
-    if (cnt[x] % 2 == 0)
-        current_xor ^= x;
-    else if (cnt[x] > 1)
-        current_xor ^= x;
-}
-
-void remove(int x) {
-    if (cnt[x] % 2 == 0)
-        current_xor ^= x;
-    else if (cnt[x] > 1)
-        current_xor ^= x;
-    cnt[x]--;
+// Mã hóa chuỗi theo vị trí xuất hiện đầu tiên của ký tự
+vector<int> encode(const string &s) {
+    unordered_map<char, int> mp;
+    vector<int> code(s.size());
+    int id = 1;
+    for (int i = 0; i < s.size(); ++i) {
+        if (mp.count(s[i]) == 0) {
+            mp[s[i]] = id++;
+        }
+        code[i] = mp[s[i]];
+    }
+    return code;
 }
 
 int main() {
     ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+    cin.tie(0);
 
-    int t, n, q;
-    cin >> t >> n;
-    for (int i = 0; i < n; ++i) cin >> a[i];
-    cin >> q;
+    cin >> t >> p;
+    n = t.size();
+    m = p.size();
 
-    vector<Query> queries(q);
-    for (int i = 0; i < q; ++i) {
-        cin >> queries[i].l >> queries[i].r;
-        queries[i].l--, queries[i].r--;
-        queries[i].id = i;
+    pattern_code = encode(p);
+
+    for (int i = 0; i + m <= n; ++i) {
+        string sub = t.substr(i, m);
+        text_code = encode(sub);
+        if (text_code == pattern_code) {
+            res.push_back(i + 1); // vị trí bắt đầu (1-indexed)
+        }
     }
 
-    block_size = sqrt(n);
-    sort(queries.begin(), queries.end(), cmp);
-
-    int L = 0, R = -1;
-    for (auto query : queries) {
-        while (R < query.r) add(a[++R]);
-        while (L > query.l) add(a[--L]);
-        while (R > query.r) remove(a[R--]);
-        while (L < query.l) remove(a[L++]);
-        answer[query.id] = current_xor;
-    }
-
-    for (int i = 0; i < q; ++i) cout << answer[i] << ' ';
+    cout << res.size() << '\n';
+    for (int x : res) cout << x << ' ';
+    return 0;
 }
