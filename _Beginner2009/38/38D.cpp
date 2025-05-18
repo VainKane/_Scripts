@@ -2,17 +2,20 @@
 
 using namespace std;
 
+#define name "38D"
+
 int const N = 2e5 + 5;
 
 string t;
 string p;
 
 int n, m;
-int lastA[N], lastB[N];
-int a[200], b[200];
+int lastA[200], lastB[200];
+int a[N], b[N];
 
 int c[2 * N];
 int z[2 * N];
+int p[2 * N];
 
 vector<int> res;
 
@@ -48,14 +51,13 @@ void Z()
 
     for (int i = 2; i <= m + n + 1; i++)
     {
-        if (i <= r) z[i] = min(z[i - l + 1], r - i + 1);
-        while (i + z[i] <= m + n + 1 && (c[z[i] + i] == c[z[i] + 1] || (c[z[i] + 1] == 0 && c[z[i] + i] > z[i] + 1)))
-        {
-            // if (i == 13 + m + 1) cout << "13: " << z[i] << ' ';
-            z[i]++;
-        }
-        // if (i == 13 + m + 1) cout << z[i] << ' ';
+        int x = 0;
+        if (i <= r) x = min(z[i - l + 1], r - i + 1);
+        while (i + x <= m + n + 1 && 
+            (c[x + i] == c[x + 1] || 
+            (c[x + 1] == 0 && c[x + i] > x))) x++;
 
+        z[i] = x;
         if (r < i + z[i] - 1)
         {
             l = i;
@@ -74,16 +76,10 @@ int main()
     cin >> t >> p;
    
     Init();
-    // for (int i = 1; i <= m + n + 1; i++) cout << c[i] << ' ';
-    // cout << '\n';
-
     Z();
-
+    
     cout << res.size() << '\n';
     for (auto val : res) cout << val << ' ';
-    
-    // cout << '\n';
-    // cout << z[13 + m + 1];
 
     return 0;
 }
