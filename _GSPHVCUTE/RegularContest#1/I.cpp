@@ -18,5 +18,7 @@ int main()
 
     cin >> n >> m >> k;
 
+    
+
     return 0;   
 }
