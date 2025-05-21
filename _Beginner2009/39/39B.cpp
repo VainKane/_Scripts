@@ -11,24 +11,47 @@ int const N = 1e5 + 5;
 
 int n;
 vector<Edge> adj[N];
-bool visited[N];
-int d1[N];
-int d2[N];
+int f[N];
+int g[N];
+int par[N];
 
-int rad = 1e9;
+int res = 1e9;
 
-void DFS(int u, int d[])
+void DFS1(int u, int p)
 {
-    visited[u] = true;
     for (auto e : adj[u])
     {
         int v = e.v;
         int w = e.w;
 
-        if (visited[v]) continue;
-        d[v] = d[u] + w;
-        DFS(v, d);
+        if (v == p) continue;
+        DFS1(v, u);
+        int x = f[v] + w;
+        if (x > f[u])
+        {
+            g[u] = f[u];
+            f[u] = x;
+        }
+        else if (x > g[u]) g[u] = x;
+    }    
+}
+
+void DFS2(int u, int p)
+{
+    for (auto e : adj[u])
+    {
+        int v = e.v;
+        int w = e.w;
+
+        if (v == p) continue;
+
+        int k = f[u];
+        if (f[u] == f[v] + w) k = g[u];
+        par[v] = w + max(k, par[u]);
+        
+        DFS2(v, u);
     }
+    res = min(res, max(f[u], par[u]));
 }
 
 int main()
@@ -45,25 +68,10 @@ int main()
         adj[v].push_back({u, w});
     }
 
-    DFS(1, d1);
-    int a = max_element(d1 + 1, d1 + n + 1) - d1;
-    
-    memset(visited, 0, sizeof visited);
-    d1[a] = 0;
-    DFS(a, d1);
-    int b = max_element(d1 + 1, d1 + n + 1) - d1;
+    DFS1(1, -1);
+    DFS2(1, -1);
 
-    memset(visited, 0, sizeof visited);
-    d2[b] = 0;
-    DFS(b, d2);
-
-    for (int u = 1; u <= n; u++)
-    {
-        int ecc = max(d1[u], d2[u]);
-        rad = min(rad, ecc);
-    }
-
-    cout << rad;
+    cout << res;
 
     return 0;
 }

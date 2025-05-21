@@ -59,7 +59,7 @@ int main()
         deg[v]++;
     }
  
-    delta = 1/ v1 - 1 / v2;
+    delta = 1 / v1 - 1 / v2;
 
     for (int u = 1; u <= n; u++)
     {

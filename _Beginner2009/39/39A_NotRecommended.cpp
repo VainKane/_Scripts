@@ -11,29 +11,25 @@ int const N = 1e5 + 5;
 
 int n;
 vector<Edge> adj[N];
-int f[N];
-int g[N];
+bool visited[N];
+int d[N];
+int par[N];
 
-int res = 0;
+int dia = 0;
 
-void DFS(int u, int p)
+void DFS(int u)
 {
+    visited[u] = true;
     for (auto e : adj[u])
     {
         int v = e.v;
         int w = e.w;
 
-        if (v == p) continue;
-        DFS(v, u);
-        int x = f[v] + w;
-        if (x > f[u]) 
-        {
-            g[u] = f[u];
-            f[u] = x;
-        }
-        else if (x > g[u]) g[u] = x;
+        if (visited[v]) continue;
+        d[v] = d[u] + w;
+        par[v] = u;
+        DFS(v);
     }
-    res = max(res, f[u] + g[u]);
 }
 
 int main()
@@ -50,8 +46,17 @@ int main()
         adj[v].push_back({u, w});
     }
 
-    DFS(1, -1);
-    cout << res;
+    DFS(1);
+
+    int node = max_element(d + 1, d + n + 1) - d;
+
+    d[node] = 0;
+    memset(visited, 0, sizeof visited);
+    DFS(node);
+
+    dia = max(dia, *max_element(d + 1, d + n + 1));
+
+    cout << dia;
 
     return 0;
 }
