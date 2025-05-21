@@ -6,44 +6,39 @@ using namespace std;
 
 struct Edge
 {
-    int v, w;
-};
-
-struct VOI
-{
-    int u, v, w;
+    int v, w, i;
 };
 
 int const N = 1e5 + 5;
 
 int n, k;
-int v1, v2;
+double v1, v2;
 
-VOI a[N];
 vector<Edge> adj[N];
-
 double delta;
-double res = 0;
 
 bool visited[N];
 int child[N];
+int deg[N];
 
 vector<double> b;
 
+double res = 0;
+
 void DFS(int u)
 {
+    child[u]++;
     visited[u] = true;
-    child[u] = 1;
-
     for (auto e : adj[u])
     {
         int v = e.v;
         int w = e.w;
-
         if (visited[v]) continue;
+        
         DFS(v);
         child[u] += child[v];
-    }   
+        b.push_back((double)child[v] * (n - child[v]) * w * delta);
+    }
 }
 
 int main()
@@ -58,31 +53,27 @@ int main()
     {
         int u, v, w;
         cin >> u >> v >> w;
-        adj[u].push_back({v, w});
-        adj[v].push_back({u, w});
-
-        a[i] = {u, v, w};
+        adj[u].push_back({v, w, i});
+        adj[v].push_back({u, w, i});
+        deg[u]++;
+        deg[v]++;
     }
+ 
+    delta = 1/ v1 - 1 / v2;
 
-    delta = ((double)1 / v1) - ((double)1 / v2);
-    
-    if (delta < 0) 
+    for (int u = 1; u <= n; u++)
     {
-        cout << 0.00;
-        return 0;
+        if (deg[u] == 1)
+        {
+            DFS(u);
+            break;
+        }
     }
 
-    for (int i = 1; i < n; i++)
-    {
-        int u = a[i].u;
-        int v = a[i].v;
-        int w = a[i].w;
-        
-        memset(visited, 0, sizeof visited);
-        DFS(u);
-        
-        cout << u << " - " << v << ": " <<  child[u] * (n - child[v]) << '\n';
-    }
+    sort(all(b), greater<double> ());
+    for (int i = 0; i < k; i++) res += b[i];
+
+    cout << res;
 
     return 0;
 }
