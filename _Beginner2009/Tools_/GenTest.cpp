@@ -13,23 +13,11 @@ int main()
 {
     ofstream cout("testcase.inp");
 
-    int n = 10;
-
-    cout << n << '\n';
-    for (int i = 1; i <= n; i++)
+    for (int i = 1; i <= 1000; i++)
     {
-        
-        cout << a << ' ' << b << '\n';
-    }
-    cout << m << '\n';
-
-    while (m--)
-    {
-        int a = Rand(1, n);
-        int b = Rand(1, n);
-
-        while (b == a) b = Rand(1, n);
-        cout << a << ' ' << b << '\n';
+        int type = Rand(1, 2);
+        if (type == 1) cout << 'A';
+        else cout << 'B';
     }
 
     return 0;

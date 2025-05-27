@@ -1,59 +1,28 @@
 import sys
-from collections import deque
 
-def solve():
-    input = sys.stdin.read().split()
-    ptr = 0
-    N, M, K = map(int, input[ptr:ptr+3])
-    ptr +=3
-    
-    good = list(map(int, input[ptr:ptr+M]))
-    ptr +=M
-    beautiful = list(map(int, input[ptr:ptr+K]))
-    ptr +=K
-    
-    adj = [[] for _ in range(N+1)]
-    for i in range(1, N+1):
-        parts = list(map(int, input[ptr:ptr+1+int(input[ptr])]))
-        ptr += len(parts)
-        di = parts[0]
-        neighbors = parts[1:]
-        adj[i] = neighbors
-    
-    # BFS from 1 to compute distances
-    dist = [-1]*(N+1)
-    q = deque()
-    dist[1] = 0
-    q.append(1)
-    
-    while q:
-        u = q.popleft()
-        for v in adj[u]:
-            if dist[v] == -1:
-                dist[v] = dist[u] + 1
-                q.append(v)
-    
-    # Find minimal distance in good nodes
-    min_good = float('inf')
-    found_good = False
-    for node in good:
-        if dist[node] != -1:
-            found_good = True
-            if dist[node] < min_good:
-                min_good = dist[node]
-    
-    # Find minimal distance in beautiful nodes
-    min_beautiful = float('inf')
-    found_beautiful = False
-    for node in beautiful:
-        if dist[node] != -1:
-            found_beautiful = True
-            if dist[node] < min_beautiful:
-                min_beautiful = dist[node]
-    
-    if not found_good or not found_beautiful:
-        print("impossible")
-    else:
-        print(min_good + min_beautiful)
+def can_transform(x, y):
+    if len(y) < len(x):
+        return False
+    if x == y:
+        return True
+    current = {y}
+    for _ in range(len(y) - len(x)):
+        next_level = set()
+        for s in current:
+            # Check if last character is 'A' and add the truncated string
+            if s[-1] == 'A':
+                next_level.add(s[:-1])
+            # Check if first character is 'B' and add reversed remaining part
+            if s[0] == 'B':
+                next_level.add(s[1:][::-1])
+        current = next_level
+        if not current:
+            return False
+    return x in current
 
-solve()
+for line in sys.stdin:
+    line = line.strip()
+    if not line:
+        continue
+    x, y = line.split()
+    print("YES" if can_transform(x, y) else "NO")

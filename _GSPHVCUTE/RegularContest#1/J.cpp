@@ -4,41 +4,16 @@ using namespace std;
 
 #define name "password"
 
-int const N = 55;
+int const N = 57;
 
 int n;
 int a[N];
+int c[N];
 
-string res = "c";
+string res = "";
+char ch = 'a';
 
-int x[N];
-
-int cnt = 0;
-
-void Try(int pos, int x[], string s, int ch)
-{
-    cnt++;
-    if (pos > n)
-    {
-        for (int i = 1; i <= n; i++) if (x[i] != a[i]) return;
-        if (s < res) res = s;
-        return;
-    }
-
-    for (int l = 1; l <= n - pos + 1; l++)
-    {       
-        int tmp[N];
-        for (int i = 1; i <= n; i++) tmp[i] = x[i];
-        for (int i = 1; i <= l; i++)
-        {
-            tmp[i] += l - i + 1;
-            if (tmp[i] > a[i]) return;
-        }
-        for (int i = 1; i <= l; i++) s += ch;
-        ch = (ch == 'a' ? 'b' : 'a');
-        Try(pos + l, tmp, s, ch);
-    }
-}
+vector<int> len;
 
 int main()
 {
@@ -51,11 +26,52 @@ int main()
     cin >> n;
     for (int i = 1; i <= n; i++) cin >> a[i];
 
-    Try(1, x, "", 'a');
-    if (res == "c") res = "No solution.";
-    
+    int last = 0;
+    int s = 0;
+
+    for (int i = n; i >= 1; i--)
+    {
+        c[i] = a[i] - 2 * a[i + 1] + a[i + 2];
+        s += c[i] * i;
+        
+        if (c[i] < 0) 
+        {
+            cout << "No solution.";
+            return 0;
+        }
+    }
+
+    if (s != n)
+    {
+        cout << "No solution.";
+        return 0;
+    }
+
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= c[i]; j++) len.push_back(i);
+    }
+
+    int l = 0;
+    int r = len.size() - 1;
+
+    while (l <= r)
+    {
+        if (ch == 'a')
+        {
+            res += string(len[r], ch);
+            ch = 'b';
+            r--;
+        }
+        else
+        {
+            res += string(len[l], ch);
+            ch = 'a';
+            l++;
+        }
+    }
+
     cout << res;
-    cout << '\n' << cnt;
 
     return 0;
 }

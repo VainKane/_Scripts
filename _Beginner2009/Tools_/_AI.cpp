@@ -1,49 +1,67 @@
-#include <iostream>
-#include <vector>
-#include <cstring>
+#include <bits/stdc++.h>
 using namespace std;
 
 const int MAXN = 1e5 + 5;
 
-vector<pair<int, int>> adj[MAXN];
-bool visited[MAXN];
-int maxDist, farthestNode;
+int n, q;
+vector<tuple<int, int, int>> edges; // u, v, w
+map<int64_t, int64_t> cnt;
+vector<pair<int, int>> queries;
 
-void dfs(int u, int dist) {
-    visited[u] = true;
-    if (dist > maxDist) {
-        maxDist = dist;
-        farthestNode = u;
-    }
+int parent[MAXN], sz[MAXN];
 
-    for (auto [v, w] : adj[u]) {
-        if (!visited[v]) {
-            dfs(v, dist + w);
-        }
-    }
+int find(int u) {
+    return parent[u] == u ? u : parent[u] = find(parent[u]);
+}
+
+void unite(int u, int v, int w) {
+    u = find(u);
+    v = find(v);
+    if (u == v) return;
+    cnt[w] += 1LL * sz[u] * sz[v];
+    if (sz[u] < sz[v]) swap(u, v);
+    parent[v] = u;
+    sz[u] += sz[v];
 }
 
 int main() {
-    int n;
-    cin >> n;
-
-    for (int i = 0; i < n - 1; ++i) {
+    ios::sync_with_stdio(false); cin.tie(nullptr);
+    cin >> n >> q;
+    for (int i = 1; i < n; ++i) {
         int u, v, w;
         cin >> u >> v >> w;
-        adj[u].emplace_back(v, w);
-        adj[v].emplace_back(u, w);
+        edges.emplace_back(w, u, v);
+    }
+    sort(edges.begin(), edges.end());
+
+    for (int i = 1; i <= n; ++i) {
+        parent[i] = i;
+        sz[i] = 1;
     }
 
-    // Lần 1: tìm đỉnh xa nhất từ đỉnh 1
-    memset(visited, false, sizeof(visited));
-    maxDist = 0;
-    dfs(1, 0);
+    for (auto &[w, u, v] : edges) {
+        unite(u, v, w);
+    }
 
-    // Lần 2: tìm đường kính từ đỉnh xa nhất vừa tìm được
-    memset(visited, false, sizeof(visited));
-    maxDist = 0;
-    dfs(farthestNode, 0);
+    // Tạo prefix sum
+    vector<pair<int64_t, int64_t>> prefix;
+    for (auto &[w, c] : cnt) {
+        if (prefix.empty())
+            prefix.emplace_back(w, c);
+        else
+            prefix.emplace_back(w, prefix.back().second + c);
+    }
 
-    cout << maxDist << endl;
+    while (q--) {
+        int l, r;
+        cin >> l >> r;
+        auto get = [&](int64_t x) {
+            auto it = upper_bound(prefix.begin(), prefix.end(), make_pair(x, (int64_t)1e18));
+            if (it == prefix.begin()) return 0LL;
+            --it;
+            return it->second;
+        };
+        cout << get(r) - get(l - 1) << ' ';
+    }
     return 0;
 }
