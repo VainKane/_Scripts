@@ -16,7 +16,7 @@ int b[N];
 int c[N][N];
 long long d[N][N];
 
-long long dp[(1 << 21) + 5][K];
+long long dp[(1 << 20) + 5][K];
 
 long long res = 1e18;
 
@@ -40,7 +40,7 @@ int mk(int i)
     return (1 << i);
 }
 
-void Dijkstra(int s, long long d[], int a[], int c[N][N], int n)
+void Dijkstra(int s, long long d[])
 {
     priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> pq;
     pq.push({0, s});
@@ -54,9 +54,8 @@ void Dijkstra(int s, long long d[], int a[], int c[N][N], int n)
 
         if (du > d[u]) continue;
 
-        for (int i = 1; i <= n; i++)
+        for (int v = 1; v <= n; v++)
         {
-            int v = a[i];
             int w = c[u][v];
 
             if (v == u) continue;
@@ -86,26 +85,29 @@ int main()
         a[i] = i;
     }
 
-    b[1] = 1;
-    for (int i = 2; i <= k + 1; i++) cin >> b[i];
+    for (int i = 1; i <= k; i++) cin >> b[i];
 
-    for (int i = 1; i <= k + 1; i++)
+    b[0] = 1;
+    for (int i = 0; i <= k; i++)
     {
         int x = b[i];
 
         memset(d[x], 0x3f, sizeof d[x]);
-        Dijkstra(x, d[x], a, c, n);
+        Dijkstra(x, d[x]);
     }
 
     memset(dp, 0x3f, sizeof dp);
-    dp[1 << 0][0] = 0;
-
-    for (int mask = 0; mask < mk(k + 1); mask++)
+    for (int i = 0; i < k; i++) 
     {
-        for (int i = 0; i < k + 1; i++)
+        dp[1 << i][i] = d[1][b[i + 1]];
+    }
+
+    for (int mask = 0; mask < mk(k); mask++)
+    {
+        for (int i = 0; i < k; i++)
         {
             if (bit(i, mask)) continue;
-            for (int j = 0; j < k + 1; j++)
+            for (int j = 0; j < k; j++)
             {
                 if (!bit(j, mask)) continue;
                 dp[on(i, mask)][i] = min(dp[on(i, mask)][i], dp[mask][j] + d[b[j + 1]][b[i + 1]]);
@@ -113,9 +115,9 @@ int main()
         }
     }
 
-    for (int i = 1; i < k + 1; i++)
+    for (int i = 0; i < k; i++)
     {
-        res = min(res, dp[mk(k + 1) - 1][i] + d[b[i + 1]][1]);
+        res = min(res, dp[mk(k) - 1][i] + d[b[i + 1]][1]);
     }
 
     cout << res;
