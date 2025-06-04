@@ -2,32 +2,33 @@
 
 using namespace std;
 
-#define left sdjf
-#define right sdf
-
 int const N = 3e5 + 5;
 
 int n, k;
 int a[N];
 int pre[N];
 
-int left = 0;
-int right = 0;
-
-int main()
+void Print(int left, int right)
 {
-    ios_base::sync_with_stdio(false);
-    cin.tie(0); cout.tie(0);
+    cout << right - left + 1 << '\n';
 
-    cin >> n >> k;
-    for (int i = 1; i <= n; i++) cin >> a[i];
-    for (int i = 1; i <= n; i++) pre[i] = pre[i - 1] + (a[i] ^ 1);
+    for (int i = 1; i <= n; i++)
+    {
+        if (i >= left && i <= right) a[i] = 1;
+        cout << a[i] << ' ';
+    }
+}
+
+void Solve1()
+{
+    int left = 1;
+    int right = 0;
 
     for (int i = 1; i <= n; i++)
     {
         int l = i;
         int r = n;
-        int 3;
+        int bound = i;
 
         while (l <= r)
         {
@@ -41,6 +42,8 @@ int main()
             else r = mid - 1;
         }
 
+        if (bound == i && !a[i] && !k) continue;
+
         if (bound - i > right - left) 
         {
             left = i;
@@ -48,13 +51,40 @@ int main()
         }
     }
 
-    cout << right - left + 1 << '\n';
+    Print(left, right);    
+}
 
-    for (int i = 1; i <= n; i++)
+void Solve2()
+{
+    int left = 1;
+    int right = 0;
+
+    int r = 1;
+
+    for (int l = 1; l <= n; l++)
     {
-        if (i >= left && i <= right) a[i] = 1;
-        cout << a[i] << ' ';
+        while (pre[r + 1] - pre[l - 1] <= k && r < n) r++;
+        if (l == r && !a[l] && !k) continue;
+        if (right - left < r - l)
+        {
+            left = l;
+            right = r;
+        }
     }
+
+    Print(left, right);    
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(0); cout.tie(0);
+
+    cin >> n >> k;
+    for (int i = 1; i <= n; i++) cin >> a[i];
+    for (int i = 1; i <= n; i++) pre[i] = pre[i - 1] + (a[i] ^ 1);
+
+    Solve2();
 
     return 0;
 }

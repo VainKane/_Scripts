@@ -2,14 +2,57 @@
 
 using namespace std;
 
-#define name "data"
+#define name "graph"
 
-int const N = 1e4 + 5;
+struct Edge
+{
+    int u, v;
+};
 
-int n, x;
-int a[N];
+int k, d;
 
-int res = 0;
+int n = 0;
+vector<Edge> a;
+
+void Print()
+{
+    cout << n << ' ' << a.size() << '\n';
+    for (auto e : a) cout << e.u << ' ' << e.v << '\n';
+}
+
+void Create(int x, int y)
+{
+    int l = n + 1;
+    for (int i = 1; i <= d - 2; i++) a.push_back({++n, n + 1}); // under path
+    int r = ++n;
+
+    for (int i = 1; i <= x; i++) a.push_back({l, ++n});
+    for (int i = 1; i <= y; i++) a.push_back({r, ++n});
+}
+
+void Solve()
+{
+    while (k)
+    {
+        int t = sqrt(k);
+        Create(t, t);
+        k -= 1 * t * t;
+    }
+}
+
+void Solve2()
+{
+    while (k)
+    {
+        int t = 2;
+        int center = ++n;
+
+        while ((t + 1) * t / 2 <= k) t++;
+        for (int i = 1; i <= t; i++) a.push_back({center, ++n});
+
+        k -= t * (t - 1) / 2;
+    }
+}
 
 int main()
 {
@@ -19,26 +62,12 @@ int main()
     freopen(name".inp", "r", stdin);
     freopen(name".out", "w", stdout);
 
-    cin >> n >> x;
-    for (int i = 1; i <= n; i++) cin >> a[i];
+    cin >> d >> k;
+    
+    if (d > 2) Solve();
+    else Solve2();
 
-    sort(a + 1, a + n + 1);
-    int l = 1;
-    int r = n;
-
-    while (l <= r)
-    {
-        if (a[l] + a[r] <= x) 
-        {
-            l++;
-            r--;
-        }
-        else r--;
-
-        res++;
-    }
-
-    cout << res;
+    Print();
 
     return 0;
 }

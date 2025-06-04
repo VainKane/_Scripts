@@ -8,7 +8,6 @@ bool IsEqual(pair<int, int> a, pair<int, int> b)
     return false;
 }
 
-
 bool Check(multiset<int> t)
 {
     int cnt = 0;

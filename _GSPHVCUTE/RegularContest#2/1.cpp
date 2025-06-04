@@ -2,6 +2,9 @@
 
 using namespace std;
 
+#define BIT(i, mask) (((mask) >> (i)) & 1)
+#define MASK(i) (1 << (i))
+#define ON(i, mask) ((mask) | (1 << (i)))
 #define F first
 #define S second
 #define name "banhkhuc"
@@ -17,28 +20,7 @@ int c[N][N];
 long long d[N][N];
 
 long long dp[(1 << 20) + 5][K];
-
 long long res = 1e18;
-
-int bit(int i, int mask)
-{
-    return (mask >> i) & 1;
-}
-
-int off(int i, int mask)
-{
-    return mask & (~(1 << i));
-}
-
-int on(int i, int mask)
-{
-    return mask | (1 << i);
-}
-
-int mk(int i) 
-{
-    return (1 << i);
-}
 
 void Dijkstra(int s, long long d[])
 {
@@ -99,25 +81,25 @@ int main()
     memset(dp, 0x3f, sizeof dp);
     for (int i = 0; i < k; i++) 
     {
-        dp[1 << i][i] = d[1][b[i + 1]];
+        dp[MASK(i)][i] = d[1][b[i + 1]];
     }
 
-    for (int mask = 0; mask < mk(k); mask++)
+    for (int mask = 0; mask < MASK(k); mask++)
     {
-        for (int i = 0; i < k; i++)
+        for (int tmp = mask; tmp > 0; tmp -= tmp & -tmp)
         {
-            if (bit(i, mask)) continue;
-            for (int j = 0; j < k; j++)
+            int i = __builtin_ctz(tmp & -tmp);
+            for (int huhu = (MASK(k) - 1) ^ mask; huhu > 0; huhu -= huhu & -huhu)
             {
-                if (!bit(j, mask)) continue;
-                dp[on(i, mask)][i] = min(dp[on(i, mask)][i], dp[mask][j] + d[b[j + 1]][b[i + 1]]);
+                int j = __builtin_ctz(huhu & -huhu);
+                dp[ON(j, mask)][j] = min(dp[ON(j, mask)][j], dp[mask][i] + d[b[i + 1]][b[j + 1]]);
             }
         }
     }
-
+    
     for (int i = 0; i < k; i++)
     {
-        res = min(res, dp[mk(k) - 1][i] + d[b[i + 1]][1]);
+        res = min(res, dp[MASK(k) - 1][i] + d[b[i + 1]][1]);
     }
 
     cout << res;
