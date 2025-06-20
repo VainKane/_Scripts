@@ -54,9 +54,6 @@ void Init()
         x = i;
     }
 
-    // for (int i = 1; i <= n; i++) cout << last[i] << ' ';
-    // cout << '\n';
-
     for (int i = 1; i <= n; i++)
     {
         if (last[i]) Update(last[i], a[i]);

@@ -1,136 +1,201 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-const int MAXN = 4005;
+#define all(v) v.begin(), v.end()
+#define name "query"
 
-int n, timer = 0;
-vector<int> tree1[MAXN], tree2[MAXN];
-int in1[MAXN], out1[MAXN], in2[MAXN], out2[MAXN];
-int parent1[MAXN], parent2[MAXN];
-vector<pair<int, int>> edges1, edges2;
-vector<int> subtree1[MAXN * 2], subtree2[MAXN * 2];
+struct Node
+{
+    int x[16];
 
-// Euler Tour
-void dfs(int u, int p, vector<int> tree[], int in[], int out[], int parent[]) {
-    in[u] = ++timer;
-    parent[u] = p;
-    for (int v : tree[u]) {
-        if (v != p)
-            dfs(v, u, tree, in, out, parent);
+    Node()
+    {
+        for (int i = 0; i <= 15; ++i) x[i] = -1e9; // x[0] unused
     }
-    out[u] = timer;
+
+    static Node Empty()
+    {
+        return Node();
+    }
+};
+
+const int N = 305;
+int t, n, q;
+vector<int> adj[N];
+int cnt, in[N], out[N];
+bool odd[N];
+vector<int> a1, a0;
+Node t1[4 * N], t0[4 * N];
+int lz1[4 * N], lz0[4 * N];
+
+void Merge(Node &v, const Node &a, const Node &b)
+{
+    int l = 1, r = 1;
+    for (int i = 1; i <= 15; i++)
+    {
+        if (a.x[l] > b.x[r])
+            v.x[i] = a.x[l++];
+        else
+            v.x[i] = b.x[r++];
+    }
 }
 
-// Fenwick Tree
-int BIT[MAXN];
+void Build(Node t[], int v, int l, int r)
+{
+    if (l == r)
+    {
+        t[v].x[1] = 0;
+        return;
+    }
 
-void update(int x, int val) {
-    for (; x < MAXN; x += x & -x)
-        BIT[x] += val;
+    int mid = (l + r) / 2;
+    Build(t, 2 * v, l, mid);
+    Build(t, 2 * v + 1, mid + 1, r);
+    Merge(t[v], t[2 * v], t[2 * v + 1]);
 }
 
-int query(int x) {
-    int res = 0;
-    for (; x > 0; x -= x & -x)
-        res += BIT[x];
+void Push(Node t[], int lz[], int v)
+{
+    if (lz[v])
+    {
+        for (int i = 1; i <= 15; i++)
+        {
+            t[2 * v].x[i] += lz[v];
+            t[2 * v + 1].x[i] += lz[v];
+        }
+        lz[2 * v] += lz[v];
+        lz[2 * v + 1] += lz[v];
+        lz[v] = 0;
+    }
+}
+
+void Update(Node t[], int lz[], int v, int l, int r, int left, int right, int val)
+{
+    if (l > right || r < left)
+        return;
+    if (left <= l && r <= right)
+    {
+        for (int i = 1; i <= 15; i++)
+            t[v].x[i] += val;
+        lz[v] += val;
+        return;
+    }
+
+    Push(t, lz, v);
+    int mid = (l + r) / 2;
+    Update(t, lz, 2 * v, l, mid, left, right, val);
+    Update(t, lz, 2 * v + 1, mid + 1, r, left, right, val);
+    Merge(t[v], t[2 * v], t[2 * v + 1]);
+}
+
+Node Get(Node t[], int lz[], int v, int l, int r, int left, int right)
+{
+    if (l > right || r < left)
+        return Node::Empty();
+    if (left <= l && r <= right)
+        return t[v];
+
+    Push(t, lz, v);
+    int mid = (l + r) / 2;
+    Node a = Get(t, lz, 2 * v, l, mid, left, right);
+    Node b = Get(t, lz, 2 * v + 1, mid + 1, r, left, right);
+    Node res;
+    Merge(res, a, b);
     return res;
 }
 
-int query_range(int l, int r) {
-    return query(r) - query(l - 1);
+void DFS(int u)
+{
+    in[u] = ++cnt;
+    if (odd[u])
+        a1.push_back(in[u]);
+    else
+        a0.push_back(in[u]);
+    for (int v : adj[u])
+    {
+        odd[v] = !odd[u];
+        DFS(v);
+    }
+    out[u] = cnt;
 }
 
-bool is_child(int in[], int out[], int u, int v) {
-    return in[v] >= in[u] && out[v] <= out[u];
+void Init()
+{
+    a1 = {0};
+    a0 = {0};
+    odd[1] = 1;
+    cnt = 0;
+    DFS(1);
+    Build(t1, 1, 1, a1.size() - 1);
+    Build(t0, 1, 1, a0.size() - 1);
 }
 
-    stack<int> st;
-    st.push(root);
-    while (!st.empty()) {
-        int u = st.top(); st.pop();
-        subtree.push_back(u);
-        for (int v : tree[u]) {
-            if (v != ban && !is_child(in, out, v, root))
-                st.push(v);
-        }
-    }
-}
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(0); cout.tie(0);
 
-int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+    // freopen(name ".inp", "r", stdin);
+    // freopen(name ".out", "w", stdout);
 
-    cin >> n;
-
-    for (int i = 0; i < n - 1; ++i) {
-        int u, v; cin >> u >> v; --u; --v;
-        tree1[u].push_back(v);
-        tree1[v].push_back(u);
-        edges1.emplace_back(u, v);
+    cin >> t >> n;
+    for (int i = 2; i <= n; i++)
+    {
+        int p;
+        cin >> p;
+        adj[p].push_back(i);
     }
 
-    for (int i = 0; i < n - 1; ++i) {
-        int u, v; cin >> u >> v; --u; --v;
-        tree2[u].push_back(v);
-        tree2[v].push_back(u);
-        edges2.emplace_back(u, v);
-    }
+    Init();
+    cin >> q;
 
-    // Euler tour
-    timer = 0;
-    dfs(0, -1, tree1, in1, out1, parent1);
-    timer = 0;
-    dfs(0, -1, tree2, in2, out2, parent2);
+    while (q--)
+    {
+        string type;
+        cin >> type;
 
-    // Collect subtree nodes after removing each edge
-    for (int i = 0; i < edges1.size(); ++i) {
-        auto [u, v] = edges1[i];
-        if (parent1[v] == u)
-            swap(u, v); // ensure u is child
-
-        vector<int> A1, A2;
-        collect_subtree_nodes(u, v, tree1, in1, out1, A1);
-        collect_subtree_nodes(v, u, tree1, in1, out1, A2);
-        subtree1[2 * i] = A1;
-        subtree1[2 * i + 1] = A2;
-    }
-
-    for (int i = 0; i < edges2.size(); ++i) {
-        auto [u, v] = edges2[i];
-        if (parent2[v] == u)
-            swap(u, v); // ensure u is child
-
-        vector<int> B1, B2;
-        collect_subtree_nodes(u, v, tree2, in2, out2, B1);
-        collect_subtree_nodes(v, u, tree2, in2, out2, B2);
-        subtree2[2 * i] = B1;
-        subtree2[2 * i + 1] = B2;
-    }
-
-    vector<int> ans(n + 1, 0);
-    int m = n - 1;
-
-    for (int i = 0; i < 2 * m; i += 2) {
-        for (int j = 0; j < 2 * m; j += 2) {
-            int max_common = 0;
-            for (int a = 0; a < 2; ++a) {
-                // Add all nodes in subtree1[i+a] to BIT
-                for (int u : subtree1[i + a])
-                    update(in1[u], 1);
-                for (int b = 0; b < 2; ++b) {
-                    int cnt = 0;
-                    for (int v : subtree2[j + b])
-                        cnt += query(in1[v]);
-                    max_common = max(max_common, cnt);
-                }
-                for (int u : subtree1[i + a])
-                    update(in1[u], -1);
+        if (type == "get")
+        {
+            int u;
+            cin >> u;
+            if (odd[u])
+            {
+                int idx = lower_bound(all(a1), in[u]) - a1.begin() + 1;
+                cout << Get(t1, lz1, 1, 1, a1.size() - 1, idx, idx).x[1] << ' ';
             }
-            ans[max_common]++;
+            else
+            {
+                int idx = lower_bound(all(a0), in[u]) - a0.begin() + 1;
+                cout << Get(t0, lz0, 1, 1, a0.size() - 1, idx, idx).x[1] << ' ';
+            }
+            continue;
+        }
+
+        int u, k;
+        cin >> u >> k;
+
+        int l1 = lower_bound(all(a1), in[u]) - a1.begin() + 1;
+        int r1 = upper_bound(all(a1), out[u]) - a1.begin();
+        int l0 = lower_bound(all(a0), inin[u]) - a0.begin() + 1;
+        int r0 = upper_bound(all(a0), out[u]) - a0.begin();
+
+        if (type == "add")
+        {
+            int d = odd[u] ? 1 : -1;
+            if (l1 <= r1)
+                Update(t1, lz1, 1, 1, a1.size() - 1, l1, r1, k * d);
+            if (l0 <= r0)
+                Update(t0, lz0, 1, 1, a0.size() - 1, l0, r0, k * -d);
+        }
+        else if (type == "pos")
+        {
+            Node m1 = Get(t1, lz1, 1, 1, a1.size() - 1, l1, r1);
+            Node m2 = Get(t0, lz0, 1, 1, a0.size() - 1, l0, r0);
+            Node res;
+            Merge(res, m1, m2);
+            cout << res.x[k] << ' ';
         }
     }
 
-    for (int i = 0; i <= n; ++i)
-        cout << ans[i] << ' ';
-    cout << '\n';
+    return 0;
 }

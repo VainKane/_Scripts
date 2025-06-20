@@ -17,14 +17,14 @@ int a[N];
 int b[N];
 
 int c[N][N];
-long long d[N][N];
+int d[N][N];
 
 long long dp[(1 << 20) + 5][K];
 long long res = 1e18;
 
-void Dijkstra(int s, long long d[])
+void Dijkstra(int s, int d[])
 {
-    priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> pq;
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
     pq.push({0, s});
     d[s] = 0;
 

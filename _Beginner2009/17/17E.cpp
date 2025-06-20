@@ -2,27 +2,51 @@
 
 using namespace std;
 
-int const MOD = 1e9 + 7;
-int const B1 = 449;
-int const B2 = 457;
+struct Hash
+{
+    int a, b, c;
+
+    bool operator < (const Hash other) const {
+        if (a != other.a) return a < other.a;
+        if (b != other.b) return b < other.b;
+        return c < other.c;
+    }
+
+    bool operator == (const Hash other) const {
+        return (a == other.a && b == other.b && c == other.c);
+    }
+};
+
+int const B1 = 419;
+int const B2 = 421;
+int const MODA = 1e9 + 7;
+int const MODB = 1e9 + 5;
+int const MODC = 1e9 + 3;
 
 int const N = 1009;
 
-int preHash[N][N];
-int powB1[N];
-int powB2[N];
+int preHashA[N][N];
+int preHashB[N][N];
+int preHashC[N][N];
 
-int n;
-int m;
-int a;
-int b;
+int powB1A[N];
+int powB2A[N];
+
+int powB1B[N];
+int powB2B[N];
+
+int powB1C[N];
+int powB2C[N];
+
+int n, m;
+int a, b;
 char s[N][N];
 
-unordered_map<int, int> cntHash;
+map<Hash, int> cntHash;
 
 vector<pair<int, int>> res;
 
-int GetHash(int u, int v, int p, int q)
+int GetHash(int u, int v, int p, int q, int preHash[N][N], int powB1[], int powB2[], int MOD)
 {
     int res = preHash[u][v];
 
@@ -40,6 +64,52 @@ int GetHash(int u, int v, int p, int q)
     res = (res + t3) % MOD;
 
     return res;
+}
+
+void Init(int preHash[N][N], int powB1[], int powB2[], int MOD)
+{
+    for (int i = 1; i <= m; i++)
+    {
+        preHash[i][1] = ( 1ll * preHash[i - 1][1] * B1 + s[i][1] ) % MOD;
+    }
+    for (int j = 1; j <= n; j++)
+    {
+        preHash[1][j] = ( 1ll * preHash[1][j - 1] * B2 + s[1][j] ) % MOD;
+    }
+
+    powB1[0] = powB2[0] = 1;
+    for (int i = 1; i <= max(m, n); i++)
+    {
+        powB1[i] = ( 1ll * powB1[i - 1] * B1 ) % MOD;
+        powB2[i] = ( 1ll * powB2[i - 1] * B2 ) % MOD;
+    }
+
+    for (int i = 2; i <= m; i++)
+    {
+        for (int j = 2; j <= n; j++)
+        {
+            int t1 = ( 1ll * preHash[i - 1][j] * B1 ) % MOD;
+            int t2 = ( 1ll * preHash[i][j - 1] * B2 ) % MOD;
+            int t3 = ( 1ll * preHash[i - 1][j - 1] * B1 * B2 ) % MOD;
+            
+            preHash[i][j] = t1;
+            preHash[i][j] = ( 1ll * preHash[i][j] + t2 ) % MOD;
+            preHash[i][j] -= t3;
+            preHash[i][j] += MOD;
+            preHash[i][j] %= MOD;
+            preHash[i][j] += s[i][j];
+            preHash[i][j] %= MOD;
+        }
+    }
+}
+
+Hash Get(int i, int j)
+{
+    int x = GetHash(i + a - 1, j + b - 1, i, j, preHashA, powB1A, powB2A, MODA);
+    int y = GetHash(i + a - 1, j + b - 1, i, j, preHashB, powB1B, powB2B, MODB);
+    int z = GetHash(i + a - 1, j + b - 1, i, j, preHashC, powB1C, powB2C, MODC);
+
+    return Hash {x, y, z};
 }
 
 int main()
@@ -62,52 +132,20 @@ int main()
 
     cin >> a >> b;
 
-    for (int i = 1; i <= m; i++)
-    {
-        preHash[i][1] = ( 1ll * preHash[i - 1][1] * B1 + s[i][1] ) % MOD;
-    }
-    for (int j = 1; j <= n; j++)
-    {
-        preHash[1][j] = ( 1ll * preHash[1][j - 1] * B2 + s[1][j] ) % MOD;
-    }
-
-    powB1[0] = powB2[0] = 1;
-    for (int i = 1; i <= max(m, n); i++)
-    {
-        powB1[i] = ( 1ll * powB1[i - 1] * B1 ) % MOD;
-        powB2[i] = ( 1ll * powB2[i - 1] * B2 ) % MOD;
-    }
-
-    for (int i = 2; i <= m; i++)
-    {
-        for (int j = 2; j <= n; j++)
-        {
-            int t1 = ( 1ll * preHash[i - 1][j] * B1) % MOD;
-            int t2 = ( 1ll * preHash[i][j - 1] * B2 ) % MOD;
-            int t3 = ( 1ll * preHash[i - 1][j - 1] * B1 * B2 ) % MOD;
-            
-            preHash[i][j] = t1;
-            preHash[i][j] = ( 1ll * preHash[i][j] + t2 ) % MOD;
-            preHash[i][j] -= t3;
-            preHash[i][j] += MOD;
-            preHash[i][j] %= MOD;
-            preHash[i][j] += s[i][j];
-            preHash[i][j] %= MOD;
-        }
-    }
-
+    Init(preHashA, powB1A, powB2A, MODA);
+    Init(preHashB, powB1B, powB2B, MODB);
+    Init(preHashC, powB1C, powB2C, MODC);
 
     for (int i = 1; i <= m - a + 1; i++)
     {
         for (int j = 1; j <= n - b + 1; j++)
         {
-            int val = GetHash(i + a - 1, j + b - 1, i, j);
-            cntHash[val]++;
+            cntHash[Get(i, j)]++;
         }
     } 
 
     int ma = 0;
-    int k = 0;
+    Hash k;
 
     for (auto p : cntHash)
     {
@@ -122,7 +160,7 @@ int main()
     {
         for (int j = 1; j <= n - b + 1; j++)
         {
-            int val = GetHash(i + a - 1, j + b - 1, i, j);
+            Hash val = Get(i, j);
             if (val == k)
             {
                 res.push_back({i, j});

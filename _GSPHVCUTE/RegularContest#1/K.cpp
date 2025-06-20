@@ -52,7 +52,6 @@ void BFS()
 
                 qu.push({xnew, ynew});
                 d[xnew][ynew] = d[x][y] + 1;
-                // a[xnew][ynew] = '#';
             }
         }
     }
@@ -76,23 +75,12 @@ int main()
         {
             cin >> a[i][j];
         }
-        
     }
 
     cin >> xs >> ys >> xt >> yt;
 
     BFS();
     cout << d[xt][yt];
-
-    // cout << '\n';
-    // for (int i = 1; i <= m; i++)
-    // {
-    //     for (int j = 1; j <= n; j++) 
-    //     {
-    //         cout << d[i][j] << ' ';
-    //     }
-    //     cout << '\n';
-    // }
 
     return 0;   
 }

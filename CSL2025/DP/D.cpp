@@ -2,29 +2,42 @@
 
 using namespace std;
 
-long long a;
-long long b;
+#define FOR(i, a, b) for (int i = (a), _b = b; i <= _b; i++)
+#define REP(i, n) for (int i = 0, _n = (n); i < n; i++)
+
+long long a, b;
 int k;
 
-long long res = 0;
+int n;
+int x[20];
+long long dp[20][2][10][170];
 
-bool Check(int x)
+long long Get(long long val)
 {
-    deque<int> digits;
-    if (x == 0) digits.push_back(0);
-
-    while (x)
+    n = 0;
+    while (val)
     {
-        digits.push_front(x % 10);
-        x /= 10;
+        x[n++] = val % 10;
+        val /= 10;
     }
 
-    for (int i = 1; i < digits.size(); i++)
+    reverse(x, x + n);
+
+    memset(dp, 0, sizeof dp);
+    dp[0][0][0][0] = 1;
+
+    REP(i, n) FOR(r, 0, 1) FOR(digit, 0, 9) FOR(sum, 0, i * 9) 
     {
-        if ((digits[i] + digits[i - 1]) % k == 0) return false;
+        int lim = r ? 9 : x[i];
+        FOR(d, 0, lim) if ((digit + d) % k || i == 0 || sum == 0)  
+            dp[i + 1][r | (d < lim)][d][sum + d] += dp[i][r][digit][sum];
     }
 
-    return true;
+    long long res = 0;
+    FOR(sum, 0, 9 * n) FOR(d, 0, 9) FOR(r, 0, 1)
+        res += dp[n][r][d][sum];
+
+    return res;
 }
 
 int main()
@@ -33,9 +46,7 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> a >> b >> k;
-    for (int i = a; i <= b; i++) res += Check(i);
-
-    cout << res;
+    cout << Get(b) - Get(a - 1);
 
     return 0;
 }

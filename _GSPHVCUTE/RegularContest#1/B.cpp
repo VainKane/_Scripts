@@ -8,9 +8,15 @@ int const N = 1e5 + 5;
 int const MOD = 1e9 + 7;
 
 string s;
-string a[9] = {"gspvhcute", "N", "E", "W", "S", "NW", "WS", "SE", "EN"};
+string a[9] = {"gspvhcute", "NW", "WS", "SE", "EN"};
 
 int dp[N];
+
+void Add(int &x, int y)
+{
+    x += y;
+    if (x >= MOD) x -= MOD;
+}
 
 int main()
 {
@@ -21,27 +27,22 @@ int main()
     s = " " + s;
     int n = s.size() - 1;
 
-    string str = "";
-
     dp[0] = dp[1] = 1;
 
     for (int i = 2; i <= n; i++)
     {
-        dp[i] += dp[i - 1];
-        dp[i] %= MOD;
+        Add(dp[i], dp[i - 1]);
 
-        for (int j = 5; j <= 8; j++)
+        string str = "";
+        str += s[i - 1];
+        str += s[i];
+
+        for (int j = 1; j <= 4; j++)
         {
-            str = "";
-            str += s[i - 1];
-            str += s[i];
-
             if (str != a[j]) continue;
-            dp[i] += dp[i - 2];
-            dp[i] %= MOD;
+            Add(dp[i], dp[i - 2]);
         }
     }
 
-    // for (int i = 1; i <= n; i++) cout << dp[i] << ' ';
     cout << dp[n];
 }

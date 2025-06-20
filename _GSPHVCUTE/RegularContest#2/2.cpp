@@ -2,35 +2,34 @@
 
 using namespace std;
 
-#define all(v) v.begin(), v.end()
-#define name "abba"
-
-string x, y;
-
-bool Check(string x, string y)
+struct Edge
 {
-    if (x == y) return true;
-    if (x.size() > y.size()) return false;
+    int u, v, w;
+};
 
-    bool res = 0;
+int const N = 88;
 
-    if (y.back() == 'A')
+int n;
+int a[N][N];
+
+vector<Edge> edges; 
+int d[N];
+
+void BellmanFord()
+{
+    while (1)
     {
-        string s = y;
-        s.pop_back();
-        
-        res |= Check(x, s);
+        bool stop = true;
+        for (auto e : edges)
+        {
+            if (d[e.v] < d[e.u] + e.w)
+            {
+                d[e.v] = d[e.u] + e.w;
+                stop = false;
+            }
+        }
+        if (stop) break;
     }
-    if (y.front() == 'B')
-    {
-        string s = y;
-        reverse(all(s));
-        s.pop_back();
-
-        res |= Check(x, s);
-    }
-
-    return res;
 }
 
 int main()
@@ -38,14 +37,29 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    freopen(name".inp", "r", stdin);
-    freopen(name".out", "w", stdout);
-
-    for (int i = 1; i <= 3; i++)
+    cin >> n;
+    for (int i = 1; i <= n; i++)
     {
-        cin >> x >> y;
-        cout << (Check(x, y) ? "Yes\n" : "No\n");
+        for (int j = 1; j <= n; j++) 
+        {
+            cin >> a[i][j];
+
+            if (a[i][j] == 0)
+            {
+                edges.push_back({i, j, 0});
+                edges.push_back({j, i, 0});
+            }
+            else if (a[i][j] == 1) edges.push_back({i, j, 1});
+            else if (a[i][j] == 2) edges.push_back({i, j, 0});
+            else if (a[i][j] == -1) edges.push_back({j, i, 1});
+            else edges.push_back({j, i, 0});
+        }
     }
+
+    BellmanFord();
+
+    cout << *max_element(d + 1, d + n + 1) + 1 << '\n';
+    for (int i = 1; i <= n; i++) cout << d[i] + 1 << ' ';
 
     return 0;
 }

@@ -113,9 +113,9 @@ void Input()
     }
 }
 
-void Get(int &x)
+int Get(int x)
 {
-    x = lower_bound(all(b), x) - b.begin() + 1;
+    return lower_bound(all(b), x) - b.begin() + 1;
 }
 
 void Init()
@@ -127,7 +127,7 @@ void Init()
     sort(all(b));
     b.erase(unique(all(b)), b.end());
 
-    for (int i = 1; i <= n; i++) Get(s[i]);
+    for (int i = 1; i <= n; i++) s[i] = Get(s[i]);
     for (int i = 1; i <= n; i++) nodes[i] = i;
 
     sort(nodes + 1, nodes + n + 1, cmp1);
@@ -148,14 +148,14 @@ void Solve()
             int v = nodes[j];
 
             if (b[s[v] - 1] == 0) continue;
-            Update(1, 1, n, s[v], c[v]);
+            Update(1, 1, b.size(), s[v], c[v]);
         }
         
         int pos = queries[i].i;
-        Get(queries[i].l);
-        Get(queries[i].h);
+        int l = Get(queries[i].l);
+        int h = upper_bound(all(b), queries[i].h) - b.begin();
 
-        res[pos] = GetMin(1, 1, n, queries[i].l, queries[i].h);
+        res[pos] = GetMin(1, 1, b.size(), l, h);
         if (res[pos] == 1e9) res[pos] = -1;
     }
 

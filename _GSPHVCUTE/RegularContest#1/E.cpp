@@ -8,12 +8,9 @@ int n;
 
 long long GCD(long long a, long long b)
 {
-    int r = a % b;
-    if (!r) return b;
-
-    while (r)
+    while (b)
     {
-        r = a % b;
+        int r = a % b;
         a = b;
         b = r;
     }

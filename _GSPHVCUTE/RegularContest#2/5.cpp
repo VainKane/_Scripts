@@ -27,7 +27,7 @@ void Create(int x, int y)
     int r = ++n;
 
     for (int i = 1; i <= x; i++) a.push_back({l, ++n});
-    for (int i = 1; i <= y; i++) a.push_back({r, ++n});
+    for (int i = 1; i <= y; i++) a.push_back({r, ++n}); 
 }
 
 void Solve()

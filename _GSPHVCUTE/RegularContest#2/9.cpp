@@ -2,91 +2,57 @@
 
 using namespace std;
 
-#define name "costquery"
-
 struct Edge
 {
-    int u, v, w;
+    int v, w;
 };
 
-int const N = 1e5 + 5;
+int const N = 3e5 + 5;
 
 int n, q;
-Edge a[N];
+vector<Edge> adj[N];
+
+vector<int> child[N];
+bool leaf[N];
+long long d[N];
 
 int par[N];
 int sz[N];
 
-long long cnt[N];
+long long res = 1e18;
 
-bool cmp(Edge a, Edge b)
+void DFS(int u)
 {
-    return a.w < b.w;
-}
-
-void MakeSet()
-{
-    for (int i = 1; i <= n; i++)
+    for (auto e : adj[u])
     {
-        par[i] = i;
-        sz[i] = 1;
+        d[e.v] = d[u] + e.w;
+        DFS(e.v); 
+        if (leaf[e.v]) child[u].push_back(e.v);
     }
-}
-
-int Find(int v)
-{
-    if (v == par[v]) return v;
-    return par[v] = Find(par[v]);
-}
-
-void Union(int a, int b)
-{
-    a = Find(a);
-    b = Find(b);
-
-    if (a == b) return;
-
-    if (sz[a] < sz[b]) swap(a, b);
-    par[b] = a;
-    sz[a] += sz[b];
 }
 
 int main()
 {
     ios_base::sync_with_stdio(false);
-    cin.tie(0); cout.tie(0); 
+    cin.tie(0); cout.tie(0);
 
-    freopen(name".inp", "r", stdin);
-    freopen(name".out", "w", stdout);
+    memset(leaf, 1, sizeof leaf);
 
     cin >> n >> q;
-    for (int i = 1; i < n; i++)
+    for (int i = 2; i <= n; i++)
     {
-        int u, v, w;
-        cin >> u >> v >> w;
-        a[i] = {u, v, w};
-    }
-
-    MakeSet();
-
-    sort(a + 1, a + n, cmp);
-    for (int i = 1; i < n; i++)
-    {
-        cnt[i] = 1ll * sz[Find(a[i].u)] * sz[Find(a[i].v)];
-        cnt[i] += cnt[i - 1];
+        int p, c; 
+        cin >> p >> c;
         
-        Union(a[i].u, a[i].v);
+        adj[p].push_back({i, c});
+        leaf[p] = false;
     }
 
-    while (q--)
+    DFS(1);
+
+    for (int i = 1; i <= q; i++)
     {
-        int l, r;
-        cin >> l >> r;
-
-        l = lower_bound(a + 1, a + n, Edge {0, 0, l}, cmp) - a;
-        r = upper_bound(a + 1, a + n, Edge {0, 0, r}, cmp) - a - 1;
-
-        cout << cnt[r] - cnt[l - 1] << ' ';
+        
     }
 
     return 0;
