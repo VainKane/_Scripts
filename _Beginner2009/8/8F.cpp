@@ -2,41 +2,41 @@
 
 using namespace std;
 
-int n;
-int w;
-int h;
+#define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
 
-pair<int, int> a[(int)1e5 + 10];
-long double const pre = 1e-7;
+int const N = 1e5 + 5;
+double const eps = 1e-7;
 
-bool Check(long double k)
+int n, maxW, maxH;
+int a[N], b[N];
+
+bool Check(double k)
 {
-    long double wide = 0;
-    long double height = 0;
-    int maxh = 0;
+    double w = 0;
+    double height = 0;
 
-    for (int i = 0; i < n; i++)
+    int h = b[1];
+
+    FOR(i, 1, n)
     {
-        if (wide + a[i].first * k <= w)
-        {
-            wide += a[i].first * k;
-            maxh = max(maxh, a[i].second);
-        }
-        else if (maxh != 0)
-        {
-            height += maxh * k;
-            wide = 0;
-            maxh = 0;
-            i--;
-            if (height > h) return false;
-        }
+        double x = a[i] * k;
+
+        if (x > maxW) return false;
+        if (h * k > maxH) return false;
+
+        if (b[i] == h && w + x <= maxW) w += x;
         else
         {
-            return false;
+            height += h * k;
+
+            w = x;
+            h = b[i];
         }
     }
 
-    return (height + maxh * k) <= h;
+    height += h * k;
+
+    return (height <= maxH);
 }
 
 int main()
@@ -44,38 +44,21 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    cout << fixed << setprecision(6);
-    
-    cin >> n >> w >> h;
+    cin >> n >> maxW >> maxH;
+    FOR(i, 1, n) cin >> a[i] >> b[i];
 
-    for (int i = 0; i < n; i++)
+    double l = 0;
+    double r = 1e9;
+
+    while (r - l > eps)
     {
-        cin >> a[i].first >> a[i].second;
+        double mid = (l + r) / 2;
+
+        if (Check(mid)) l = mid;
+        else r = mid;
     }
 
-    sort(a, a + n, cmp);
-
-    long double l = 0;
-    long double r = LLONG_MAX;
-    long double mid;
-    long double res = 0;
-
-    while (r - l > pre)
-    {
-        mid = l + (r - l) / 2;
-
-        if (Check(mid))
-        {
-            res = mid;
-            l = mid;
-        }
-        else
-        {
-            r = mid;
-        }
-    }
-
-    cout << res;
+    cout << fixed << setprecision(6) << (l + r) / 2;
 
     return 0;
 }

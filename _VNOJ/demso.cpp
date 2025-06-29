@@ -11,7 +11,7 @@ long long a, b;
 int D, k;
 
 int digits[N];
-long long dp[N][2][11][N];
+long long dp[N][2][11][N][2];
 
 long long Get(long long x)
 {
@@ -26,17 +26,16 @@ long long Get(long long x)
     k = min(k, max(n - 1, 0));
 
     memset(dp, 0, sizeof dp);
-    FOR(d, 0, min(9ll, x)) dp[1][d < x][d][0] = 1;
-    dp[0][0][0][0] = 1;
+    dp[0][0][0][0][1] = 1;
 
-    REP(i, n) FOR(r, 0, 1) FOR(digit, 0, 9) FOR(cnt, 0, k) if (dp[i][r][digit][cnt])
+    REP(i, n) FOR(r, 0, 1) FOR(digit, 0, 9) FOR(cnt, 0, k) FOR(zero, 0, 1) if (dp[i][r][digit][cnt][zero])
     {
         int lim = r ? 9 : digits[i];
-        FOR(d, 0, lim) dp[i + 1][r | (d < lim)][d][cnt + ((abs(digit - d) <= D) && i)] += dp[i][r][digit][cnt];
+        FOR(d, 0, lim) dp[i + 1][r | (d < lim)][d][cnt + ((abs(digit - d) <= D) && i && !zero)][zero && !d] += dp[i][r][digit][cnt][zero];
     }
     
     long long res = 0;
-    FOR(r, 0, 1) FOR(d, 0, 9) FOR(cnt, 0, k) res += dp[n][r][d][cnt];
+    FOR(r, 0, 1) FOR(d, 0, 9) FOR(cnt, 0, k) FOR(zero, 0, 1) res += dp[n][r][d][cnt][zero];
 
     return res; 
 }

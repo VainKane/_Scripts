@@ -1,201 +1,52 @@
 #include <bits/stdc++.h>
+
 using namespace std;
 
-#define all(v) v.begin(), v.end()
-#define name "query"
+#define FOR(i, a, b) for (long long i = (a), _b = (b); i <= _b; ++i)
+#define name "MOVIE"
 
-struct Node
-{
-    int x[16];
+typedef long long ll;
 
-    Node()
-    {
-        for (int i = 0; i <= 15; ++i) x[i] = -1e9; // x[0] unused
-    }
+const int N = 1e4 + 5;
 
-    static Node Empty()
-    {
-        return Node();
-    }
-};
-
-const int N = 305;
-int t, n, q;
-vector<int> adj[N];
-int cnt, in[N], out[N];
-bool odd[N];
-vector<int> a1, a0;
-Node t1[4 * N], t0[4 * N];
-int lz1[4 * N], lz0[4 * N];
-
-void Merge(Node &v, const Node &a, const Node &b)
-{
-    int l = 1, r = 1;
-    for (int i = 1; i <= 15; i++)
-    {
-        if (a.x[l] > b.x[r])
-            v.x[i] = a.x[l++];
-        else
-            v.x[i] = b.x[r++];
-    }
-}
-
-void Build(Node t[], int v, int l, int r)
-{
-    if (l == r)
-    {
-        t[v].x[1] = 0;
-        return;
-    }
-
-    int mid = (l + r) / 2;
-    Build(t, 2 * v, l, mid);
-    Build(t, 2 * v + 1, mid + 1, r);
-    Merge(t[v], t[2 * v], t[2 * v + 1]);
-}
-
-void Push(Node t[], int lz[], int v)
-{
-    if (lz[v])
-    {
-        for (int i = 1; i <= 15; i++)
-        {
-            t[2 * v].x[i] += lz[v];
-            t[2 * v + 1].x[i] += lz[v];
-        }
-        lz[2 * v] += lz[v];
-        lz[2 * v + 1] += lz[v];
-        lz[v] = 0;
-    }
-}
-
-void Update(Node t[], int lz[], int v, int l, int r, int left, int right, int val)
-{
-    if (l > right || r < left)
-        return;
-    if (left <= l && r <= right)
-    {
-        for (int i = 1; i <= 15; i++)
-            t[v].x[i] += val;
-        lz[v] += val;
-        return;
-    }
-
-    Push(t, lz, v);
-    int mid = (l + r) / 2;
-    Update(t, lz, 2 * v, l, mid, left, right, val);
-    Update(t, lz, 2 * v + 1, mid + 1, r, left, right, val);
-    Merge(t[v], t[2 * v], t[2 * v + 1]);
-}
-
-Node Get(Node t[], int lz[], int v, int l, int r, int left, int right)
-{
-    if (l > right || r < left)
-        return Node::Empty();
-    if (left <= l && r <= right)
-        return t[v];
-
-    Push(t, lz, v);
-    int mid = (l + r) / 2;
-    Node a = Get(t, lz, 2 * v, l, mid, left, right);
-    Node b = Get(t, lz, 2 * v + 1, mid + 1, r, left, right);
-    Node res;
-    Merge(res, a, b);
-    return res;
-}
-
-void DFS(int u)
-{
-    in[u] = ++cnt;
-    if (odd[u])
-        a1.push_back(in[u]);
-    else
-        a0.push_back(in[u]);
-    for (int v : adj[u])
-    {
-        odd[v] = !odd[u];
-        DFS(v);
-    }
-    out[u] = cnt;
-}
-
-void Init()
-{
-    a1 = {0};
-    a0 = {0};
-    odd[1] = 1;
-    cnt = 0;
-    DFS(1);
-    Build(t1, 1, 1, a1.size() - 1);
-    Build(t0, 1, 1, a0.size() - 1);
-}
+ll m;            // phút xem phim mỗi ngày (1 ≤ m ≤ 1e9)
+int n;           // số bộ phim (1 ≤ n ≤ 1e4)
+ll e[N], l[N];   // e[i]: số tập, l[i]: độ dài mỗi tập
 
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    // freopen(name ".inp", "r", stdin);
-    // freopen(name ".out", "w", stdout);
+    // freopen(name".inp", "r", stdin);
+    // freopen(name".out", "w", stdout);
 
-    cin >> t >> n;
-    for (int i = 2; i <= n; i++)
+    cin >> m >> n;
+    FOR(i, 1, n) cin >> e[i] >> l[i];
+
+    ll days = 1;      // bắt đầu ở ngày 1
+    ll remain = m;    // phút còn trống trong ngày hiện tại
+
+    FOR(i, 1, n)
     {
-        int p;
-        cin >> p;
-        adj[p].push_back(i);
+        ll cnt = e[i];          // còn cnt tập của phim i
+        ll len = l[i];
+
+        /* 1. Dùng nốt thời gian trống của ngày hiện tại */
+        ll fit = min(cnt, remain / len);
+        cnt    -= fit;
+        remain -= fit * len;
+        if (!cnt) continue;     // phim i đã xong
+
+        /* 2. Mở thêm các ngày mới để xem trọn phim i */
+        ll cap  = m / len;                  // tập / 1 ngày (>=1)
+        ll need = (cnt + cap - 1) / cap;    // số ngày mới phải mở
+        days   += need;
+
+        ll last = cnt - (need - 1) * cap;   // tập xem ở ngày cuối
+        remain  = m - last * len;           // phút dư của ngày đó
     }
 
-    Init();
-    cin >> q;
-
-    while (q--)
-    {
-        string type;
-        cin >> type;
-
-        if (type == "get")
-        {
-            int u;
-            cin >> u;
-            if (odd[u])
-            {
-                int idx = lower_bound(all(a1), in[u]) - a1.begin() + 1;
-                cout << Get(t1, lz1, 1, 1, a1.size() - 1, idx, idx).x[1] << ' ';
-            }
-            else
-            {
-                int idx = lower_bound(all(a0), in[u]) - a0.begin() + 1;
-                cout << Get(t0, lz0, 1, 1, a0.size() - 1, idx, idx).x[1] << ' ';
-            }
-            continue;
-        }
-
-        int u, k;
-        cin >> u >> k;
-
-        int l1 = lower_bound(all(a1), in[u]) - a1.begin() + 1;
-        int r1 = upper_bound(all(a1), out[u]) - a1.begin();
-        int l0 = lower_bound(all(a0), inin[u]) - a0.begin() + 1;
-        int r0 = upper_bound(all(a0), out[u]) - a0.begin();
-
-        if (type == "add")
-        {
-            int d = odd[u] ? 1 : -1;
-            if (l1 <= r1)
-                Update(t1, lz1, 1, 1, a1.size() - 1, l1, r1, k * d);
-            if (l0 <= r0)
-                Update(t0, lz0, 1, 1, a0.size() - 1, l0, r0, k * -d);
-        }
-        else if (type == "pos")
-        {
-            Node m1 = Get(t1, lz1, 1, 1, a1.size() - 1, l1, r1);
-            Node m2 = Get(t0, lz0, 1, 1, a0.size() - 1, l0, r0);
-            Node res;
-            Merge(res, m1, m2);
-            cout << res.x[k] << ' ';
-        }
-    }
-
+    cout << days << ' ' << remain << '\n';
     return 0;
 }
