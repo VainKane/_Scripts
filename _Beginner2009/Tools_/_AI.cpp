@@ -2,51 +2,76 @@
 
 using namespace std;
 
-#define FOR(i, a, b) for (long long i = (a), _b = (b); i <= _b; ++i)
-#define name "MOVIE"
+#define FOR(i,a,b) for (int i = (a), _b = (b); i <= _b; ++i)
+typedef long long       ll;
+const ll INF = (ll)-4e18;
+const int N  = 5005;          // n ≤ 5000
 
-typedef long long ll;
+int n, k;
+ll L, R, SG;
+ll a[N];
+int lowIdx[N], highIdx[N];
+ll w[N], dpPrev[N], dpCur[N];
 
-const int N = 1e4 + 5;
-
-ll m;            // phút xem phim mỗi ngày (1 ≤ m ≤ 1e9)
-int n;           // số bộ phim (1 ≤ n ≤ 1e4)
-ll e[N], l[N];   // e[i]: số tập, l[i]: độ dài mỗi tập
-
-int main()
-{
+int main() {
     ios_base::sync_with_stdio(false);
-    cin.tie(0); cout.tie(0);
+    cin.tie(0);
 
-    // freopen(name".inp", "r", stdin);
-    // freopen(name".out", "w", stdout);
+    /* ---------- Đọc dữ liệu ---------- */
+    cin >> n >> k;
+    cin >> L >> R;
+    cin >> SG;
+    FOR(i, 1, n) cin >> a[i];
 
-    cin >> m >> n;
-    FOR(i, 1, n) cin >> e[i] >> l[i];
+    /* ---------- Hệ số trọng số ---------- */
+    FOR(t, 1, k) w[t] = 2LL * t - k - 1;     // w_t = 2t - k - 1
 
-    ll days = 1;      // bắt đầu ở ngày 1
-    ll remain = m;    // phút còn trống trong ngày hiện tại
-
-    FOR(i, 1, n)
-    {
-        ll cnt = e[i];          // còn cnt tập của phim i
-        ll len = l[i];
-
-        /* 1. Dùng nốt thời gian trống của ngày hiện tại */
-        ll fit = min(cnt, remain / len);
-        cnt    -= fit;
-        remain -= fit * len;
-        if (!cnt) continue;     // phim i đã xong
-
-        /* 2. Mở thêm các ngày mới để xem trọn phim i */
-        ll cap  = m / len;                  // tập / 1 ngày (>=1)
-        ll need = (cnt + cap - 1) / cap;    // số ngày mới phải mở
-        days   += need;
-
-        ll last = cnt - (need - 1) * cap;   // tập xem ở ngày cuối
-        remain  = m - last * len;           // phút dư của ngày đó
+    /* ---------- Tiền xử lý cửa sổ ---------- */
+    FOR(i, 1, n) {
+        int l = lower_bound(a + 1, a + i, a[i] - R) - a;          // a[p] ≥ a[i]-R
+        int r = upper_bound(a + 1, a + i, a[i] - L) - a - 1;      // a[p] ≤ a[i]-L
+        lowIdx[i]  = l;
+        highIdx[i] = r;                                           // (l ≤ r) ⇒ cửa sổ tồn tại
     }
 
-    cout << days << ' ' << remain << '\n';
+    /* ---------- Khởi tạo cho t = 1 ---------- */
+    FOR(i, 1, n) dpPrev[i] = INF;
+    FOR(i, 1, n)
+        if (a[i] >= L && a[i] <= R) dpPrev[i] = w[1] * a[i];
+
+    /* ---------- Quy hoạch động cho t = 2..k ---------- */
+    deque<int> dq;
+    FOR(t, 2, k) {
+        dq.clear();
+        int left = 1, right = 0;                 // [left, right] là cửa sổ hiện tại
+        FOR(i, 1, n) {
+            /* mở rộng right tới highIdx[i] */
+            while (right < highIdx[i]) {
+                ++right;
+                if (dpPrev[right] == INF) continue;          // giá trị không hợp lệ
+                while (!dq.empty() && dpPrev[dq.back()] <= dpPrev[right])
+                    dq.pop_back();
+                dq.push_back(right);
+            }
+            /* thu hẹp left lên lowIdx[i] */
+            while (left < lowIdx[i]) {
+                if (!dq.empty() && dq.front() == left) dq.pop_front();
+                ++left;
+            }
+
+            dpCur[i] = dq.empty() ? INF
+                                  : dpPrev[dq.front()] + w[t] * a[i];
+        }
+        /* chuyển sang bước kế */
+        FOR(i, 1, n) dpPrev[i] = dpCur[i];
+    }
+
+    /* ---------- Lấy kết quả cuối ---------- */
+    ll best = INF;
+    FOR(i, 1, n)
+        if (SG - a[i] >= L && SG - a[i] <= R)
+            best = max(best, dpPrev[i]);
+
+    cout << best * 2 << '\n';       // nhân 2 vì ∑Ti = 2·∑|xi-xj|
     return 0;
 }

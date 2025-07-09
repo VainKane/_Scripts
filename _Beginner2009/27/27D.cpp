@@ -83,7 +83,7 @@ int main()
 
         if (w > 12) continue;
         adj[u].push_back({v, w});
-    }
+    }   
 
     Dijkstra(a);
     cout << d[b];

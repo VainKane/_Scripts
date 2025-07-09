@@ -5,11 +5,7 @@ using namespace std;
 #define bit(i, x) (x >> i & 1)
 #define ll long long
 #define sz(x) (int)x.size()
-#define rep(i, l, r) for(int i = l; i <= r; i++)
-#define rep2(i, l, r) for(int i = l; i >= r; i--)
-
-const int N = 2e5 + 5;
-const int mod = 998244353;
+#define rep(i, l, r) for (int i = (l), _r = (r); i <= _r; i++)
 
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 ll rnd(ll l, ll r) {

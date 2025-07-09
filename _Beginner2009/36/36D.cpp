@@ -2,6 +2,8 @@
 
 using namespace std;
 
+#define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
+
 int const N = 39;
 
 int n, k, m;
@@ -9,22 +11,11 @@ int t;
 
 long long f[N][N];
 int b[N];
-int p[N];
 
 void Init()
 {
-    for (int x = 1; x <= min(m, n); x++) f[1][x] = 1;
-
-    for (int i = 2; i <= k; i++)
-    {
-        for (int x = 1; x <= n; x++)
-        {
-            for (int z = 1; z <= min(x - 1, m); z++)
-            {
-                f[i][x] += f[i - 1][x - z];
-            }
-        }
-    }
+    FOR(x, 1, min(m, n)) f[1][x] = 1;
+    FOR(i, 2, k) FOR(x, 1, n) FOR(z, 1, min(x - 1, m)) f[i][x] += f[i - 1][x - z];
 
     cout << f[k][n] << '\n';
 }
@@ -35,9 +26,9 @@ void Solve(string s)
     int cnt = 0;
     int l = 1;
 
-    s += " ";
+    s = " " + s + " ";
 
-    for (int i = 1; i < s.size(); i++)
+    FOR(i, 2, s.size() - 1)
     {
         if (s[i] == s[i - 1]) l++;
         else
@@ -47,9 +38,7 @@ void Solve(string s)
         }
     }
 
-    for (int i = 1; i <= k; i++) p[i] = p[i - 1] + b[i];
-
-    for (int i = k; i >= 1; i++)
+    for (int i = k; i >= 1; i--)
     {
         if (i & 1)
         {

@@ -2,6 +2,9 @@
 
 using namespace std;
 
+#define REP(i, n) for (int i = 0, _n = (n); i < _n; i++)
+#define FORD(i, a, b) for (int i = (a), _b = (b); i >= _b; i--)
+
 int cnt = 0;
 
 long long GCD(long long a, long long b)
@@ -22,6 +25,12 @@ long long GCD(long long a, long long b)
 
 int a[23] = {0, 1, 2, 3};
 
+int Fibo(int n)
+{
+    if (n <= 2) return 1;
+    return Fibo(n - 1) + Fibo(n - 2);
+}
+
 int main()
 {
     // GCD(1e18, 4352345234231234);
@@ -41,12 +50,19 @@ int main()
     // s.resize(s.size() - 1);
     // cout << s;
 
-    priority_queue<int> pq;
-    pq.push(2);
-    pq.push(2);
-    pq.push(2);
+    // priority_queue<int> pq;
+    // pq.push(2);
+    // pq.push(2);
+    // pq.push(2);
 
-    // cout << pq.size();
+    // // cout << pq.size();
 
-    cout << (long long)10e18;
+    // cout << (long long)10e18;
+
+    // REP(i, Fibo(32)) cout << i << ' ';
+
+    // vector<int> vt = {1, 2, 3, 4};
+
+    int a = (1 << 0) - 1;
+    cout << a;
 }

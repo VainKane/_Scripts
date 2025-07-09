@@ -49,24 +49,21 @@ int main()
                 if (j == 2 && (a[m] < l || a[m] > r)) continue;
                 if (a[i] - a[m] < l || a[i] - a[m] > r) continue;
 
-                long long d = 2 * (j - 1) * (k - j + 1);
+                long long d = 2 * (j - 1) * (k - j + 1); 
                 dp[i][j] = max(dp[i][j], dp[m][j - 1] + d * (a[i] - a[m]));
             }
         }
     }
 
-    for (int i = 1; i <= n; i++)
-    {
-        res = max(res, dp[i][k]);
-    }
+    // for (int i = 1; i <= n; i++)
+    // {
+    //     for (int j = 1; j <= k; j++) cout << dp[i][j] << ' ';
+    //     cout << '\n';
+    // }
 
     for (int i = 1; i <= n; i++)
     {
-        for (int j = 1; j <= k; j++)
-        {
-            cout << dp[i][j] << ' ';
-        }
-        cout << '\n';
+        res = max(res, dp[i][k]);
     }
 
     cout << res;

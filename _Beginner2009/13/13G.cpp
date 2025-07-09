@@ -2,18 +2,31 @@
 
 using namespace std;
 
-int n;
-int k;
+#define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
 
-int l;
-int r;
+int const N = 5009;
 
-int sg;
-int a[5009];
+int n, k;
+int l, r, SG;
 
-long long dp[5009][5009];
-long long res = 0;
+int a[N], d[N];
+long long f[2][N], g[2][N];
 
+int cur, pre;
+
+void Init()
+{
+    memset(f, -1, sizeof f);
+    
+    cur = 1, pre = 0;
+    
+    FOR(j, 1, k) d[j] = 2 * j * (k - j);
+    FOR(i, 1, n) if (a[i] >= l && a[i] <= r) 
+    {
+        f[cur][i] = 0;
+        g[cur][i] = -d[1] * a[i];
+    }
+}
 int main()
 {
     ios_base::sync_with_stdio(false);
@@ -21,56 +34,53 @@ int main()
 
     cin >> n >> k;
     cin >> l >> r;
-    cin >> sg;
+    cin >> SG;
 
-    for (int i = 1; i <= n; i++)
+    FOR(i, 1, n) cin >> a[i];
+
+    Init();
+
+    FOR(j, 2, k) 
     {
-        cin >> a[i];
-    }
+        deque<int> q;
+        int idx = 0;
 
-    memset(dp, -1, sizeof dp);
+        swap(cur, pre);
+        memset(f[cur], -1, sizeof f[cur]);
 
-    for (int i = 1; i <= n; i++)
-    {
-        if (a[i] >= l && a[i] <= r)
+        FOR(i, j, n)
         {
-            dp[i][1] = 0;
+            while (!q.empty() && a[i] - a[q.front()] > r) q.pop_front();
+            while (idx - 1 < i && a[i] - a[idx + 1] >= l)
+            {
+                idx++;
+
+                if (idx == 1) 
+                {
+                    if (a[idx] >= l && a[idx] <= r && f[pre][idx] != -1) q.push_back(idx);
+                }
+                else if (f[pre][idx] != -1) 
+                {
+                    while (!q.empty() && g[pre][q.back()] <= g[pre][idx]) q.pop_back();
+                    q.push_back(idx);
+                }
+            }
+
+            if (!q.empty()) 
+            {
+                f[cur][i] = g[pre][q.front()] + 1ll * d[j - 1] * a[i];
+                g[cur][i] = f[cur][i] - 1ll * d[j] * a[i];
+            }
         }
     }
 
-    for (int j = 2; j <= k; j++) 
+    long long res = 0;
+
+    FOR(i, k, n)
     {
-        deque<int> qu;
-        long long d = 2 * (j - 1) * (k - j + 1);
-
-        for (int i = 1; i <= n; i++)
-        {
-            if (j == k && (sg - a[i] < l || sg - a[i] > r)) continue;
-
-            while (!qu.empty() && (a[i] - a[qu.front()] > r || a[i] - a[qu.front()] < l)) qu.pop_front();
-            while (!qu.empty() && j == 2 && (a[qu.front()] < l || a[qu.front()] > r)) qu.pop_front();
-            while (!qu.empty() && dp[qu.front()][j - 1] == -1) qu.pop_front();
-            while (!qu.empty() && dp[qu.back()][j - 1] - d * a[qu.back()] <= dp[i][j - 1] - d * a[i]) qu.pop_back();
-
-            qu.push_back(i);
-            dp[i][j] = dp[qu.front()][j - 1] + d * (a[i] - a[qu.front()]);
-        }
+        int tmp = SG - a[i];
+        if (tmp >= l && tmp <= r) res = max(res, f[cur][i]);
     }
-
-    for (int i = 1; i <= n; i++)
-    {
-        res = max(res, dp[i][k]);
-    }
-
-    for (int i = 1; i <= n; i++)
-    {
-        for (int j = 1; j <= k; j++)
-        {
-            cout << dp[i][j] << ' ';
-        }
-        cout << '\n';
-    }
-
     cout << res;
 
     return 0;

@@ -2,6 +2,7 @@
 
 using namespace std;
 
+#define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
 #define all(v) v.begin(), v.end()
 #define F first
 #define S second
@@ -17,24 +18,24 @@ vector<int> b;
 int f[N];
 int g[N];
 
+void Init()
+{   
+    sort(all(b));
+    b.erase(unique(all(b)), b.end());
+
+    FOR(i, 1, n) a[i] = lower_bound(all(b), a[i]) - b.begin() + 1;
+}
+
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
     cin >> n;
-    for (int i = 1; i <= n; i++)
+    FOR(i, 1, n)
     {
         cin >> a[i];
         b.push_back(a[i]);
-    }
-
-    sort(all(b));
-    b.erase(unique(all(b)), b.end());
-
-    for (int i = 1; i <= n; i++)
-    {
-        a[i] = lower_bound(all(b), a[i]) - b.begin() + 1;
     }
 
     for (int i = 1; i <= n; i++)

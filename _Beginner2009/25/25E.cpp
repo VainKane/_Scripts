@@ -2,13 +2,14 @@
 
 using namespace std;
 
+#define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
+#define all(v) v.begin(), v.end()
+
 int const N = 1e5 + 5;
 int const LOG = 17;
 
-int n;
-int m;
-int s;
-int t;
+int n, m;
+int s, t;
 
 vector<int> adj[N];
 
@@ -18,38 +19,30 @@ int par[N];
 int up[N][LOG + 5];
 int upMin[N][LOG + 5];
 
-bool visisted[N];
-
 vector<int> res;
 
-void Build(int start)
+void Build()
 {
     queue<int> qu;
-    qu.push(start);
-    visisted[start] = true;
+    qu.push(s);
 
     while (!qu.empty())
     {
         int u = qu.front();
         qu.pop();
 
-        for (auto v : adj[u])
+        for (auto v : adj[u]) if (h[v] == -1)
         {
-            if (visisted[v]) continue;
-            
-            visisted[v] = true;
             h[v] = h[u] + 1;
-            
-            if (v == t) return;
             qu.push(v);
         }
     }
 }
 
-bool CompareLCA(int u, int v)
+bool Better(int u, int v)
 {
-    int uMin = 1e9;
-    int vMin = 1e9;
+    int uMin = u;
+    int vMin = v;
 
     for (int i = LOG; i >= 0; i--)
     {
@@ -63,50 +56,55 @@ bool CompareLCA(int u, int v)
         }
     }
 
-    uMin = min(uMin, u);
-    vMin = min(vMin, v);
-
     return uMin < vMin;
 }
 
-void BFS(int root)
+void BFS()
 {
-    if (h[root] == 0)
+    if (h[t] == -1)
     {
         cout << -1;
         exit(0);
     }
 
     queue<int> qu;
-    qu.push(root);
+    qu.push(s);
 
     while (!qu.empty())
     {
         int u = qu.front();
         qu.pop();
 
-        if (u == s) return;
-
-        for (auto v : adj[u])
+        for (auto v : adj[u]) if (h[v] == h[u] - 1)
         {
-            if (h[v] == h[u] - 1)
-            {
-                if (par[u] == 0 || CompareLCA(v, par[u])) par[u] = v;
-            }
+            if (Better(v, par[u])) par[u] = v;
         }
         
         up[u][0] = par[u];
         upMin[u][0] = min(u, par[u]);
 
-        for (int i = 1; i <= LOG; i++)
+        FOR(i, 1, LOG)
         {
             int p = up[u][i - 1];
             up[u][i] = up[p][i - 1];
             upMin[u][i] = min(upMin[u][i - 1], upMin[p][i - 1]);
         }
 
-        qu.push(par[u]);
+        for (auto v : adj[u]) if (h[v] == h[u] + 1 && !par[v]) 
+        {
+            par[v] = u;
+            qu.push(v);
+        }
     }
+}
+
+void Init()
+{
+    memset(h, -1, sizeof h);
+    h[s] = 0;
+
+    Build();
+    BFS();
 }
 
 int main()
@@ -115,7 +113,7 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> n >> m >> s >> t;
-    for (int i = 1; i <= m; i++)
+    FOR(i, 1, m)
     {
         int u, v;
         cin >> u >> v;
@@ -124,19 +122,13 @@ int main()
         adj[v].push_back(u);
     }
 
-    Build(s);
-    BFS(t);
+    Init();
 
     res.push_back(t);
+    while (par[t]) res.push_back(t = par[t]);
+    reverse(all(res));
 
-    while (s != t)
-    {
-        t = par[t];
-        res.push_back(t);
-    }
-
-    reverse(res.begin(), res.end());
-    for (auto val : res) cout << val << ' ';
+    for (auto v : res) cout << v << ' ';
 
     return 0;
 }
