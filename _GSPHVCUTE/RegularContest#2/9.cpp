@@ -2,6 +2,11 @@
 
 using namespace std;
 
+#define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
+#define FORD(i, a, b) for (int i = (a), _b = (b); i >= _b; i--)
+#define F first
+#define S second
+
 struct Edge
 {
     int v, w;
@@ -11,24 +16,62 @@ int const N = 3e5 + 5;
 
 int n, q;
 vector<Edge> adj[N];
+pair<int, int> edg[N];
 
 vector<int> child[N];
-bool leaf[N];
 long long d[N];
 
-int par[N];
-int sz[N];
+bool isLeaf[N];
 
-long long res = 1e18;
+int qr[N];
+bool mark[N];
 
-void DFS(int u)
+int par[N], sz[N];
+long long val[N];
+
+long long res[N];
+
+void MakeSet()
 {
-    for (auto e : adj[u])
+    FOR(i, 1, n)
+    {
+        par[i] = i;
+        sz[i] = 1;
+    }
+}
+
+int Find(int v)
+{
+    if (v == par[v]) return v;
+    return par[v] = Find(par[v]);
+}
+
+void Union(int a, int b)
+{
+    a = Find(a);
+    b = Find(b);
+
+    if (a == b) return;
+
+    if (sz[a] < sz[b]) swap(a, b);
+
+    par[b] = a;
+    sz[b] += sz[a];
+    val[a] = min(val[a], val[b]);
+}
+
+void DFS(int u, int p)
+{
+    bool isLeaf = true;
+
+    for (auto e : adj[u]) if (e.v != p)
     {
         d[e.v] = d[u] + e.w;
-        DFS(e.v); 
-        if (leaf[e.v]) child[u].push_back(e.v);
+        isLeaf = false;
+        DFS(e.v, u); 
     }
+
+    val[u] = (isLeaf ? d[u] : 1e18);
 }
 
 int main()
@@ -36,24 +79,39 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    memset(leaf, 1, sizeof leaf);
-
     cin >> n >> q;
-    for (int i = 2; i <= n; i++)
+    FOR(i, 2, n)
     {
         int p, c; 
         cin >> p >> c;
         
         adj[p].push_back({i, c});
-        leaf[p] = false;
+        adj[i].push_back({p, c});
+
+        edg[i] = {i, p};
     }
 
-    DFS(1);
-
-    for (int i = 1; i <= q; i++)
+    FOR(i, 1, q)
     {
-        
+        cin >> qr[i];
+        mark[qr[i]] = true;
     }
+
+    MakeSet();
+    DFS(1, -1);
+
+    // FOR(u, 1, n) cout << u << ' ' << val[u] << '\n';
+
+    FOR(i, 2, n) if (!mark[i]) Union(edg[i].F, edg[i].S);
+    FORD(i, q, 1)
+    {
+        res[i] = val[Find(1)];
+        if (res[i] == 1e18) res[i] = -1;
+
+        Union(edg[qr[i]].F, edg[qr[i]].S);
+    }
+
+    FOR(i, 1, q) cout << res[i] << '\n';
 
     return 0;
 }

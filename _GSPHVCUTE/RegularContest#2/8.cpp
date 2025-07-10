@@ -14,6 +14,8 @@ long long n;
 int k;
 
 int dp[65][MK(9) + 5][15];
+int newCmp[MK(9) + 5][MK(10) + 5];
+vector<int> masks[2];
 
 bool Get(bool b1, bool b2, bool cmp)
 {
@@ -25,6 +27,23 @@ void Add(int &x, int y)
 {
     x += y;
     if (x >= MOD) x -= MOD;
+}
+
+void Init()
+{
+    REP(cmp, MK(k - 1)) REP(mask, MK(k))
+    {
+        REP(j, k - 1) if (Get(BIT(j, mask), BIT(j + 1, mask), BIT(j, cmp))) 
+            newCmp[cmp][mask] |= MK(j);
+    }
+
+    REP(mask, MK(k))
+    {
+        int type = __builtin_popcount(mask) & 1;
+        masks[type].push_back(mask);
+    }
+
+    dp[0][0][0] = 1;
 }
 
 int main()
@@ -44,20 +63,17 @@ int main()
         return 0;
     }
 
-    dp[0][0][0] = 1;
-
     int lg = __lg(n) + 1;
+    Init();
 
-    REP(i, __lg(n) + 1) REP(cmp, MK(k - 1)) REP(carry, k) if (dp[i][cmp][carry]) REP(mask, MK(k))
+    REP(i, lg) REP(cmp, MK(k - 1)) REP(carry, k) if (dp[i][cmp][carry])
     {
-        int tmp = carry + __builtin_popcount(mask);
-        if (tmp % 2 != BIT(i, n)) continue;
-
-        int newCarry = tmp / 2;
-        int newCmp = 0;
-
-        REP(j, k - 1) if (Get(BIT(j, mask), BIT(j + 1, mask), BIT(j, cmp))) newCmp |= MK(j);
-        Add(dp[i + 1][newCmp][newCarry], dp[i][cmp][carry]);
+        int type = BIT(i, n) ^ (carry & 1);
+        for (auto mask : masks[type])
+        {
+            int tmp = carry + __builtin_popcount(mask);
+            Add(dp[i + 1][newCmp[cmp][mask]][tmp >> 1], dp[i][cmp][carry]);
+        }
     }
 
     cout << dp[lg][MK(k - 1) - 1][0];

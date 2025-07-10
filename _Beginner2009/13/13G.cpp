@@ -54,12 +54,10 @@ int main()
             while (idx - 1 < i && a[i] - a[idx + 1] >= l)
             {
                 idx++;
+                if (f[pre][idx] == -1) continue;
 
-                if (idx == 1) 
-                {
-                    if (a[idx] >= l && a[idx] <= r && f[pre][idx] != -1) q.push_back(idx);
-                }
-                else if (f[pre][idx] != -1) 
+                if (idx == 1 && a[idx] >= l && a[idx] <= r) q.push_back(idx);
+                else
                 {
                     while (!q.empty() && g[pre][q.back()] <= g[pre][idx]) q.pop_back();
                     q.push_back(idx);

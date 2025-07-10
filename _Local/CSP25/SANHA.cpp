@@ -3,59 +3,72 @@
 using namespace std;
 
 #define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
+#define FORD(i, a, b) for (int i = (a), _b = (b); i >= _b; i--)
+#define all(v) v.begin(), v.end()
 
 int const N = 1e5 + 5;
 
-int n, q;
-int a[N], rb[N];
+struct Query
+{
+    int r, i;
 
-vector<int> adj[N];
-bool visited[N];
+    bool operator < (const Query other) const
+    {
+        return r < other.r;
+    }
+};
+
+int n, q;
+int a[N];
+vector<Query> qr[N];
+
+int lb[N];
+
+int res[N];
+int bit[N];
+
+void Update(int idx, int val)
+{
+    while (idx <= n)
+    {
+        bit[idx] += val;
+        idx += idx & -idx;
+    }
+}
+
+int Get(int idx)
+{
+    int res = 0;
+
+    while (idx)
+    {
+        res += bit[idx];
+        idx -= idx & -idx;
+    }
+
+    return res;
+}
+
+int Get(int l, int r)
+{
+    return Get(r) - Get(l - 1);
+}
 
 void Init()
 {
     stack<int> st;
-    a[n + 1] = -1;
+    a[0] = -1;
 
-    FOR(i, 1, n + 1)
+    FORD(i, n, 0)
     {
         while (!st.empty() && a[i] <= a[st.top()])
         {
-            rb[st.top()] = i;
+            lb[st.top()] = i;
             st.pop();
         }
+        
         st.push(i);
-    }
-}
-
-void CreateGraph(int l, int r)
-{
-    memset(visited, false, sizeof visited);
-    FOR(i, l, r) adj[i].clear();
-
-    FOR(i, l, r) if (a[i] == a[rb[i]] && i != rb[i]) 
-    {
-        adj[i].push_back(rb[i]);
-        adj[rb[i]].push_back(i);
-    }
-}
-
-void BFS(int s)
-{
-    queue<int> q;
-    q.push(s);
-    visited[s] = true;
-
-    while (!q.empty())
-    {
-        int u = q.front();
-        q.pop();
-
-        for (auto v : adj[u]) if (!visited[v])
-        {
-            visited[v] = true;
-            q.push(v);
-        }
+        sort(all(qr[i]));
     }
 }
 
@@ -69,22 +82,17 @@ int main()
 
     Init();
 
-    while (q--)
+    FOR(i, 1, q)
     {
         int l, r;
         cin >> l >> r;
-    
-        CreateGraph(l, r);
+        // qr[l].push_back({r, i});
 
-        int cc = 0;
-        FOR(u, l, r) if (!visited[u])
-        {
-            BFS(u);
-            cc++;
-        }
-
-        cout << cc << '\n';
+        int res = 0;
+        FOR(j, l, r) res += (lb[j] < l || a[lb[j]] < a[j]);
+        cout << res << '\n';
     }
+
 
     return 0;
 }
