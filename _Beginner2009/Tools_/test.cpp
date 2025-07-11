@@ -63,6 +63,10 @@ int main()
 
     // vector<int> vt = {1, 2, 3, 4};
 
-    int a = (1 << 0) - 1;
-    cout << a;
+    // int a = (1 << 0) - 1;
+    // cout << a;
+
+    // cout << -123 % 5;
+
+    cout << char(67);
 }

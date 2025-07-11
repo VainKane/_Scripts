@@ -2,26 +2,63 @@
 
 using namespace std;
 
-int const mod = 1e9 + 7;
-int const N = 1e6 + 10;
-int const B = 199;
+#define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
+#define REP(i, n) for (int i = 0, _n = (n); i < _n; i++)
 
-string a;
-string b;
+int const N = 1e6 + 5;
+int const BASE = 256;
+int const MOD[] = {(int)1e9 + 2277, (int)1e9 + 5277};
+int const NMOD = 2;
 
-int hashA;
-int preHashB[N];
-int powB[N];
-
-int n;
-int m;
-
-int GetHash(int l, int r)
+struct Hash
 {
-    return (1ll * preHashB[r] - 1ll * preHashB[l - 1] * powB[r - l + 1] + 1ll * mod * mod) % mod;
+    int val[NMOD];
+
+    Hash()
+    {
+        memset(val, 0, sizeof val);
+    }
+
+    bool operator == (const Hash other) const
+    {
+        REP(j, NMOD) if (val[j] != other.val[j]) return false;
+        return true;
+    }
+};
+
+string a, b;
+int n, m;
+
+int pw[NMOD][N], hs[NMOD][N];
+Hash hsA;
+
+void Init()
+{
+    REP(j, NMOD)
+    {
+        pw[j][0] = 1;
+        FOR(i, 1, max(m, n)) pw[j][i] = (1ll * pw[j][i - 1] * BASE) % MOD[j];
+
+        FOR(i, 1, n) hs[j][i] = (hs[j][i - 1] + 1ll * b[i] * pw[j][i - 1]) % MOD[j];
+        FOR(i, 1, m) hsA.val[j] = (hsA.val[j] + 1ll * a[i] * pw[j][i - 1]) % MOD[j];
+        hsA.val[j] = (1ll * hsA.val[j] * pw[j][max(m, n)]) % MOD[j];
+    }
 }
 
-vector<int> res;
+Hash Get(int l, int r)
+{
+    Hash res;
+
+    REP(j, NMOD)
+    {
+        int tmp = hs[j][r] - hs[j][l - 1];
+        if (tmp < 0) tmp += MOD[j];
+
+        res.val[j] = (1ll * tmp * pw[j][max(m, n) - l + 1]) % MOD[j];
+    }
+
+    return res;
+}
 
 int main()
 {
@@ -30,34 +67,21 @@ int main()
 
     cin >> a >> b;
 
+    m = a.size();
+    n = b.size();
     a = " " + a;
     b = " " + b;
 
-    n = a.size() - 1;
-    m = b.size() - 1;
+    Init();
 
-    for (int i = 1; i <= n; i++)
+    vector<int> res;
+    FOR(i, 1, n)
     {
-        hashA = ( 1ll * hashA * B + a[i] ) % mod;
-    }
-
-    powB[0] = 1;
-    for (int i = 1; i <= m; i++)
-    {
-        preHashB[i] = ( 1ll * preHashB[i - 1] * B + b[i] ) % mod;
-        powB[i] = ( 1ll * powB[i - 1] * B ) % mod;
-    }
-
-    for (int i = 1; i <= m - n + 1; i++)
-    {
-        if (hashA == GetHash(i, i + n - 1))
-        {
-            res.push_back(i);
-        }
+        if (Get(i, i + m - 1) == hsA) res.push_back(i); 
     }
 
     cout << res.size() << '\n';
-    for (auto val : res) cout << val << ' ';
+    for (auto idx : res) cout << idx << ' ';
 
     return 0;
 }
