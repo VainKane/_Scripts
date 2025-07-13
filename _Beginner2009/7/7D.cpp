@@ -2,106 +2,59 @@
 
 using namespace std;
 
+#define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
+#define FORD(i, a, b) for (int i = (a), _b = (b); i >= _b; i--)
+#define REP(i, n) for (int i = 0, _n = (n); i < _n; i++)
+
+int const N = 40;
+
 int n;
-string s[40];
-int x[40];
+string s[N];
 
-int m = 0;
-int res = INT_MAX;
+int a[N];
+int cnt[N];
 
-bool mark[40];   
+vector<int> adj[N];
+bool visited[N];
 
-void Try(int pos)
-{   
-    if (pos > m)
-    {
-        int ind = 1;
+int res = 0;
 
-        string s1[40];
-
-        for (int i = 1; i <= n; i++)
-        {
-            s1[i] = s[i];
-        }
-
-        for (int i = 1; i <= n; i++)
-        {
-            for (int j = 0; j < s[i].length(); j++)
-            {
-                if (s[i][j] == '*')
-                {
-                    if (x[ind]) 
-                    {
-                        s1[i][j] = 'a';
-                    }
-                    else s1[i][j] = 'b';
-
-                    ind++;
-                }
-            }
-        }
-
-        int cnt = 0;
-        memset(mark, 1, sizeof mark);
-
-        for (int i = 1; i <= n; i++)
-        {
-            for (int j = i + 1; j <= n; j++)
-            {
-                if (s1[i] == s1[j])
-                {
-                    mark[j] = false;
-                }
-            }
-        }
-
-        for (int i = 1; i <= n; i++)
-        {
-            for (int j = 1; j <= n; j++)
-            {
-                if (mark[i] && mark[j])
-                {
-                    if (s1[i] != s1[j])
-                    {
-                        cnt++;
-                    }
-                }
-            }
-        }
-
-        res = min(res, cnt);
-        return;
-    }
-
-    for (int i = 0; i <= 1; i++)
-    {
-        x[pos] = i;
-        Try(pos + 1);   
-    }
+bool Equal(string a, string b)
+{
+    if (a.size() != b.size()) return false;
+    FOR(i, 1, a.size()) if (a[i] != b[i] && a[i] != '*' && b[i] != '*') return false;
+    return true;
 }
+
+bool cmp(int a, int b)
+{
+    return cnt[a] > cnt[b];
+}
+
+void DFS(int u)
+{
+    visited[u] = true;
+    for (auto v : adj[u]) if (!visited[v]) DFS(v);
+}
+
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
     cin >> n;
+    FOR(i, 1, n) cin >> s[i];
 
-    for (int i = 1; i <= n; i++)
+    FOR(i, 1, n) FOR(j, 1, n) if (i != j) cnt[i] += Equal(s[i], s[j]);
+
+    FOR(i, 1, n) a[i] = i;
+    sort(a + 1, a + n + 1, cmp);
+
+    FOR(i, 1, n) FOR(j, i + 1, n) if (Equal(s[j], s[i])) adj[j].push_back(j);
+    FORD(i, n, 1) if (!visited[i])
     {
-        cin >> s[i];
-
-        for (auto key : s[i])
-        {   
-            if (key == '*') m++;    
-        }
-    }
-
-    Try(1);
-
-    if (n == 4)
-    {
-        if (s[1] == "cat" && s[2] == "*a*" && s[3] == "h**" && s[4] == "hat") cout << 2;
-        return 0;
+        DFS(i);
+        res++;
     }
 
     cout << res;

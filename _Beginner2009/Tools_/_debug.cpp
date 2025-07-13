@@ -2,7 +2,7 @@
 
 using namespace std;
 
-int const ntest = 1e4;
+int const ntest = 1;
 #define name "skwthr"
 #define file "M"
 
@@ -17,7 +17,7 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int t = Rand(1, 1);
+    int t = Rand(1, 500);
     cout << t << '\n';
 
     while (t--)
@@ -26,7 +26,7 @@ void GenTest()
         int c = Rand(2, 10);
         int a = Rand(r / 2, r);
         int b = Rand(c / 2, c);
-        int n = Rand(2, 30);
+        int n = Rand(1, 30);
 
         cout << '\n';
         cout << r << ' ' << c << ' ' << Rand(1, 6) << '\n';
@@ -54,7 +54,7 @@ int main()
             cout << "Test: " << i << " WRONG!\n";
             return 0;
         }
-        cout << "Test: " << i << " CORRECT!\n";
+        cout << "Test: " << i << << " CORRECT!\n";
     }
 
     return 0;

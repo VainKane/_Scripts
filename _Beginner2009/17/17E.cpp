@@ -9,8 +9,8 @@ using namespace std;
 #define S second
 
 int const N = 1009;
-int const NMOD = 1;
-int const MOD[] = {(int)1e9 + 2277, (int)1e9 + 5277, (int)1e9 + 8277};
+int const NMOD = 2;
+int const MOD[] = {(int)1e9 + 2277, (int)1e9 + 5277, (int)1e9 + 8277, (int)1e9 + 9277};
 int const BASE = 256;
 
 struct Hash
@@ -42,8 +42,7 @@ char s[N][N];
 int pw[NMOD][N * N];
 int hs[NMOD][N][N];
 
-map<Hash, int> mp;
-vector<pair<int, int>> res;
+map<Hash, vector<pair<int, int>>> mp;
 
 int GetId(int i, int j)
 {
@@ -58,23 +57,19 @@ void Init()
         FOR(i, 1, m * n) pw[k][i] = (1ll * pw[k][i - 1] * BASE) % MOD[k]; 
 
         FOR(i, 1, m) FOR(j, 1, n) 
-        {
-            hs[k][i][j] = (hs[k][i - 1][j] + hs[k][i][j - 1]
-                        - hs[k][i - 1][j - 1] + 1ll * s[i][j] * pw[k][GetId(i, j)]) % MOD[k]; 
-            if (hs[k][i][j] < 0) hs[k][i][j] += MOD[k];
-        }
+            hs[k][i][j] = (1ll * hs[k][i - 1][j] + hs[k][i][j - 1] 
+                        - hs[k][i - 1][j - 1] + 1ll * s[i][j] * pw[k][GetId(i, j)] + MOD[k]) % MOD[k]; 
     }
 }
 
 Hash Get(int i, int j, int u, int v)
 {
     Hash res;
+    if (i > u || j > v) return res;
 
     REP(k, NMOD)
     {
-        int tmp = (hs[k][u][v] - hs[k][u][j - 1] - hs[k][i - 1][v] + hs[k][i - 1][j - 1]) % MOD[k];
-        if (tmp < 0) tmp += MOD[k];
-
+        int tmp = (1ll * hs[k][u][v] - hs[k][u][j - 1] - hs[k][i - 1][v] + hs[k][i - 1][j - 1] + 2ll * MOD[k]) % MOD[k];
         res.val[k] = (1ll * tmp * pw[k][m * n - GetId(i, j)]) % MOD[k];
     }
 
@@ -87,31 +82,36 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> m >> n;
-    FOR(i, 1, m) FOR(j, 1, n) cin >> s[i][j];
+    cin.ignore(1);
+    FOR(i, 1, m)
+    {
+        string str;
+        getline(cin, str);
+
+        str = " " + str;
+        FOR(j, 1, n) s[i][j] = str[j];
+    }
     cin >> a >> b;
 
     Init();
 
-    int ma = 0;
+    int ma = -1;
     Hash hsMa;
 
     FOR(i, 1, m - a + 1) FOR(j, 1, n - b + 1)
     {
         Hash tmp = Get(i, j, i + a - 1, j + b - 1);
-        int &x = mp[tmp];
-        x++;
+        vector<pair<int, int>> &v = mp[tmp];
+        v.push_back({i, j});
 
-        if (mp[tmp] > ma)
+        if ((int)v.size() > ma)
         {
-            ma = mp[tmp];
+            ma = v.size();
             hsMa = tmp;
         }
     }
 
-    FOR(i, 1, m - a + 1) FOR(j, 1, n - b + 1)
-    {
-        if (Get(i, j, i + a - 1, j + b - 1) == hsMa) res.push_back({i, j});
-    }
+    vector<pair<int, int>> &res = mp[hsMa];
 
     cout << a << ' ' << b << '\n';
     FOR(i, res[0].F, res[0].F + a - 1)
@@ -119,14 +119,8 @@ int main()
         FOR(j, res[0].S, res[0].S + b - 1) cout << s[i][j];
         cout << '\n';
     }
-
-    cout << res.size() << '\n';
+    cout << ma << '\n';
     for (auto p : res) cout << p.F << ' ' << p.S << '\n';
-
-    // cout << Get(1, 4, 3, 6).val[0] << '\n' << Get(4, 3, 6, 5).val[0];
-    // cout << " ma = " << ma;
-    // cout << '\n';
-    // for (auto p : mp) cout << p.S << ' ';
 
     return 0;
 }

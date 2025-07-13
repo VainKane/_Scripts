@@ -68,5 +68,8 @@ int main()
 
     // cout << -123 % 5;
 
-    cout << char(67);
+    // cout << char(67);
+
+    vector<pair<int, int>> res;
+    cout << res[0].first << ' ' << res[0].second;
 }

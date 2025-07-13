@@ -39,9 +39,9 @@ void Init()
         pw[j][0] = 1;
         FOR(i, 1, max(m, n)) pw[j][i] = (1ll * pw[j][i - 1] * BASE) % MOD[j];
 
-        FOR(i, 1, n) hs[j][i] = (hs[j][i - 1] + 1ll * b[i] * pw[j][i - 1]) % MOD[j];
-        FOR(i, 1, m) hsA.val[j] = (hsA.val[j] + 1ll * a[i] * pw[j][i - 1]) % MOD[j];
-        hsA.val[j] = (1ll * hsA.val[j] * pw[j][max(m, n)]) % MOD[j];
+        FOR(i, 1, n) hs[j][i] = (hs[j][i - 1] + 1ll * b[i] * pw[j][i]) % MOD[j];
+        FOR(i, 1, m) hsA.val[j] = (hsA.val[j] + 1ll * a[i] * pw[j][i]) % MOD[j];
+        hsA.val[j] = (1ll * hsA.val[j] * pw[j][max(m, n) - 1]) % MOD[j];
     }
 }
 
@@ -54,7 +54,7 @@ Hash Get(int l, int r)
         int tmp = hs[j][r] - hs[j][l - 1];
         if (tmp < 0) tmp += MOD[j];
 
-        res.val[j] = (1ll * tmp * pw[j][max(m, n) - l + 1]) % MOD[j];
+        res.val[j] = (1ll * tmp * pw[j][max(m, n) - l]) % MOD[j];
     }
 
     return res;
