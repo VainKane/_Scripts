@@ -7,7 +7,7 @@ using namespace std;
 #define MK(i) (1 << (i))
 #define name "CIRSSTR"
 
-int const N = 1e5 + 5;
+// int const N = 1e5 + 5;
 
 string s1, s2;
 

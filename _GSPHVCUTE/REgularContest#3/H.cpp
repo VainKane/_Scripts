@@ -8,8 +8,8 @@ using namespace std;
 #define S second
 #define name "robot"
 
-int const N = 84;
-int const K = 2001;
+int const N = 89;
+int const K = 2002;
 int const OS = 82;
 
 int t;
@@ -18,32 +18,17 @@ string s;
 
 bool dp[N][K][2][2 * N];
 
-char Rev(char ch)
-{
-    if (ch == 'M') return 'D';
-    return 'M';
-}
-
 void Solve()
 {
-    memset(dp, false, sizeof dp);
+    FOR(i, 1, n) FOR(o, 0, k) memset(dp[i][o], false, sizeof dp[i][o]);
 
     dp[0][0][0][OS] = true;
-    REP(i, n) FOR(o, 0, i) REP(d, 2) FOR(pos, -n, n) if (dp[i][o][d][pos + OS])
+    REP(i, n) FOR(o, 0, min(i, k)) REP(d, 2) FOR(pos, -i, i)
     {
-        pos += OS;
-        int newPos = pos + (d ? -1 : 1);
+        if (!dp[i][o][d][pos + OS]) continue;
 
-        if (s[i] == 'D')
-        {   
-            dp[i + 1][o][!d][pos] = true;
-            if (o < k) dp[i + 1][o + 1][d][newPos] = true;
-        }
-        else
-        {
-            dp[i + 1][o][d][newPos] = true;
-            if (o < k) dp[i + 1][o + 1][!d][pos] = true;
-        }
+        dp[i + 1][o + (s[i] == 'D')][d][pos + OS + (d ? -1 : 1)] = true;
+        dp[i + 1][o + (s[i] == 'M')][!d][pos + OS] = true;
     }
 
     int res = 0;
@@ -52,8 +37,6 @@ void Solve()
     REP(d, 2) FOR(pos, -n, n) if (dp[n][o][d][pos + OS]) res = max(res, abs(pos));
 
     cout << res << '\n';
-
-    if (k == 1) cout << dp[3][1][0][3 + OS];
 }
 
 int main()
