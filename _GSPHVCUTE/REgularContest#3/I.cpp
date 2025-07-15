@@ -30,8 +30,12 @@ Edge edges[N];
 int rootCost;
 int cost[N];
 
+int childMin[N];
+
 void DFS(int u, int par)
 {
+    childMin[u] = cost[u];
+
     for (auto i : adj[u])
     {
         int v = edges[i].GetOther(u);
@@ -40,6 +44,8 @@ void DFS(int u, int par)
         rootCost += edges[i].GetCost(u);
         cost[v] = cost[u] + edges[i].GetCost(v) - edges[i].GetCost(u);
         DFS(v, u);
+
+        childMin[u] = min(childMin[u], childMin[v]);
     }
 }
 
@@ -55,26 +61,19 @@ void Solve()
         DFS(root, -1);
 
         int a, b;
-        a = b = 0;
+        a = b = 1e9;
 
-        FOR(u, 1, n) if (u != root)
+        for (auto i : adj[root])
         {
-            if (cost[u] < cost[a]) b = a, a = u;
-            else if (cost[u] < cost[b]) b = u;
+            int v = edges[i].GetOther(root);
+            int x = childMin[v];
+
+            if (x < a) b = a, a = x;
+            else if (x < b) b = x;
         }
 
         res = min(res, rootCost);
-        if (adj[root].size() > 1)
-        {
-            int tmp = rootCost + cost[a] + cost[b];
-            if (tmp < res)
-            {
-                res = tmp;
-                cout << rootCost << ' ' << cost[a] << ' ' << cost[b] << ' ' << root << '\n';
-            }
-        }
-
-        // if (root == 5) cout << "cost 5: " << rootCost;
+        if (adj[root].size() > 1) res = min(res, rootCost + a + b);
     }
 
     cout << res << '\n';

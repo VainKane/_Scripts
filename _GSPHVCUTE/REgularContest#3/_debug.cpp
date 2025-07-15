@@ -18,12 +18,12 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int t = Rand(1, 3);
+    int t = Rand(1, 4);
     cout << t << '\n';
 
     while (t--)
     {
-        int n = Rand(1, 10);
+        int n = Rand(2, 1e2);
         cout << '\n' << n << '\n';
         for (int i = 2; i <= n; i++) 
         {
