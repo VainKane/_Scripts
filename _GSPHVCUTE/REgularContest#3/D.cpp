@@ -48,9 +48,13 @@ Point InterPoint(Point A, Point B, Point C, Point D)
     double x = (-c1 - b1 * y) / a1;
 
     bool check1 = x <= A.x;
-    bool check2 = x < B.x;
+    bool check2 = x <= B.x;
+    bool check3 = y <= A.y;
+    bool check4 = y <= B.y;
 
-    if ((check1 ^ check2) == 0) return Point{0, 0};
+    if ((check1 ^ check2) == 0) return Point {0, 0};
+    if ((check3 ^ check4) == 0) return Point {0, 0};
+
     return Point {x, y};
 }
 
@@ -81,10 +85,14 @@ void InterRec()
         }
     }
 
-    if (v.size() != 4) return;
+    if (v.size() != 4) 
+    {
+        cout << 0;
+        exit(0);
+    }
 
-    swap(v[1], v[2]);
-    REP(j, 4) b[j] = v[j];
+    REP(i, 4) b[i] = v[i];
+    
 }
 
 int main()

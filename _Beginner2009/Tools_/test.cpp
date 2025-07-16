@@ -70,6 +70,12 @@ int main()
 
     // cout << char(67);
 
-    vector<pair<int, int>> res;
-    cout << res[0].first << ' ' << res[0].second;
+    // vector<pair<int, int>> res;
+    // cout << res[0].first << ' ' << res[0].second;
+
+    // cout << (int)'␡';
+
+    // int a;
+    // scanf("%c", &a);
+    // cout << a;
 }

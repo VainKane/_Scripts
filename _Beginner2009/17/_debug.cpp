@@ -16,18 +16,22 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int n = Rand(3, 1000);
-    int m = Rand(3, 1000);
-    int a = Rand(2, m);
-    int b = Rand(2, n);
+    int x = 1e3;
+
+    int n = Rand(3, x);
+    int m = Rand(3, x);
+    int a = Rand(2, m / 10);
+    int b = Rand(2, n / 10);
     cout << m << ' ' << n << '\n';
 
     for (int i = 1; i <= m; i++)
     {
         for (int j = 1; j <= n; j++)
         {
-            int t = Rand('a', 'z');
-            cout << (char)t;
+            int type = Rand(1, 1);
+            
+            if (type) cout << (char)Rand('a', 'b');
+            else cout << '\n';
         }
         cout << '\n';
     }
@@ -39,8 +43,8 @@ int main()
     for (int itest = 1; itest <= ntest; itest++)
     {
         GenTest();
-        system(name".exe");
-        system(name"_trau.exe");
+        system(name".exe <"name".inp> "name".out");
+        system(name"_trau.exe <"name".inp> "name".ans");
 
         if (system("fc "name".out "name".ans") != 0)
         {

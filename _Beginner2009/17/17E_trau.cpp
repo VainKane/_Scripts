@@ -86,30 +86,18 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> m >> n;
-    cin.ignore();
+    cin.ignore(1);
     FOR(i, 1, m)
     {
-        // string str;
-        // getline(cin, str);
+        string str;
+        getline(cin, str);
 
         // if (str.size() < n) return 0;
 
-        // str = " " + str;
-        // FOR(j, 1, n) s[i][j] = str[j];
-
-        cin.read(s[i] + 1, n);
-        cin.ignore();
-
-        // FOR(j, 1, n) s[i][j] = cin.get();
+        str = " " + str;
+        FOR(j, 1, n) s[i][j] = str[j];
     }
     cin >> a >> b;
-
-    // cout << '\n';
-    // FOR(i, 1, m) 
-    // {
-    //     FOR(j, 1, n) cout << s[i][j];
-    //     cout << '\n';
-    // }
 
     Init();
 
