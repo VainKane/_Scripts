@@ -1,34 +1,34 @@
 #include <bits/stdc++.h>
-
 using namespace std;
 
 #define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
 #define REP(i, n) for (int i = 0, _n = (n); i < _n; i++)
-#define all(v) v.begin(), v.end()
+#define ID(i, j, n) ((i - 1) * (n) + (j))
+#define sz(v) ((int)(v).size())
 #define F first
 #define S second
 
-int const N = 1010;
-int const NMOD = 1;
-int const MOD[] = {(int)1e9 + 2277, (int)1e9 + 5277, (int)1e9 + 8277, (int)1e9 + 9277};
-int const BASE = 256;
+const int N = 1010;
+const int NMOD = 1;
+const int MOD[] = {(int)1e9 + 2277, (int)1e9 + 5277, (int)1e9 + 8277, (int)1e9 + 9277};
+const int BASE = 256;
 
-struct Hash
+struct Hash 
 {
     int val[NMOD];
 
-    Hash()
-    {
-        memset(val, 0, sizeof val);
+    Hash() 
+    { 
+        memset(val, 0, sizeof val); 
     }
 
-    bool operator == (Hash const other) const
+    bool operator == (const Hash &other) const 
     {
         REP(k, NMOD) if (val[k] != other.val[k]) return false;
         return true;
     }
 
-    bool operator < (Hash const other) const
+    bool operator < (const Hash &other) const 
     {
         REP(k, NMOD) if (val[k] != other.val[k]) return val[k] < other.val[k];
         return false;
@@ -39,106 +39,85 @@ int m, n;
 int a, b;
 char s[N][N];
 
-int pw[NMOD][N * N];
+int pw[NMOD][N * N + 5];
 int hs[NMOD][N][N];
+
+map<Hash,vector<pair<int,int>>> mp;
 
 int MAX;
 
-map<Hash, vector<pair<int, int>>> mp;
-
-int GetId(int i, int j)
+void Init() 
 {
-    return (i - 1) * n + j;
-}
-
-void Init()
-{
-    MAX = (m + 1) * (n + 1) + 1;
-
-    REP(k, NMOD)
+    MAX = N * N;
+    
+    REP(k, NMOD) 
     {
         pw[k][0] = 1;
-        FOR(i, 1, MAX) pw[k][i] = (1ll * pw[k][i - 1] * BASE) % MOD[k]; 
+        FOR(i, 1, MAX) pw[k][i] = (1ll * pw[k][i - 1] * BASE) % MOD[k];
 
-        FOR(i, 1, m) FOR(j, 1, n) 
-            hs[k][i][j] = (1ll * hs[k][i - 1][j] + hs[k][i][j - 1] 
-                        - hs[k][i - 1][j - 1] + 1ll * s[i][j] * pw[k][GetId(i, j)] + MOD[k]) % MOD[k]; 
+        FOR(i, 1, m) FOR(j, 1, n)
+            hs[k][i][j] = (hs[k][i - 1][j] + hs[k][i][j - 1]
+                - hs[k][i - 1][j - 1] + 1ll * s[i][j] * pw[k][ID(i, j, n)] + MOD[k]) % MOD[k];
     }
 }
 
-Hash Get(int i, int j, int u, int v)
+Hash Get(int i, int j, int u, int v) 
 {
     Hash res;
     if (i > u || j > v) return res;
-
-    REP(k, NMOD)
+    
+    REP(k, NMOD) 
     {
-        int tmp = (1ll * hs[k][u][v] - hs[k][u][j - 1] - hs[k][i - 1][v] + hs[k][i - 1][j - 1] + 2ll * MOD[k]) % MOD[k];
-        res.val[k] = (1ll * tmp * pw[k][MAX - GetId(i, j)]) % MOD[k];
+        int tmp = (hs[k][u][v] - hs[k][u][j - 1] - hs[k][i - 1][v] + hs[k][i - 1][j - 1]) % MOD[k];
+        if (tmp < 0) tmp += MOD[k];
+
+        res.val[k] = (1ll * tmp * pw[k][MAX - ID(i, j, n)]) % MOD[k];
     }
 
     return res;
 }
 
-int main()
+int main() 
 {
-    ios_base::sync_with_stdio(false);
-    cin.tie(0); cout.tie(0);
+    scanf("%d%d", &m, &n);
+    getchar();
 
-    cin >> m >> n;
-    cin.ignore();
-    FOR(i, 1, m)
-    {
-        // string str;
-        // getline(cin, str);
-
-        // if (str.size() < n) return 0;
-
-        // str = " " + str;
-        // FOR(j, 1, n) s[i][j] = str[j];
-
-        cin.read(s[i] + 1, n);
-        cin.ignore();
-
-        // FOR(j, 1, n) s[i][j] = cin.get();
-    }
-    cin >> a >> b;
-
-    // cout << '\n';
-    // FOR(i, 1, m) 
-    // {
-    //     FOR(j, 1, n) cout << s[i][j];
-    //     cout << '\n';
-    // }
+    FOR(i, 1, m) fgets(s[i] + 1, n + 2, stdin);
+    scanf("%d%d", &a, &b);
 
     Init();
 
     int ma = -1;
     Hash hsMa;
 
-    FOR(i, 1, m - a + 1) FOR(j, 1, n - b + 1)
+    // if (m >= 700 && n >= 700) return 0;
+
+    FOR(i, 1, m - a + 1) FOR(j, 1, n - b + 1) 
     {
         Hash tmp = Get(i, j, i + a - 1, j + b - 1);
-        vector<pair<int, int>> &v = mp[tmp];
+       
+        auto &v = mp[tmp];
         v.push_back({i, j});
-
-        if ((int)v.size() > ma)
+        
+        if (sz(v) > ma) 
         {
-            ma = v.size();
+            ma = sz(v);
             hsMa = tmp;
         }
     }
 
-    vector<pair<int, int>> &res = mp[hsMa];
+    auto &res = mp[hsMa];
 
-    cout << a << ' ' << b << '\n';
-    FOR(i, res[0].F, res[0].F + a - 1)
+    printf("%d %d\n", a, b);
+    
+    FOR(i, res[0].F, res[0].F + a - 1) 
     {
-        FOR(j, res[0].S, res[0].S + b - 1) cout << s[i][j];
-        cout << '\n';
+        FOR(j, res[0].S, res[0].S + b - 1) putchar(s[i][j]);
+        putchar('\n');
     }
-    cout << ma << '\n';
-    for (auto p : res) cout << p.F << ' ' << p.S << '\n';
+
+    printf("%d\n", ma);
+    for (auto &p : res) printf("%d %d\n", p.F, p.S);
 
     return 0;
 }

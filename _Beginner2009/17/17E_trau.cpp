@@ -82,8 +82,8 @@ Hash Get(int i, int j, int u, int v)
 
 int main()
 {
-    ios_base::sync_with_stdio(false);
-    cin.tie(0); cout.tie(0);
+    // ios_base::sync_with_stdio(false);
+    // cin.tie(0); cout.tie(0);
 
     cin >> m >> n;
     cin.ignore(1);

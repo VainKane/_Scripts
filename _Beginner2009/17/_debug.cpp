@@ -18,8 +18,8 @@ void GenTest()
 
     int x = 1e3;
 
-    int n = Rand(3, x);
-    int m = Rand(3, x);
+    int n = Rand(30, x);
+    int m = Rand(30, x);
     int a = Rand(2, m / 10);
     int b = Rand(2, n / 10);
     cout << m << ' ' << n << '\n';
@@ -28,10 +28,10 @@ void GenTest()
     {
         for (int j = 1; j <= n; j++)
         {
-            int type = Rand(1, 1);
+            int type = Rand(0, 4);
             
-            if (type) cout << (char)Rand('a', 'b');
-            else cout << '\n';
+            if (type) cout << ' ';
+            else cout << 'a';
         }
         cout << '\n';
     }
