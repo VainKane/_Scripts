@@ -13,7 +13,7 @@ int a[N];
 pair<int, int> b[N];
 
 long long s[N][N];
-long long f[N][N], g[N][N];
+long long f[N][N];
 
 int main()
 {
@@ -32,22 +32,14 @@ int main()
     memset(f, -1, sizeof f);
     f[0][0] = 0;
 
-    FOR(i, 1, m) 
+    FOR(i, 1, m) FOR(j, 0, n) 
     {
-        deque<int> q;
-        FOR(j, 0, n)
-        {
-            while (!q.empty() && q.front() < j - b[i].F) q.pop_front();
-            while (!q.empty() && g[i - 1][q.front()] > g[i - 1][j]) q.pop_back();
-            if (f[i - 1][j] != -1) q.push_back(j);
-
-            if (q.empty()) continue;
-
-            f[i][j] = g[i - 1][q.front()] + s[i][j];
-            g[i][j] = f[i][j] - s[i + 1][j];
-        }
+        f[i][j] = 1e18;
+        FOR(z, max(0, j - b[i].S), j) if (f[i - 1][z] != -1)
+        f[i][j] = min(f[i][j], f[i - 1][z] - s[i][z] + s[i][j]);
     }
 
+    if (f[m][n] == 1e18 || f[m][n] == -1) f[m][n] == 2;
     cout << f[m][n];
 
     return 0;

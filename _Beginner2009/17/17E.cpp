@@ -118,6 +118,6 @@ int main()
 
     printf("%d\n", ma);
     for (auto &p : res) printf("%d %d\n", p.F, p.S);
-
+    
     return 0;
 }
