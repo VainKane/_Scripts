@@ -16,7 +16,7 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int const MAX = 300;
+    int const MAX = 10;
 
     int n = Rand(10, MAX);
     int m = Rand(n, MAX);
@@ -24,7 +24,7 @@ void GenTest()
     cout << n << ' ' << m << '\n';
     for (int i = 1; i <= n; i++) cout << Rand(0, 1e9) << ' ';
     cout << '\n';
-    for (int i = 1; i <= m; i++) cout << Rand(0, 1e9) << ' ' << Rand(n / 3, n) << '\n';
+    for (int i = 1; i <= m; i++) cout << Rand(0, 1e9) << ' ' << Rand(n / 100, n) << '\n';
 }
 
 int main()

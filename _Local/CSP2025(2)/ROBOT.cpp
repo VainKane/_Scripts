@@ -37,14 +37,17 @@ int main()
         deque<int> q;
         FOR(j, 0, n)
         {
-            while (!q.empty() && q.front() < j - b[i].F) q.pop_front();
-            while (!q.empty() && g[i - 1][q.front()] > g[i - 1][j]) q.pop_back();
-            if (f[i - 1][j] != -1) q.push_back(j);
+            while (!q.empty() && q.front() < j - b[i].S) q.pop_front();
+            if (f[i - 1][j] != -1)
+            {
+                while (!q.empty() && g[i - 1][q.front()] > g[i - 1][j]) q.pop_back();
+                q.push_back(j);
+            }
 
             if (q.empty()) continue;
 
             f[i][j] = g[i - 1][q.front()] + s[i][j];
-            g[i][j] = f[i][j] - s[i + 1][j];
+            g[i][j] = f[i][j] - s[i + 1][j];            
         }
     }
 

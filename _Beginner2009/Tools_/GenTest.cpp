@@ -13,12 +13,20 @@ int main()
 {
     ofstream cout("testcase.inp");
 
-    for (int i = 1; i <= 1000; i++)
+    int n = Rand(8, 10);
+    int m = n - 1;
+    
+    cout << n << ' ' << m << '\n';
+    for (int i = 2; i <= n; i++)
     {
-        int type = Rand(1, 2);
-        if (type == 1) cout << 'A';
-        else cout << 'B';
+        cout << i << ' ' << Rand(1, i - 1) << ' ' << Rand(0, 1e9) << '\n';
     }
 
+    for (int i = 1; i <= m - n + 1; i++) 
+    {
+        int u = Rand(1, n - 1);
+        cout << u << ' ' << Rand(u + 1, n) << Rand(0, 1e9) << '\n';
+    }
+    
     return 0;
 }
