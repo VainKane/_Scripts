@@ -78,4 +78,8 @@ int main()
     // int a;
     // scanf("%c", &a);
     // cout << a;
+
+    long long d[3];
+    memset(d, 0x3f, sizeof d);
+    cout << d[0] << '\n' << (long long)1e18;
 }

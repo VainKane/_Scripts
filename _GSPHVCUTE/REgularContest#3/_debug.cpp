@@ -2,8 +2,8 @@
 
 using namespace std;
 
-#define name "traffic"
-#define file "I"
+#define name "difference"
+#define file "E"
 
 int const ntest = 1e4;
 
@@ -17,23 +17,16 @@ long long Rand(long long l, long long r)
 void GenTest()
 {
     ofstream cout(name".inp");
+ 
+    int n = Rand(1, 1e2);
+    int m = Rand(1, 1e4 / n);
 
-    int t = Rand(1, 4);
-    cout << t << '\n';
-
-    while (t--)
+    cout << "3\n";
+    cout << m << ' ' << n << '\n';
+    for (int i = 1; i <= m; i++)
     {
-        int n = Rand(2, 1e2);
-        cout << '\n' << n << '\n';
-        for (int i = 2; i <= n; i++) 
-        {
-            int type = Rand(0, 2);
-            int u = i;
-            int v = Rand(1, i - 1);
-
-            if (type) swap(u, v);
-            cout << u << ' ' << v << '\n';
-        }
+        for (int i = 1; i <= n; i++) cout << Rand(1, 1e2) << ' ';
+        cout << '\n';
     }
 }
 

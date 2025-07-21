@@ -9,52 +9,57 @@ using namespace std;
 
 int const N = 55;
 
-int n, m;
+long long d[N][(int)2e4 + 5];
 
-struct Matrix
+struct Data
 {
-    bool x[N][N];
+    long long du;
+    int u, r;
 
-    Matrix()
+    bool operator < (Data const other) const
     {
-        memset(x, 0, sizeof x);
-    }
-
-    static Matrix I()
-    {
-        Matrix res;
-        FOR(i, 1, n) res.x[i][i] = 1;
-        return res;
-    }
-
-    Matrix operator * (Matrix const other) const
-    {
-        Matrix res = Matrix::I();
-
-        FOR(i, 1, n) FOR(j, 1, n) FOR(k, 1, n)
-            res.x[i][j] |= (x[i][k] & other.x[k][j]);
-
-        return res;
+        return du > other.du;
     }
 };
 
-Matrix PowMod(Matrix a, long long b)
-{
-    Matrix res = Matrix::I();
-
-    while (b)
-    {
-        if (b & 1) res = res * a;
-        
-        b >>= 1;
-        a = a * a;
-    }
-
-    return res;
-}
+int n, m;
 
 long long t;
 vector<pair<int, int>> adj[N];
+
+int c = 1e4;
+
+void Dijkstra()
+{
+    memset(d, 0x3f, sizeof d);
+    d[1][0] = 0;
+
+    priority_queue<Data> q;
+    q.push(Data {0, 1, 0});
+
+    while (!q.empty())
+    {
+        long long du = q.top().du;
+        int u = q.top().u;
+        int r = q.top().r;
+        q.pop();
+
+        if (du > d[u][r]) continue;
+
+        for (auto e : adj[u])
+        {
+            int v = e.F;
+            int w = e.S;
+            int newR = (r + w) % (2 * c);
+
+            if (d[v][newR] > d[u][r] + w)
+            {
+                d[v][newR] = d[u][r] + w;
+                q.push(Data {d[v][newR], v, newR});
+            }
+        }
+    }
+}
 
 int main()
 {
@@ -71,15 +76,12 @@ int main()
         cin >> u >> v >> w;
         adj[u].push_back({v, w});
         adj[v].push_back({u, w});
+
+        if (u == 1 || v == 1) c = w;
     }
 
-    Matrix T, B;
-
-    FOR(u, 1, n) for (auto e : adj[u]) T.x[u][e.F] = true;
-    B.x[1][1] = true; 
-
-    Matrix res = PowMod(T, t - 1) * B;
-    cout << (res.x[n][1] ? "Possible" : "Impossible");
+    Dijkstra();
+    cout << ((d[n][t % (2 * c)] <= t) ? "Possible" : "Impossible");
 
     return 0;
 }
