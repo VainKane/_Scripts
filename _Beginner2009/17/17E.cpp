@@ -7,11 +7,13 @@ using namespace std;
 #define sz(v) ((int)(v).size())
 #define F first
 #define S second
+#define name "17E"
 
-const int N = 1010;
-const int NMOD = 1;
-const int MOD[] = {(int)1e9 + 2277, (int)1e9 + 5277, (int)1e9 + 8277, (int)1e9 + 9277};
-const int BASE = 256;
+int const N = 1010;
+int const NMOD = 1;
+int const MOD[] = {(int)1e9 + 9277, (int)1e9 + 5277, (int)1e9 + 8277, (int)1e9 + 9277};
+int const P = 1e7 + 19;
+int const BASE = 256;
 
 struct Hash 
 {
@@ -35,6 +37,30 @@ struct Hash
     }
 };
 
+struct HashTable
+{
+    vector<pair<int, int>> hs[P + 5];
+
+    int GetKey(int hash)
+    {
+        return hash % P;
+    }
+
+    int Insert(int key)
+    {
+        int hsKey = GetKey(key);
+        
+        for (auto &p : hs[hsKey]) if (p.F == key)
+        {
+            p.S++;
+            return p.S;
+        }
+
+        hs[hsKey].push_back({key, 1});
+        return 1;
+    }
+};
+
 int m, n;
 int a, b;
 char s[N][N];
@@ -42,8 +68,7 @@ char s[N][N];
 int pw[NMOD][N * N + 5];
 int hs[NMOD][N][N];
 
-map<Hash,vector<pair<int,int>>> mp;
-
+HashTable table;
 int MAX;
 
 void Init() 
@@ -79,45 +104,58 @@ Hash Get(int i, int j, int u, int v)
 
 int main() 
 {
-    scanf("%d%d", &m, &n);
-    getchar();
+    ios_base::sync_with_stdio(false);
+    cin.tie(0); cout.tie(0);
 
-    FOR(i, 1, m) fgets(s[i] + 1, n + 2, stdin);
-    scanf("%d%d", &a, &b);
+    cin >> m >> n;
+    cin.ignore();
+
+    FOR(i, 1, m)
+    {
+        string str;
+        getline(cin, str);
+        FOR(j, 1, n) s[i][j] = str[j - 1];
+    }
+    cin >> a >> b;
 
     Init();
 
     int ma = -1;
-    Hash hsMa;
-
-    // if (m >= 700 && n >= 700) return 0;
+    Hash maxHash;
 
     FOR(i, 1, m - a + 1) FOR(j, 1, n - b + 1) 
     {
-        Hash tmp = Get(i, j, i + a - 1, j + b - 1);
-       
-        auto &v = mp[tmp];
-        v.push_back({i, j});
+        Hash hash = Get(i, j, i + a - 1, j + b - 1);
+        int tmp = table.Insert(hash.val[0]); 
         
-        if (sz(v) > ma) 
+        if (tmp > ma)
         {
-            ma = sz(v);
-            hsMa = tmp;
+            ma = tmp;
+            maxHash = hash;
+        }  
+    }
+
+    bool first = true;
+
+    cout << a << ' ' << b << '\n';
+    FOR(i, 1, m - a + 1) FOR(j, 1, n - b + 1)
+    {
+        if (Get(i, j, i + a - 1, j + b - 1) == maxHash) 
+        {
+            if (first)
+            {
+                FOR(u, i, i + a - 1)
+                {
+                    FOR(v, j, j + b - 1) cout << s[u][v];
+                    cout << '\n';
+                }
+                cout << ma << '\n';
+
+                first = false;
+            }
+            cout << i << ' ' << j << '\n';
         }
     }
-
-    auto &res = mp[hsMa];
-
-    printf("%d %d\n", a, b);
-    
-    FOR(i, res[0].F, res[0].F + a - 1) 
-    {
-        FOR(j, res[0].S, res[0].S + b - 1) putchar(s[i][j]);
-        putchar('\n');
-    }
-
-    printf("%d\n", ma);
-    for (auto &p : res) printf("%d %d\n", p.F, p.S);
     
     return 0;
 }

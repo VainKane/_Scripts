@@ -2,6 +2,8 @@
 
 using namespace std;
 
+#define name "17E"
+
 int const MOD = 1e9 + 9277;
 int const B1 = 199;
 int const B2 = 257;
@@ -47,6 +49,9 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
+    // freopen(name".inp", "r", stdin);
+    // freopen(name".out", "w", stdout);
+
     cin >> m >> n;
 
     cin.ignore();
@@ -54,8 +59,6 @@ int main()
     {
         string str;
         getline(cin, str);
-
-        if (str.size() < n) return 0;
 
         str = " " + str;
         for (int j = 1; j <= n; j++) s[i][j] = str[j];
