@@ -2,8 +2,8 @@
 
 using namespace std;
 
-#define name "BAI4"
-int const ntest = 10;
+#define name "BAI3"
+int const ntest = 1e4;
 
 mt19937_64 rd(time(0));
 
@@ -16,10 +16,11 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    long long l = Rand(1, 1e5);
-    long long r = Rand(l, 1e5);
+    int n = Rand(1, 1e4);
+    int k = Rand(1, 1e9);
 
-    cout << l << ' ' << r;
+    cout << n << ' ' << k << '\n';
+    for (int i = 1; i <= n; i++) cout << Rand(1, 1e3) << ' ';
 }
 
 int main()
