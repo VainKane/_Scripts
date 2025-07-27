@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#define name "SUMX"
+#define name "XORGAND"
 int const ntest = 1e4;
 
 mt19937_64 rd(time(0));
@@ -13,15 +13,20 @@ long long Rand(long long l, long long r)
 }
 
 void GenTest()
-{   
+{
     ofstream cout(name".inp");
 
-    int n = Rand(1e3, 1e4);
-    int x = Rand(2, 1e2);
+    int n = Rand(1, 2e5);
+    int q = Rand(1, 1e3);
 
     cout << n << '\n';
-    for (int i = 1; i <= n; i++) cout << Rand(1, 10) << ' ';
-    cout << '\n' << x;
+    for (int i = 1; i <= n; i++) cout << Rand(1, 1e9) << ' ';
+    cout << q << '\n';
+    for (int i = 1; i <= n; i++)
+    {
+        int l = Rand(1, n);
+        cout << l << ' ' << Rand(l, n) << ' ' << Rand(1, 1e9) << '\n';
+    }
 }
 
 int main()

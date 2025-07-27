@@ -79,7 +79,22 @@ int main()
     // scanf("%c", &a);
     // cout << a;
 
-    long long d[3];
-    memset(d, 0x3f, sizeof d);
-    cout << d[0] << '\n' << (long long)1e18;
+    // long long d[3];
+    // memset(d, 0x3f, sizeof d);
+    // cout << d[0] << '\n' << (long long)1e18;
+
+    // int n; cin >> n;
+
+    // int tmp = 0, res = 0;
+
+    // for (int i = 1; i <= n; i++) 
+    // {
+    //     int x; cin >> x;
+    //     tmp += x;
+    //     res += tmp;
+    // }
+
+    // cout << res;
+
+    cout << (int)'(' << ' ' << (int)')';
 }
