@@ -3,31 +3,35 @@
 using namespace std;
 
 #define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
+#define FORD(i, a, b) for (int i = (a), _b = (b); i >= _b; i--)
 #define REP(i, n) for (int i = 0, _n = (n); i < _n; i++)
 #define MK(i) (1 << (i))
 #define BIT(i, x) (((x) >> (i)) & 1)
 #define name "23on2b3"
 
+int dp[35][2];
+
 int Get(int x, int r)
 {
-    int k = 32 - __builtin_clz(x);
-    
-    int res = r >= x;
-    int tmp = x;
-    REP(i, 31 - k) if (BIT(i + k, r))
+    int k = 32 - __builtin_clz(r);
+    if (k < 32 - __builtin_clz(x)) return 0;
+
+    memset(dp, 0, sizeof dp);
+    dp[k][0] = 1;
+
+    FORD(i, k, 1) FOR(smaller, 0, 1) if (dp[i][smaller]) 
     {
-        tmp |= MK(i);
-        res += r >= tmp;
-    }
-    
-    for (int haha = (MK(k) - 1) ^ x; haha; haha ^= haha & -haha)
-    {
-        int i = __builtin_ctz(haha & -haha);
-        x |= MK(i);
-        res += r >= x;
+        int lim = smaller ? 1 : BIT(i - 1, r);
+        FOR(d, 0, lim) 
+        {
+            int newSmaller = smaller | (d < lim);
+
+            if (BIT(i - 1, x) && d) dp[i - 1][newSmaller] += dp[i][smaller];
+            else if (!BIT(i - 1, x)) dp[i - 1][newSmaller] += dp[i][smaller];
+        }
     }
 
-    return res;
+    return dp[0][0] + dp[0][1];
 }
 
 int main()
@@ -43,9 +47,11 @@ int main()
     {
         int a, l, r;
         cin >> a >> l >> r;
-        cout << Get(a, r) << " " << Get(a, l - 1) << '\n';
+        // cout << Get(a, r) << " " << Get(a, l - 1) << '\n';
         cout << Get(a, r) - Get(a, l - 1) << '\n';
-    }
+    
+        // cout << Get(a, 1);
+    }   
 
     return 0;
 }
