@@ -5,8 +5,8 @@ using namespace std;
 #define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
 #define FORD(i, a, b) for (int i = (a), _b = (b); i >= _b; i--)
 #define REP(i, n) for (int i = 0, _n = (n); i < _n; i++)
-#define MK(i) (1 << (i))
 #define BIT(i, x) (((x) >> (i)) & 1)
+#define MK(i) (1 << (i))
 #define name "23on2b3"
 
 int dp[35][2];

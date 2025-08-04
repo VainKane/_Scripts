@@ -5,7 +5,7 @@ using namespace std;
 #define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
 
 int const N = 1e4 + 5;
-double const Pi = 3.141592653;
+double const Pi = 3.1415926535;
 
 struct Point
 {

@@ -7,11 +7,6 @@ using namespace std;
 #define REP(i, n) for (int i = 0, _n = (n); i < _n; i++)
 #define name "hexagon"
 
-struct Point
-{
-    int q, r, s;
-};
-
 int const N = 209;
 int const X = 100;
 
@@ -69,18 +64,19 @@ int main()
     FOR(r, -m + X, m + X) FORD(s, stS[r], edS[r])
     {
         int q = stQ[r] + stS[r] - s;
+
         REP(i, 3) 
         {
+            int q2 = q + dq[i];
             int r2 = r + dr[i];
             int s2 = s + ds[i];
-            int q2 = q + dq[i];
 
-            if (!Inside(r2, s2, q2)) continue;
+            if (!Inside(q2, r2, s2)) continue;
 
-            dp[r2][s2][q2] = max(dp[r2][s2][q2], dp[r][s][q] + a[r2][s2][q2]);
+            dp[q2][r2][s2] = max(dp[q2][r2][s2], dp[q][r][s] + a[q2][r2][s2]);
         }
 
-        cout << q - X << ' ' << r - X << ' ' << s - X << ' '  << dp[q][r][s] << '\n';
+        // cout << q - X << ' ' << r - X << ' ' << s - X << ' '  << dp[q][r][s] << '\n';
     }
 
     int x, y, z;

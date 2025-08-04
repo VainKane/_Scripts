@@ -73,15 +73,13 @@ void DFSCheck(int u)
     {
         if (v == up[u][0]) continue;
         
-        up[v][0] = u;
-
         DFSCheck(v);
         val[u] += val[v];
     
-        res += (!val[v]);
+        // cout << "debug: " << v << ' ' << val[v] << '\n';
     }
 
-    // res += (!val[u]);
+    res += (!val[u]);
 }
 
 int main()
@@ -97,11 +95,9 @@ int main()
 
         adj[u].push_back(v);
         adj[v].push_back(u);
-
-        root = u;
     }
 
-    DFS(root);
+    DFS(1);
 
     cin >> m;
     while (m--)
@@ -110,15 +106,14 @@ int main()
         cin >> u >> v;
 
         int anc = LCA(u, v);
-        cnt[anc] += 2;
-        cnt[u] -= 1;
-        cnt[v] -= 1;
+        cnt[anc] -= 2;
+        cnt[u] += 1;
+        cnt[v] += 1;
     }
 
-    memset(up, 0, sizeof up);
     DFSCheck(1);
 
-    cout << res;
+    cout << res - 1;
 
     return 0;
 }

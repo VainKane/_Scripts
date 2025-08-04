@@ -2,8 +2,8 @@
 
 using namespace std;
 
-#define name "raspored"
-#define file "F"
+#define name "coprime"
+#define file "N"
 
 int const ntest = 1e4;
 
@@ -18,23 +18,9 @@ void GenTest()
 {
     ofstream cout(name".inp");
  
-    int n = Rand(1, 8);
-    int q = Rand(1, 8);
+    int n = Rand(1, 5000);
 
-    int d[n + 1];
-
-    cout << "2\n";
-    cout << n << ' ' << q << '\n';
-    for (int i = 1; i <= n; i++) 
-    {
-        d[i] = Rand(1, 1e2);
-        cout << Rand(1, 1e3) << ' ' << d[i] << '\n';
-    }
-    for (int i = 1; i <= q; i++) 
-    {
-        int idx = Rand(1, n);
-        cout << idx << ' ' << Rand(1, 1e3) << ' ' << d[idx] << '\n';
-    }
+    for (int i = 1; i <= n; i++) cout << Rand(1, 12) * Rand(1, 12) << ' ';
 }
 
 
