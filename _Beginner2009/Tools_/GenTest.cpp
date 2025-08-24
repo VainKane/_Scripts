@@ -17,12 +17,11 @@ int main()
     int q = Rand(1, 2e5);
     
     cout << n << ' ' << q << '\n';
-    for (int i = 1; i <= n; i++) cout << Rand(2, 1e9) << ' ';
-    cout << '\n';
-    for (int i = 1; i <= q; i++)
+    for (int i = 1; i <= n; i++) cout << Rand(1, 1e9) << ' ';
+    while (q--) 
     {
         int l = Rand(1, n);
-        cout << l << ' ' << Rand(l, n) << ' ' << Rand(1, 10) << '\n';
+        cout << l << ' ' << Rand(l, n) << '\n';
     }
     
     return 0;

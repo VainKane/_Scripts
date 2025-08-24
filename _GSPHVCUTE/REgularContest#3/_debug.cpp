@@ -2,8 +2,8 @@
 
 using namespace std;
 
-#define name "coprime"
-#define file "N"
+#define name "business"
+#define file "P"
 
 int const ntest = 1e4;
 
@@ -18,11 +18,17 @@ void GenTest()
 {
     ofstream cout(name".inp");
  
-    int n = Rand(1, 5000);
+    int n = Rand(3e5, 3e5); 
+    int k = Rand(0, 1e4);
 
-    for (int i = 1; i <= n; i++) cout << Rand(1, 12) * Rand(1, 12) << ' ';
+    cout << n << ' ' << k << '\n';
+    for (int i = 1; i <= k; i++) cout << Rand(1, n) << ' ';
+    cout << '\n';
+    for (int i = 2; i <= n; i++)
+    {
+        cout << Rand(1, i - 1) << ' ' << i << '\n';
+    }
 }
-
 
 int main()
 {
@@ -30,7 +36,7 @@ int main()
     {
         GenTest();
         system(file".exe");
-        system(file"_trau.exe");
+        system(file"_IT.exe");
 
         if (system("fc "name".out "name".ans") != 0)
         {
