@@ -8,29 +8,34 @@ int const N = 3009;
 int const MOD = 1e9 + 7;
 
 int n;
-string s;
-
 int dp[N][N];
+
+void Add(int &x, int const &y)
+{
+    x += y;
+    if (x >= MOD) x -= MOD;
+}
 
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    cin >> n >> s;
-    s = " " + s;
+    dp[1][1] = 1;
 
-    FOR(i, 1, n) dp[1][i] = 1;
-
-    FOR(i, 2, n) FOR(j, 1, n)
+    cin >> n;
+    FOR(i, 2, n)
     {
-        if (s[i - 1] == '<') FOR(p, 1, j - 1) dp[i][j] += dp[i - 1][p];
-        else FOR(p, j + 1, n) dp[i][j] += dp[i - 1][p];
+        char ch; cin >> ch;
+        FOR(j, 1, i)
+        {
+            if (ch == '<') Add(dp[i][j], dp[i - 1][j - 1]);
+            else dp[i][j] = (dp[i - 1][i - 1] - dp[i - 1][j - 1] + MOD) % MOD;
+        }
+        FOR(j, 1, i) Add(dp[i][j], dp[i][j - 1]);
     }
 
-    int res = 0;
-    FOR(j, 1, n) cout << j << ' ' << dp[3][j] << '\n';
-    cout << res;  
+    cout << dp[n][n];
 
     return 0;
 }
