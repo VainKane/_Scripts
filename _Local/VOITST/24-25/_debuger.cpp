@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#define name "CAU1"
+#define name "CAU6"
 int const ntest = 1e4;
 
 mt19937_64 rd(time(0));
@@ -16,7 +16,19 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    cout << Rand(1, 1e4) << ' ' << Rand(1, 1e4);
+    int n = Rand(1, 2e5);
+    int a[n + 1];
+    for (int i = 1; i <= n; i++) a[i] = i;
+    random_shuffle(a + 1, a + n + 1);
+
+    cout << n << '\n';
+
+    for (int i = 2; i <= n; i++)
+    {
+        // cout << a[i] << ' ' << a[Rand(1, i - 1)] << '\n';
+        // cout << a[i] << ' ' << a[i - 1] << '\n';
+        cout << a[i] << " \n";
+    }
 }
 
 int main()

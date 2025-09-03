@@ -11,74 +11,44 @@ int const MOD = 1e9 + 7;
 int n;
 vector<int> adj[N];
 
-int f[N];
-int in[N];
+int f[N], g[N];
+int sz[N], id[N];
 
-int pw[N];
-
-int timer = 0;
-
-void DFS(int u, int p)
+int PowMod(int a, int b)
 {
-    f[u] = 1;
-    for (auto v : adj[u]) if (v != p)
+    int res = 1;
+    while (b)
     {
-        DFS(v, u);
-        f[u] = 1ll * f[u] * (f[v] + 1) % MOD;
+        if (b & 1) res = 1ll * res * a % MOD;
+        b >>= 1;
+        a = 1ll * a * a % MOD;
+    }
+    return res;
+}
+
+void DFS1(int u, int p, int root)
+{
+    sz[u] = f[u] = 1;
+    id[u] = root;
+
+    for (auto &v : adj[u]) if (v != p && v != u)
+    {
+        DFS1(v, u, root);
+        f[u] = 1ll * f[u] * ((f[v] + 1) % MOD) % MOD;
+        sz[u] += sz[v];
     }
 }
 
-void DFSTime(int u, int p)
+void DFS2(int u, int p)
 {
-    in[u] = ++timer;
-    for (auto v : adj[u]) if (v != p) DFSTime(v, u);
-}
-
-bool CheckSub1()
-{
-    FOR(u, 1, n) if (adj[u].size() > 2 || adj[u].size() == 0) return false;
-    return true;
-}
-
-void Sub1()
-{
-    FOR(u, 1, n) if (adj[u].size() == 1)
+    for (auto &v : adj[u]) if (v != p && v != u)
     {
-        DFSTime(u, -1);
-        break;
+        int tmp = 1ll * f[u] * g[u] % MOD;
+        tmp = 1ll * tmp * PowMod((f[v] + 1) % MOD, MOD - 2) % MOD;
+
+        g[v] = (tmp + 1) % MOD;
+        DFS2(v, u);
     }
-    FOR(u, 1, n)
-    {
-        int x = 1ll * in[u] * (n - in[u] + 1) % MOD;
-        cout << x << ' ';
-    }
-    exit(0);
-}
-
-bool CheckSub2()
-{
-    FOR(i, 2, n)
-        if (adj[i].size() != 1 || adj[i][0] != 1) return false;
-    return true;
-}
-
-void Sub2()
-{
-    pw[0] = 1;
-    FOR(i, 1, n) pw[i] = 1ll * pw[i - 1] * 2 % MOD;
-
-    cout << pw[n - 1] << ' ';
-    FOR(i, 2, n) cout << (pw[n - 2] + 1) % MOD << ' ';
-}
-
-void Sub3()
-{
-    FOR(i, 1, n)
-    {
-        DFS(i, -1);
-        cout << f[i] << ' ';
-    }
-    exit(0);
 }
 
 int main()
@@ -98,9 +68,23 @@ int main()
         adj[v].push_back(u);
     }
 
-    if (CheckSub1()) Sub1();
-    else if (CheckSub2()) Sub2();
-    else Sub3();
+    FOR(u, 1, n) if (!id[u]) 
+    {
+        g[u] = 1;
+        DFS1(u, -1, u);
+        DFS2(u, -1);
+
+        // cout << u << ' ' << sz[u] << '\n';
+    }
+
+    FOR(u, 1, n) 
+    {
+        int res = 1ll * f[u] * g[u] % MOD;
+        res = 1ll * res * PowMod(2, n - sz[id[u]]) % MOD;
+
+        cout << res << ' ';
+    }
+    // cout << f[1] << ' ' << g[1] << ' ' << sz[1];
 
     return 0;
 }

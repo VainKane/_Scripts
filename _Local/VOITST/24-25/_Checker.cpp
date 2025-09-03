@@ -11,26 +11,25 @@ int par[N];
 
 void Print(int start, int end)
 {
-    vector<int> res;
+    // vector<int> res;
 
-    res.push_back(start);
-    while (end != start)
-    {
-        res.push_back(end);
-        end = par[end];
-    } 
-    res.push_back(start);
+    // res.push_back(start);
+    // while (end != start)
+    // {
+    //     res.push_back(end);
+    //     end = par[end];
+    // } 
+    // res.push_back(start);
      
-    reverse(res.begin(), res.end());
+    // reverse(res.begin(), res.end());
 
     cout << "YES\n";
-    for (auto val : res) cout << val << ' ';
+    // for (auto val : res) cout << val << ' ';
 
     exit(0);
 }
 
-
-void DFS(int u)
+void DFS(int u, int p)
 {
     visisted[u] = true;
 
@@ -39,9 +38,9 @@ void DFS(int u)
         if (!visisted[v])
         {
             par[v] = u;
-            DFS(v);
+            DFS(v, u);
         }
-        else if (v != par[u]) 
+        else if (v != p) 
         {
             Print(v, u);
         }
@@ -53,6 +52,8 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
+    freopen("CAU6.inp", "r", stdin);
+
     cin >> n;
 
     int u, v;
@@ -62,7 +63,7 @@ int main()
         adj[v].push_back(u);
     }
 
-    DFS(1);
+    for(int u = 1; u <= n; u++) if (!visisted[u]) DFS(1, -1);
     cout << "NO";
 
     return 0;
