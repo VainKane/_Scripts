@@ -12,7 +12,6 @@ int n;
 vector<int> adj[N];
 
 int f[N], g[N];
-int sz[N], id[N];
 
 int PowMod(int a, int b)
 {
@@ -26,22 +25,20 @@ int PowMod(int a, int b)
     return res;
 }
 
-void DFS1(int u, int p, int root)
+void DFS1(int u, int p)
 {
-    sz[u] = f[u] = 1;
-    id[u] = root;
+    f[u] = 1;
 
-    for (auto &v : adj[u]) if (v != p && v != u)
+    for (auto &v : adj[u]) if (v != p)
     {
-        DFS1(v, u, root);
+        DFS1(v, u);
         f[u] = 1ll * f[u] * ((f[v] + 1) % MOD) % MOD;
-        sz[u] += sz[v];
     }
 }
 
 void DFS2(int u, int p)
 {
-    for (auto &v : adj[u]) if (v != p && v != u)
+    for (auto &v : adj[u]) if (v != p)
     {
         int tmp = 1ll * f[u] * g[u] % MOD;
         tmp = 1ll * tmp * PowMod((f[v] + 1) % MOD, MOD - 2) % MOD;
@@ -68,23 +65,11 @@ int main()
         adj[v].push_back(u);
     }
 
-    FOR(u, 1, n) if (!id[u]) 
-    {
-        g[u] = 1;
-        DFS1(u, -1, u);
-        DFS2(u, -1);
+    g[1] = 1;
+    DFS1(1, -1);
+    DFS2(1, -1);
 
-        // cout << u << ' ' << sz[u] << '\n';
-    }
-
-    FOR(u, 1, n) 
-    {
-        int res = 1ll * f[u] * g[u] % MOD;
-        res = 1ll * res * PowMod(2, n - sz[id[u]]) % MOD;
-
-        cout << res << ' ';
-    }
-    // cout << f[1] << ' ' << g[1] << ' ' << sz[1];
+    FOR(u, 1, n) cout << 1ll * f[u] * g[u] % MOD << ' ';
 
     return 0;
 }
