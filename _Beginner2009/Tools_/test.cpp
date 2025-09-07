@@ -9,18 +9,8 @@ int cnt = 0;
 
 long long GCD(long long a, long long b)
 {
-    long long r = a % b;
-    if (!r) return b;
-
-    while (b)
-    {
-        cnt++;
-        r = a % b;
-        a = b;
-        b = r;
-    }
-
-    return a;
+    if (a == 0 || b == 0 || a == b) return a | b;
+    
 }
 
 int a[23] = {0, 1, 2, 3};
