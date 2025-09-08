@@ -13,7 +13,7 @@ template <class t> bool maxi(t &x, t const &y)
 }
 
 int const N = 1e6 + 5;
-int BASE = 256;
+int const BASE = 256;
 int const NMOD = 2;
 int const MODS[] = {(int)1e9 + 2277, (int)1e9 + 5277};
 
