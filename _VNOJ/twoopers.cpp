@@ -73,8 +73,6 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    freopen("twoopers.inp", "r", stdin);
-
     cin >> s >> t;
 
     Init();
@@ -85,9 +83,9 @@ int main()
         if (GetHash(i, i + n - 1, hs1) == GetHash(1, n, hs2)) res += n;
         else
         {
-            int l = i;
+            int l = i - 1;
             int r = i + n - 1;
-            int pos = 0;
+            int pos = l;
 
             while (l <= r)
             {

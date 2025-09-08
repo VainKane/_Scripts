@@ -14,9 +14,9 @@ int main()
     ofstream cout("testcase.inp");
 
     int n = 1e5;
-    for (int i = 1; i <= n; i++) cout << (char)Rand('a', 'c');
+    for (int i = 1; i <= n; i++) cout << (char)Rand('a', 'a');
     cout << ' ';
-    while (n--) cout << (char)Rand('a', 'c');
+    while (n--) cout << (char)Rand('a', 'a');
     
     return 0;
 }
