@@ -4,43 +4,34 @@ using namespace std;
 
 #define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
 
-int const N = 1e4 + 5;
+int const N = 105;
 
 int n, m;
 vector<int> adj[N];
 
 int id[N], low[N];
-int timer = 0;
+int f[N];
 
-stack<int> st;
-int scc = 0;
+int timer = 0;
+int res = 0;
 
 void Tarjan(int u, int p)
 {
     low[u] = id[u] = ++timer;
-    st.push(u);
+    f[u] = 1;
 
-    for (auto &v : adj[u])
+    for (auto &v : adj[u]) if (v != p)
     {
         if (id[v]) low[u] = min(low[u], id[v]);
         else
         {
             Tarjan(v, u);
+            
             low[u] = min(low[u], low[v]);
-        }
-    }
+            f[u] += f[v];
 
-    if (low[u] == id[u])
-    {
-        int v = 0;
-        while (v != u)
-        {
-            v = st.top();
-            st.pop();
-            id[v] = n + 1;
+            if (low[v] == id[v]) res += f[v] * (n - f[v]);
         }
-
-        scc++;
     }
 }
 
@@ -55,10 +46,11 @@ int main()
         int u, v;
         cin >> u >> v;
         adj[u].push_back(v);
+        adj[v].push_back(u);
     }
 
     FOR(u, 1, n) if (!id[u]) Tarjan(u, -1);
-    cout << scc;
+    cout << res;
 
     return 0;
 }

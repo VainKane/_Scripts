@@ -12,36 +12,27 @@ vector<int> adj[N];
 int id[N], low[N];
 int timer = 0;
 
-stack<int> st;
-int scc = 0;
+int bridges = 0, joints = 0;
 
 void Tarjan(int u, int p)
 {
-    low[u] = id[u] = ++timer;
-    st.push(u);
+    int child = (p != -1);
+    id[u] = low[u] = ++timer;
 
-    for (auto &v : adj[u])
+    for (auto &v : adj[u]) if (v != p)
     {
         if (id[v]) low[u] = min(low[u], id[v]);
         else
         {
             Tarjan(v, u);
+
             low[u] = min(low[u], low[v]);
+            if (low[v] == id[v]) bridges++;
+            if (low[v] >= id[u]) child++;
         }
     }
 
-    if (low[u] == id[u])
-    {
-        int v = 0;
-        while (v != u)
-        {
-            v = st.top();
-            st.pop();
-            id[v] = n + 1;
-        }
-
-        scc++;
-    }
+    joints += child >= 2;
 }
 
 int main()
@@ -55,10 +46,11 @@ int main()
         int u, v;
         cin >> u >> v;
         adj[u].push_back(v);
+        adj[v].push_back(u);
     }
 
     FOR(u, 1, n) if (!id[u]) Tarjan(u, -1);
-    cout << scc;
+    cout << joints << ' ' << bridges;
 
     return 0;
 }
