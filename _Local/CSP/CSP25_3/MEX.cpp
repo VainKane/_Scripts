@@ -3,15 +3,28 @@
 using namespace std;
 
 #define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
+#define all(v) v.begin(), v.end()
+#define F first
+#define S second
 
 int m, n;
 vector<vector<int>> a;
 
-int mid;
-
-bool DFS(int x, int y)
+bool Check(int x)
 {
-    if (a[x + 1][y] != mid)
+    vector<pair<int, int>> pos;
+    FOR(i, 1, m) FOR(j, 1, n) if (a[i][j] < x) pos.push_back({i, j});
+
+    sort(all(pos));
+
+    pair<int, int> last = {0, 0};
+    for (auto &p : pos) 
+    {
+        if (p.F < last.F || p.S < last.S) return false;
+        last = p;
+    }
+
+    return true;
 }
 
 int main()
@@ -23,17 +36,17 @@ int main()
     while (t--)
     {
         cin >> m >> n;
+        a.assign(m + 2, vector<int> (n + 2));
 
-        a.resize(m + 5, vector<int> (n + 5));
         FOR(i, 1, m) FOR(j, 1, n) cin >> a[i][j];
 
         int l = 0;
-        int r = m * n - 1;
-        int res = 0;
+        int r = m * n;
+        int res = l;
 
         while (l <= r)
         {
-            mid = (l + r) >> 1;
+            int mid = (l + r) / 2;
             if (Check(mid))
             {
                 res = mid;
@@ -41,7 +54,10 @@ int main()
             }
             else r = mid - 1;
         }
-    }    
+
+        cout << res << '\n';
+    }
+
 
     return 0;
 }
