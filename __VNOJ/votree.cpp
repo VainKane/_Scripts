@@ -24,7 +24,9 @@ void DFS(int u, int p)
     {
         h[v] = h[u] + 1;
         up[v][0] = u;
-        upLCA[v][0] = v;
+
+        FOR(i, 1, LOG) 
+            up[v][i] = up[up[v][i - 1]][i - 1];
 
         DFS(v, u);
     }
@@ -32,7 +34,7 @@ void DFS(int u, int p)
 
 int LCA(int u, int v)
 {
-    if (h[u] > h[v]) swap(u, v);
+    if (h[u] < h[v]) swap(u, v);
     int delta = h[u] - h[v];
 
     for (int tmp = delta; tmp; tmp ^= tmp & -tmp)
@@ -56,13 +58,11 @@ void Init()
 {
     DFS(1, -1);
 
-    FOR(u, 1, n) FOR(i, 1, LOG)
-    {
-        up[u][i] = up[up[u][i - 1]][i - 1];
+    FOR(u, 1, n) upLCA[u][0] = u;
+    FOR(i, 1, LOG) FOR(u, 1, n - MK(i) + 1)
         upLCA[u][i] = LCA(upLCA[u][i - 1], upLCA[u + MK(i - 1)][i - 1]);
-    }
 
-    FOR(i, 1, n) lg[i] = lg[i / 2] + 1;
+    FOR(i, 2, n) lg[i] = lg[i / 2] + 1;
 }
 
 int LCARange(int l, int r)
