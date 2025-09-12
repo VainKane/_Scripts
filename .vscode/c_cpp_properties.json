@@ -2,9 +2,9 @@
     "configurations": [
         {
             "name": "Win32",
-            "includePath": [
-                "d:/Dev/_Scripts/**"
-            ],
+            // "includePath": [
+            //     "d:/Dev/_Scripts/**"
+            // ],
             "defines": [
                 "_DEBUG",
                 "UNICODE",
@@ -17,10 +17,10 @@
             "mergeConfigurations": false,
             "compilerPath": "C:/Program Files/CodeBlocks/MinGW/bin/gcc.exe",
             "browse": {
-                "path": [
-                    "d:/Dev/_Scripts/**",
-                    "${workspaceFolder}"
-                ],
+                // "path": [
+                //     "d:/Dev/_Scripts/**",
+                //     "${workspaceFolder}"
+                // ],
                 "limitSymbolsToIncludedHeaders": true
             }
         },

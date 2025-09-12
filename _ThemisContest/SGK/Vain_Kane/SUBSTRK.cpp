@@ -3,15 +3,14 @@
 using namespace std;
 
 #define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
-#define name "COUNTPL"
+#define name "SUBSTRK"
 
-int const N = 1009;
+int const N = 1e6 + 5;
 
-int n;
+int n, k;
 string s;
 
-int f[N][N];
-int dp[N][N];
+int cnt[N];
 
 int main()
 {
@@ -21,17 +20,22 @@ int main()
     freopen(name".inp", "r", stdin);
     freopen(name".out", "w", stdout);
 
-    cin >> s;
+    cin >> k >> s;
     n = s.size();
     s = " " + s;
 
-    FOR(i, 1, n) f[i][i] = f[i - 1][i] = true;
+    long long res = 0;
+    int pre = 0;
+    cnt[0] = 1;
 
-    cin >> s;
-    FOR(i, 1, n) FOR(j, 1, n)
-        f[i][j] = f[i][j] & (s[i] == s[j]);
+    FOR(i, 1, n) 
+    {
+        pre += s[i] == '1';
+        if (pre >= k) res += cnt[pre - k];      
+        cnt[pre]++;
+    }
 
-    cout << f[1][3];
+    cout << res;
 
     return 0;
 }

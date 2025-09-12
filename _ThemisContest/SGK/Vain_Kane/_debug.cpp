@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#define name "nklp"
+#define name "SUBSTRK"
 int const ntest = 1e4;
 
 mt19937_64 rd(time(0));
@@ -16,9 +16,15 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int n = Rand(1, 10);
-    cout << n << '\n';
-    for (int i = 1; i <= n; i++) cout << Rand(1, n) << ' ';
+    int n = Rand(1, 1e4);
+    int k = Rand(1, n / 2);
+
+    cout << k << '\n';
+    while (n--) 
+    {
+        int type = Rand(0, 3);
+        cout << (type != 0);
+    }
 }
 
 int main()
@@ -26,8 +32,8 @@ int main()
     for (int i = 1; i <= ntest; i++)
     {
         GenTest();
-        system(name".exe <"name".inp> "name".out");
-        system(name"_trau.exe <"name".inp> "name".ans");
+        system(name".exe");
+        system(name"_trau.exe");
 
         if (system("fc "name".out "name".ans") != 0)
         {
