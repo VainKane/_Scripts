@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#define name "nklp"
+#define name "fct045_distsum"
 int const ntest = 1e4;
 
 mt19937_64 rd(time(0));
@@ -16,9 +16,9 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int n = Rand(1, 10);
+    int n = Rand(1, 1e4);
     cout << n << '\n';
-    for (int i = 1; i <= n; i++) cout << Rand(1, n) << ' ';
+    for (int i = 1; i <= n; i++) cout << Rand(0, 1e8) << ' ';
 }
 
 int main()
