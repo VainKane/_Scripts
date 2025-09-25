@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#define name "CAU3"
+#define name "CAU2"
 int const ntest = 1e4;
 
 mt19937_64 rd(time(0));
@@ -16,9 +16,22 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int n = Rand(1, 6);
-    cout << n << ' ' << Rand(1, 2) << ' ' << Rand(2, 8) << '\n';
-    while (n--) cout << Rand(0, 5) << ' ';
+    int n = Rand(1, 3e5);
+    int m = Rand(1, 3e5);
+    
+    cout << n << ' ' << m << '\n';
+    for (int i = 1; i <= n; i++)
+    {
+        int len = Rand(1, 10);
+        while (len--) cout << (char)Rand('a', 'b');
+        cout << '\n';
+    }
+    for (int i = 1; i <= m; i++)
+    {
+        int len = Rand(1, 10);
+        while (len--) cout << (char)Rand('a', 'b');
+        cout << '\n';
+    }
 }
 
 int main()
