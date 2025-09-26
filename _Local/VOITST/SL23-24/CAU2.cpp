@@ -13,8 +13,8 @@ using namespace std;
 int const N = 6e5 + 5;
 int const oo = 3e5;
 int const BASE = 256;
-int const NMOD = 2;
-int const MODS[] = {(int)1e9 + 2277, (int)1e9 + 5277};
+int const NMOD = 3;
+int const MODS[] = {(int)1e9 + 7};
 
 struct Hash
 {
@@ -42,6 +42,8 @@ int n, m;
 
 int pw[NMOD][N];
 int hs[NMOD][N];
+
+vector<pair<Hash, Hash>> mark[26];
 
 void Init()
 {
