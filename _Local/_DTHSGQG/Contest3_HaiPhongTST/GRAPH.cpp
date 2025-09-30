@@ -19,12 +19,13 @@ struct Edge
 };
 
 int const N = 2e5 + 5;
+int const M = 3e5 + 5;
 long long const oo = 2e18;
 
 int n, m;
 vector<Edge> adj[N];
 
-long long a[10 * N];
+long long a[M];
 long long d[N];
 
 void Dijkstra(int &idx)
