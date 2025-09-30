@@ -47,7 +47,6 @@ int main()
         {
             if (IsEqual(p[i], p[j]))
             {
-
                 if (visisted.count(make_pair(i, j)) == 0)
                 {
                     t.insert(p[i].first);
