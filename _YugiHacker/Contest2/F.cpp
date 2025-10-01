@@ -12,7 +12,7 @@ struct FenwickTree
 
     FenwickTree(int _n = 0)
     {
-        n = _n;
+        n = _n + 1;
         bit.assign(n + 4, 0);
     }
 
@@ -29,7 +29,7 @@ struct FenwickTree
     {
         int res = 0;
 
-        while (idx)
+        while (idx > 0)
         {
             res += bit[idx];
             idx ^= idx & -idx;
@@ -80,11 +80,13 @@ long long CountGreater(long long s)
     long long res = 0;
 
     bit.Reset();
+    bit.Update(GetId(0), 1);
 
     FOR(i, 1, n)
     {
         curSum += a[i];
-        res += bit.Get(GetId(curSum - s));
+        int id = upper_bound(all(vals), curSum - s) - vals.begin();
+        res += bit.Get(id);
         bit.Update(GetId(curSum), 1);
     }
 
@@ -111,9 +113,9 @@ int main()
         if (CountGreater(mid) >= k)
         {
             res = mid;
-            r = mid - 1;
+            l = mid + 1;
         }
-        else l = mid + 1;
+        else r = mid - 1;
     }
 
     cout << res;

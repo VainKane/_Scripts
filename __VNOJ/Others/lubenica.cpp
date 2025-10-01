@@ -4,79 +4,30 @@ using namespace std;
 
 #define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
 #define FORD(i, b, a) for (int i = (b), _a = (a); i >= _a; i--)
-#define MK(i) (1ll << (i))
 #define F first
 #define S second
-#define name "backup"
 
 template <class t> bool mini(t &x, t const &y)
 {
     return x > y ? x = y, 1 : 0;
 }
 
-struct DSU
+template <class t> bool maxi(t &x, t const &y)
 {
-    vector<int> par;
-    vector<int> sz;
-    int n;
-
-    void MakeSet()
-    {
-        FOR(i, 1, n)
-        {
-            par[i] = i;
-            sz[i] = 1;
-        }
-    }
-
-    DSU(int _n = 0)
-    {
-        n = _n;
-        par.assign(n + 5, 0);
-        sz.assign(n + 5, 0);
-        MakeSet();
-    }
-
-    int Find(int v)
-    {
-        if (par[v] == v) return v;
-        return par[v] = Find(par[v]);
-    }
-
-    void Union(int a, int b)
-    {
-        a = Find(a);
-        b = Find(b);
-
-        if (a == b) return;
-
-        if (sz[a] < sz[b]) swap(a, b);
-        sz[a] += sz[b];
-        par[b] = a;
-    }
-};
-
-struct Query
-{
-    int type, u, v;
-};
+    return x < y ? x = y, 1 : 0;
+}
 
 int const N = 1e5 + 5;
 int const oo = 1e9;
 int const LOG = 17;
 
-int n, q;
+int n;
 vector<pair<int, int>> adj[N];
-
-Query qr[N];
 
 int h[N];
 int upPar[N][20];
 int upMin[N][20];
-DSU dsu;
-
-int res[N];
-bool mark[N];
+int upMax[N][20];
 
 void DFS(int u, int p)
 {
@@ -88,12 +39,13 @@ void DFS(int u, int p)
         if (v == p) continue;
         h[v] = h[u] + 1;
         upPar[v][0] = u;
-        upMin[v][0] = w;
+        upMin[v][0] = upMax[v][0] = w;
 
         FOR(i, 1, LOG) 
         {
             upPar[v][i] = upPar[upPar[v][i - 1]][i - 1];
             upMin[v][i] = min(upMin[v][i - 1], upMin[upPar[v][i - 1]][i - 1]);
+            upMax[v][i] = max(upMax[v][i - 1], upMax[upPar[v][i - 1]][i - 1]);
         }
         
         DFS(v, u);
@@ -140,15 +92,30 @@ int GetMin(int u, int v)
     return res;
 }
 
+int GetMax(int u, int v)
+{
+    if (h[u] < h[v]) swap(u, v);
+    int delta = h[u] - h[v];
+
+    if (u == v) return 0;
+
+    int res = upMax[u][0];
+    for (int tmp = delta; tmp; tmp ^= tmp & -tmp)
+    {
+        int i = __builtin_ctz(tmp & -tmp);
+        maxi(res, upMax[u][i]);
+        u = upPar[u][i];
+    }
+
+    return res;
+}
+
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    freopen(name".inp", "r", stdin);
-    freopen(name".out", "w", stdout);
-
-    cin >> n >> q;
+    cin >> n;
     FOR(i, 2, n)
     {
         int u, v, w;
@@ -157,46 +124,18 @@ int main()
         adj[v].push_back({u, w});
     }
 
-    FOR(i, 1, q) 
-    {
-        cin >> qr[i].type;
-        if (qr[i].type == 1) cin >> qr[i].u >> qr[i].v;
-        else 
-        {
-            cin >> qr[i].u;
-            mark[qr[i].u] = true;
-        }
-    }
-    
-    dsu = DSU(n);
     DFS(1, -1);
-    FOR(u, 1, n) if (!mark[u]) for (auto &e : adj[u]) if (!mark[e.F]) dsu.Union(u, e.F);
     
-    FORD(i, q, 1)
+    int q; cin >> q;
+    while (q--)
     {
-        int u = qr[i].u;
-        int v = qr[i].v;
+        int u, v;
+        cin >> u >> v;
 
-        if (qr[i].type == 1)
-        {
-            if (u == v) 
-            {
-                res[i] = 0;
-                continue;
-            }
-
-            int p = LCA(u, v);
-            if (dsu.Find(u) == dsu.Find(v)) res[i] = min(GetMin(u, p), GetMin(v, p));
-            else res[i] = -1;
-        }
-        else
-        {
-            for (auto &e : adj[u]) if (!mark[e.F]) dsu.Union(u, e.F);
-            mark[u] = false;
-        } 
+        int p = LCA(u, v);
+        cout << min(GetMin(u, p), GetMin(v, p)) << ' ';
+        cout << max(GetMax(u, p), GetMax(v, p)) << '\n';
     }
-
-    FOR(i, 1, q) if (qr[i].type == 1) cout << res[i] << '\n';
 
     return 0;
 }

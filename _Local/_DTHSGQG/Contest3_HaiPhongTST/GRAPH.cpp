@@ -49,7 +49,8 @@ void Dijkstra(int &idx)
             long long p = e.p;
             long long w = e.w;
 
-            if (p <= a[idx] && mini(d[v], d[u] + w)) pq.push({d[v], v});
+            if (p > a[idx]) continue;
+            if (mini(d[v], d[u] + w)) pq.push({d[v], v});
         }
     }
 }
@@ -59,8 +60,8 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    freopen(name".inp", "r", stdin);
-    freopen(name".out", "w", stdout);
+    // freopen(name".inp", "r", stdin);
+    // freopen(name".out", "w", stdout);
 
     cin >> n >> m;
     FOR(i, 1, m)
@@ -72,7 +73,7 @@ int main()
         adj[v].push_back({u, a[i], w});
     }
 
-    sort(a + 1, a + n + 1);
+    sort(a + 1, a + m + 1);
 
     int l = 1;
     int r = m;

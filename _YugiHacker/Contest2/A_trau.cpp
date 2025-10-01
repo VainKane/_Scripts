@@ -99,10 +99,6 @@ int main()
         int l, r;
         cin >> l >> r;
         it.Update(l, r);
-
-        // cout << "When T = " << t << ":\n";
-        // FOR(i, 1, n) cout << it.Get(i) << ' ';
-        // cout << '\n';
     }
 
     int res = 0;
