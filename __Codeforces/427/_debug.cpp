@@ -16,12 +16,13 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int n = Rand(1, 5000);
-    int m = Rand(1, 5000);
+    int oo = 5000;
+    int n = Rand(1, oo);
+    int m = Rand(1, oo);
 
-    while (n--) cout << (char)Rand('a', 'b');
+    while (n--) cout << (char)Rand('a', 'd');
     cout << '\n';
-    while (m--) cout << (char)Rand('a', 'b');
+    while (m--) cout << (char)Rand('a', 'd');
 }
 
 int main()

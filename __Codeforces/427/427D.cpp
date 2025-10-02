@@ -33,8 +33,11 @@ void BuildF(int f[N][N], string s1, string s2, int n, int m)
 
 void BuildG(int g[], int f[N][N], string s, int n)
 {
-    FOR(i, 1, n) FOR(j, 1, n) if (i != j)
-        maxi(g[i], f[i][j] + 1);
+    FOR(i, 1, n) 
+    {
+        g[i] = 1;
+        FOR(j, 1, n) if (i != j) maxi(g[i], f[i][j] + 1);
+    }
 }
 
 void Init()
@@ -63,7 +66,7 @@ int main()
     FOR(i, 1, n) FOR(j, 1, m) 
     {
         int x = max(g1[i], g2[j]);
-        if (f[i][j] >= x) mini(res, x);
+        if (f[i][j] >= x && x) mini(res, x);
     } 
 
     if (res == N) res = -1;
