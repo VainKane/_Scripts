@@ -71,7 +71,10 @@
         "typeindex": "cpp",
         "typeinfo": "cpp",
         "valarray": "cpp",
-        "271d": "cpp"
+        "271d": "cpp",
+        "any": "cpp",
+        "compare": "cpp",
+        "variant": "cpp"
     },
         "files.exclude": {
         "**/.git": true,

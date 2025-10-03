@@ -3,51 +3,36 @@
 using namespace std;
 
 #define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
+#define name "RECT"
 
-template <class X, class Y>
-    bool mini(X &x, Y const &y)
-    {
-        if (x > y)
-        {
-            x = y;
-            return true;
-        }
-        return false;
-    }
+int const N = 3e5 + 5;
 
-int const N = 509;
-
-int m, n;
-bool a[N][N];
+int n;
+int x[N], y[N];
 
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    cin >> m >> n;
-    FOR(i, 1, m) FOR(j, 1, n) 
-    {
-        char x; cin >> x;
-        a[i][j] = (x == 'x');
-    }
+    freopen(name".inp", "r", stdin);
+    freopen(name".ans", "w", stdout);
+
+    cin >> n;
+    FOR(i, 1, n) cin >> x[i] >> y[i];
 
     int q; cin >> q;
     while (q--)
     {
-        int x, y;
-        cin >> x >> y;
+        int x1, y1, x2, y2;
+        cin >> x1 >> y1 >> x2 >> y2;
 
-        int res = 1e9;
-        FOR(i, 1, m) FOR (j, 1, n) if (a[i][j])
+        int res = 0;
+        FOR(i, 1, n) 
         {
-            int u = i - x;
-            int v = j - y;
-            
-            mini(res, u * u + v * v);
+            if ((x[i] == x1 || x[i] == x2) && y[i] >= y1 && y[i] <= y2) res++;
+            else res += (y[i] == y1 || y[i] == y2) && x[i] >= x1 && x[i] <= x2;
         }
-
-        a[x][y] = true;
         cout << res << '\n';
     }
 
