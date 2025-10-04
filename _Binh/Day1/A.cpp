@@ -4,42 +4,15 @@ using namespace std;
 
 #define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
 #define all(v) v.begin(), v.end()
-#define name "RECT"
 
 int const N = 3e5 + 5;
 
 int n;
+pair<int, int> a[N], b[N];
 
-int x[N], y[N];
-vector<int> xValues, yValues;
-vector<int> posY[N], posX[N];
-
-void Build(vector<int> &values, vector<int> pos[], int a[], int b[])
+int Cal(pair<int, int> a[], pair<int, int> l, pair<int, int> r)
 {
-    FOR(i, 1, n) values.push_back(a[i]);
-    sort(all(values));
-    values.erase(unique(all(values)), values.end());
-
-    FOR(i, 1, n) 
-    {
-        int val = lower_bound(all(values), a[i]) - values.begin() + 1;
-        pos[val].push_back(b[i]);
-    }
-
-    FOR(i, 1, n) sort(all(pos[i]));
-}
-
-int GetId(vector<int> &values, int &val)
-{
-    int idx = lower_bound(all(values), val) - values.begin() + 1;
-    if (values[idx - 1] != val) return 0;
-    return idx;
-}
-
-int Cal(vector<int> &pos, int &l, int &r)
-{
-    if (l > r) return 0;
-    return upper_bound(all(pos), r) - lower_bound(all(pos), l);
+    return upper_bound(a + 1, a + n + 1, r) - lower_bound(a + 1, a + n + 1, l);
 }
 
 int main()
@@ -47,14 +20,17 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    freopen(name".inp", "r", stdin);
-    freopen(name".out", "w", stdout);
-
     cin >> n;
-    FOR(i, 1, n) cin >> x[i] >> y[i];
+    FOR(i, 1, n) 
+    {
+        int x, y;
+        cin >> x >> y;
+        a[i] = {x, y};
+        b[i] = {y, x};
+    }
 
-    Build(xValues, posY, x, y);
-    Build(yValues, posX, y, x);
+    sort(a + 1, a + n + 1);
+    sort(b + 1, b + n + 1);
 
     int q; cin >> q;
     while (q--)
@@ -62,19 +38,11 @@ int main()
         int x1, y1, x2, y2;
         cin >> x1 >> y1 >> x2 >> y2;
 
-        int u1 = GetId(xValues, x1);
-        int u2 = GetId(xValues, x2);
-        int v1 = GetId(yValues, y1);
-        int v2 = GetId(yValues, y2);
-
-        x1++; x2--;
         int res = 0;
-        
-        res += Cal(posY[u1], y1, y2);
-        if (u1 != u2) res += Cal(posY[u2], y1, y2);
-        
-        res += Cal(posX[v1], x1, x2);
-        if (v1 != v2) res += Cal(posX[v2], x1, x2);
+        res += Cal(a, {x1, y1}, {x1, y2});
+        if (x1 != x2) res += Cal(a, {x2, y1}, {x2, y2});
+        res += Cal(b, {y1, x1 + 1}, {y1, x2 - 1});
+        if (y1 != y2) res += Cal(b, {y2, x1 + 1}, {y2, x2 - 1});
 
         cout << res << '\n';
     }

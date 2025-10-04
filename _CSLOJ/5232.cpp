@@ -50,7 +50,7 @@ struct SegmentTree
         if (left <= l && right >= r) 
         {
             t[v] += val * len[v];
-            lz[v] += val * len[v];
+            lz[v] += val;
             return;
         }
 
@@ -113,7 +113,11 @@ int main()
         int y1 = events[i].y1;
         int y2 = events[i].y2;
 
+        // it.Update(y1, y2 - 1, type);
+        // res += it.t[1] * (events[i].x - events[i - 1].x);
+
         res += it.t[1] * (events[i].x - events[i - 1].x);
+        if (type == -1) res -= (y2 - y1 - 1) * (events[i].x - events[i - 1].x);
         it.Update(y1, y2 - 1, type);
     }
 
