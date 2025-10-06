@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#define name "A"
+#define name "C"
 int const ntest = 1e4;
 
 mt19937_64 rd(time(0));
@@ -16,33 +16,45 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int oo = 1e5;
-    int n = Rand(1, 3e5);
-    int m = Rand(1, 10);
+    int n = Rand(1, 1000);
+    int k = Rand(1, n);
+    int oo = 1e6;
 
-    vector<int> valuesX, valuesY;
-
-    cout << n << '\n';
-    while (n--) 
+    cout << n << ' ' << k << '\n';
+    for (int i = 2; i <= n; i++)
     {
-        valuesX.push_back(Rand(1, oo));
-        valuesY.push_back(Rand(1, oo));
-        cout << valuesX[valuesX.size() - 1] << ' ' << valuesY[valuesY.size() - 1] << '\n'; 
+        cout << i << ' ' << Rand(1, i - 1) << ' '  << Rand(1, oo) << '\n';
     }
+    while (k--) cout << Rand(1, n) << '\n';
 
-    cout << m << '\n';
-    while (m--)
-    {
-        int type = Rand(1, 1);
-        int x1 = valuesX[Rand(0, valuesX.size() - 1)];
-        int x2 = Rand(x1, oo);
+    //************************Problem A
+//     int oo = 1e4;
+//     int n = Rand(1, 3e5);
+//     int m = Rand(1, 1e5);
 
-        type = Rand(1, 1);
-        int y1 = valuesY[Rand(0, valuesY.size() - 1)];
-        int y2 = Rand(y1, oo);
+//     vector<int> valuesX, valuesY;
 
-        cout << x1 << ' ' << y1 << ' ' << x2 << ' ' << y2 << '\n';
-    }
+//     cout << n << '\n';
+//     while (n--) 
+//     {
+//         valuesX.push_back(Rand(1, oo));
+//         valuesY.push_back(Rand(1, oo));
+//         cout << valuesX[valuesX.size() - 1] << ' ' << valuesY[valuesY.size() - 1] << '\n'; 
+//     }
+
+//     cout << m << '\n';
+//     while (m--)
+//     {
+//         int type = Rand(1, 1);
+//         int x1 = valuesX[Rand(0, valuesX.size() - 1)];
+//         int x2 = Rand(x1, oo);
+
+//         type = Rand(1, 1);
+//         int y1 = valuesY[Rand(0, valuesY.size() - 1)];
+//         int y2 = Rand(y1, oo);
+
+//         cout << x1 << ' ' << y1 << ' ' << x2 << ' ' << y2 << '\n';
+//     }
 }
 
 int main()

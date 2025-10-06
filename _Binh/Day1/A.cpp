@@ -12,7 +12,8 @@ pair<int, int> a[N], b[N];
 
 int Cal(pair<int, int> a[], pair<int, int> l, pair<int, int> r)
 {
-    return upper_bound(a + 1, a + n + 1, r) - lower_bound(a + 1, a + n + 1, l);
+    int res = upper_bound(a + 1, a + n + 1, r) - lower_bound(a + 1, a + n + 1, l);
+    return res < 0 ? 0 : res;
 }
 
 int main()
@@ -39,10 +40,14 @@ int main()
         cin >> x1 >> y1 >> x2 >> y2;
 
         int res = 0;
+
         res += Cal(a, {x1, y1}, {x1, y2});
         if (x1 != x2) res += Cal(a, {x2, y1}, {x2, y2});
-        res += Cal(b, {y1, x1 + 1}, {y1, x2 - 1});
-        if (y1 != y2) res += Cal(b, {y2, x1 + 1}, {y2, x2 - 1});
+
+        x1++; x2--;
+
+        res += Cal(b, {y1, x1}, {y1, x2});
+        if (y1 != y2) res += Cal(b, {y2, x1}, {y2, x2});
 
         cout << res << '\n';
     }
