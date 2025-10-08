@@ -88,7 +88,7 @@ int main()
     cin.tie(0); cout.tie(0);
 
     freopen(name".inp", "r", stdin);
-    freopen(name".out", "w", stdout);
+    freopen(name".ans", "w", stdout);
 
     int n, t;
     cin >> n >> t;

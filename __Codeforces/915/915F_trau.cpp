@@ -27,9 +27,9 @@ vector<int> adj[N];
 
 int h[N];
 
-int upPar[N][22];
-int upMin[N][22];
-int upMax[N][22];
+int upPar[N][21];
+int upMin[N][21];
+int upMax[N][21];
 
 void DFS(int u, int p)
 {

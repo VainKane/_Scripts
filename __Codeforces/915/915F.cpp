@@ -3,6 +3,7 @@
 using namespace std;
 
 #define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
+#define all(v) v.begin(), v.end()
 
 struct DSU
 {
@@ -84,11 +85,13 @@ int main()
         adj[v].push_back(u);
     }
 
+    FOR(u, 1, n) sort(all(adj[u]), greater<int> ());
+
     dsu = DSU(n);
     FOR(u, 1, n) dsu.sum[u] = a[u];
 
     FOR(i, 1, 1e6) for (auto &u : node[i]) for (auto &v : adj[u]) if (a[v] <= a[u]) dsu.Union(u, v, i);
-    // cout << dsu.res;
+    cout << dsu.res;
 
     // FOR(i, 1, 9) 
     // {
