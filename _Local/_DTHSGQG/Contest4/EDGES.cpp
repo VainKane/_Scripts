@@ -12,16 +12,10 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-template <class t> bool maxi(t &x, t const &y)
-{
-    return x < y ? x = y, 1 : 0;
-}
-
 int const N = 1e5 + 5;
-int const os = 1e9 + 1;
 long long const oo = 1e18;
 
-int n, m;
+int n;
 int m1, m2;
 
 vector<int> initAdj[N];
@@ -33,10 +27,11 @@ int sccId[N];
 bool inDeg[N], outDeg[N];
 long long d[N];
 
-int s, t;
-
 stack<int> st;
 int cnt = 0, scc = 0;
+int s, t;
+
+long long res = 0;
 
 void Tarjan(int u)
 {
@@ -101,13 +96,13 @@ void Init()
     }
 }
 
-void Dijkstra(vector<int> adj[])
+void Dijkstra()
 {
-    memset(d, 0x3f, sizeof d);
-    d[t] = 1;
-
     priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> pq;
     pq.push({0, t});
+
+    memset(d, 0x3f, sizeof d);
+    d[t] = 0;
 
     while (!pq.empty())
     {
@@ -115,7 +110,7 @@ void Dijkstra(vector<int> adj[])
         long long du = pq.top().F;
         pq.pop();
 
-        if (du >= d[u]) continue;
+        if (du > d[u]) continue;
 
         for (auto &e : adj[u])
         {
@@ -140,7 +135,7 @@ int main()
         int u, v;
         cin >> u >> v;
         initAdj[u].push_back(v);
-        // adj[u].push_back({v, os});
+        adj[u].push_back({v, 0});
     }
 
     cin >> m2;
@@ -149,18 +144,19 @@ int main()
         int u, v, w;
         cin >> u >> v >> w;
         
-        // maxi(w, 0);
+        if (w < 0)
+        {
+            res += w;
+            w = 0;
+        }
         adj[u].push_back({v, w});
     }
     
     Init();
-    Dijkstra(initAdj);
-    Dijkstra(adj);
+    Dijkstra();
 
-    if (d[s] < oo) cout << "YES\n" << d[s] - 1;
+    if (d[s] < oo) cout << "YES\n" << res + d[s];
     else cout << "NO";
-
-    // cout << s << ' ' << t;
 
     return 0;
 }
