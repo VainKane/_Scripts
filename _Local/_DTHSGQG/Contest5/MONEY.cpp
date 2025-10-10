@@ -5,6 +5,11 @@ using namespace std;
 #define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
 #define sz(v) ((int)v.size())
 
+template <class t> bool maxi(t &x, t const &y)
+{
+    return x < y ? x = y, 1 : 0;
+}
+
 struct Node
 {
     long long x[2][2];
@@ -24,8 +29,8 @@ struct SegmentTree
     {
         Node res;
         
-        FOR(i, 0, 1) FOR(j, 0, 1)
-            res.x[i][j] = max({a.x[i][0] + b.x[1][j], a.x[i][1] + b.x[0][j], a.x[i][0] + b.x[0][j]});
+        FOR(i, 0, 1) FOR(j, 0, 1) FOR(u, 0, 1) FOR(v, 0, 1) if (u + v != 2)
+            maxi(res.x[i][j], a.x[i][u] + b.x[v][j]);
     
         return res;
     }

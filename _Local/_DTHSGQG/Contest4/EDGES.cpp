@@ -29,7 +29,7 @@ long long d[N];
 
 stack<int> st;
 int cnt = 0, scc = 0;
-int s, t;
+int s = 0, t = 0;
 
 long long res = 0;
 
@@ -71,6 +71,7 @@ void Init()
     {
         int u = sccId[i];
         int v = sccId[j];
+        if (u == v) continue;
         inDeg[v] = true;
         outDeg[u] = true;
     }

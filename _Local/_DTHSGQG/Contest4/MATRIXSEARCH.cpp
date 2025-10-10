@@ -17,10 +17,10 @@ struct FenwickTree
 
     void Update(int idx, int val)
     {
-        while (idx)
+        while (idx <= n)
         {
             bit[idx] += val;
-            idx ^= idx & -idx;
+            idx += idx & -idx;
         }
     }
 
@@ -28,7 +28,13 @@ struct FenwickTree
     {
         int res = 0;
 
-        
+        while (idx)
+        {
+            res += bit[idx];
+            idx ^= idx & -idx;
+        }
+
+        return res;
     }
 };
 
@@ -36,6 +42,26 @@ int const N = 1009;
 
 int m, n;
 int a[N][N];
+
+FenwickTree bit[N];
+
+bool Check(int &x)
+{
+    int i = 1;
+    int j = n;
+
+    while (i <= m && j)
+    {
+        int val = a[i][j] + bit[i].Get(j);
+        int k = bit[i].Get(j);
+        
+        if (val == x) return true;
+        else if (val > x) j--;
+        else i++;
+    }
+
+    return false;
+}
 
 int main()
 {
@@ -45,10 +71,24 @@ int main()
     cin >> m >> n;
     FOR(i, 1, m) FOR(j, 1, n) cin >> a[i][j];
 
+    FOR(i, 1, m) bit[i] = FenwickTree(n);
+
     int q; cin >> q;
     while (q--)
     {
-        
+        int type; cin >> type;
+        if (type == 1)
+        {
+            int x; cin >> x;
+            cout << (Check(x) ? "Y\n" : "N\n");
+        }
+        else 
+        {
+            int x, y, val;
+            cin >> x >> y >> val;
+
+            FOR(i, x, m) bit[i].Update(y, val);
+        }
     }
 
     return 0;
