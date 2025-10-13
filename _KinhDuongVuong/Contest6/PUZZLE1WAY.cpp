@@ -50,7 +50,7 @@ int main()
             FOR(j, 1, i - 1) if (j + a[j] >= i)
             {
                 FOR(p, 1, j - 1) if (p + a[p] < i) mini(dp[i][j], dp[j][p] + cnt[j + 1][i]);
-                // cout << i << ' ' << j << ' ' << dp[i][j] << '\n';z
+                // cout << i << ' ' << j << ' ' << dp[i][j] << '\n';
             }
         }
 

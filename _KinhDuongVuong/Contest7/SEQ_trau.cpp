@@ -18,9 +18,9 @@ int const N = 1e5 + 5;
 int n;
 int a[N];
 
-bool Equal(int l, int r, int u, int v)
+bool Equal(int l, int r, int u)
 {
-    REP(i, r - l) if (a[l + i] != a[u + i]) return false;
+    REP(i, r - l + 1) if (a[l + i] != a[u + i]) return false;
     return true;
 }
 
@@ -29,7 +29,7 @@ int Count(int l, int r)
     int k = r - l + 1;
     int res = 0;
 
-    FOR(i, 1, n - k + 1) res += Equal(l, r, i, i + k - 1);
+    FOR(i, 1, n - k + 1) res += Equal(l, r, i);
     return res;
 }
 

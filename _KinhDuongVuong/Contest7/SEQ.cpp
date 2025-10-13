@@ -4,6 +4,7 @@ using namespace std;
 
 #define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
 #define FORD(i, b, a) for (int i = (b), _a = (a); i >= _a; i--)
+#define REP(i, n) for (int i = 0, _n = (n); i < _n; i++)
 #define all(v) v.begin(), v.end()
 #define F first
 #define S second
@@ -19,13 +20,38 @@ template <class t> bool mini(t &x, t const &y)
 }
 
 int const N = 1e5 + 5;
+int const BASE = 256;
+int const NMOD = 2;
+int const MODS[] = {(int)1e9 + 2277, (int)1e9 + 5277};
+
+struct Hash
+{
+    int x[NMOD];
+
+    Hash()
+    {
+        memset(x, 0, sizeof x);
+    }
+
+    bool operator == (Hash const other) const
+    {
+        REP(k, NMOD) if (x[k] != other.x[k]) return false;
+        return true;
+    }
+
+    bool operator < (Hash const other) const
+    {
+        REP(k, NMOD) if (x[k] != other.x[k]) return x[k] < other.x[k];
+        return false;
+    }
+};
 
 int n;
 int a[N];
 int cnt[N];
 
-int last[N], nxt[N];
-bool rep[N];
+int pw[NMOD][N];
+int hs[NMOD][N];
 
 int mode = 0;
 int pos;
@@ -42,15 +68,47 @@ void Init()
     {
         a[i] = lower_bound(all(vals), a[i]) - vals.begin() + 1;
         maxi(mode, ++cnt[a[i]]);
-        rep[cnt[a[i]]] = true;
     }
 
-    memset(last, 0x3f, sizeof last);
-    FORD(i, n, 1)
+    REP(k, NMOD)
     {
-        nxt[i] = last[a[i]];
-        last[a[i]] = i;
+        pw[k][0] = 1;
+        FOR(i, 1, n) 
+        {
+            pw[k][i] = 1ll * pw[k][i - 1] * BASE % MODS[k];
+            hs[k][i] = (hs[k][i - 1] + 1ll * a[i] * pw[k][i - 1]) % MODS[k];
+        }
     }
+}
+
+Hash GetHash(int l, int r)
+{
+    Hash res;
+
+    REP(k, NMOD)
+    {
+        int tmp = hs[k][r] - hs[k][l - 1];
+        if (tmp < 0) tmp += MODS[k];
+        res.x[k] = 1ll * tmp * pw[k][n - l + 1] % MODS[k];
+    }
+
+    return res;
+}
+
+int GetPos(int const &k)
+{
+    vector<Hash> v;
+
+    FOR(i, 1, n - k + 1) v.push_back(GetHash(i, i + k - 1));
+    sort(all(v));
+
+    FORD(i, n - k + 1, 1) 
+    {
+        Hash hs = GetHash(i, i + k - 1);
+        if (upper_bound(all(v), hs) - lower_bound(all(v), hs) == mode) return i;
+    }
+
+    return 0;
 }
 
 int main()
@@ -63,25 +121,20 @@ int main()
 
     Init();
 
-    FORD(i, n, 1) if (cnt[a[i]] == mode && !rep[cnt[a[i]]])
-    {
-        cout << i << ' ' << i + 1;
-        return 0;
-    }
-
+    int l = 1;
+    int r = n;
     pair<int, int> res;
-    FOR(l, 1, n) if (cnt[a[l]] == mode)
+    
+    while (l <= r)
     {
-        int r = l;
-        int maxIdx = nxt[l];
-
-        while (cnt[a[r + 1]] == mode && r + 1 < maxIdx) 
+        int mid = (l + r) >> 1;
+        int pos = GetPos(mid);
+        if (pos)
         {
-            mini(maxIdx, nxt[++r]);
+            res = {pos, mid};
+            l = mid + 1;
         }
-
-        if (maxi(res.S, r - l + 1) || res.S == r - l + 1) res.F = l;
-        l = r;
+        else r = mid - 1;
     }
 
     cout << res.F << ' ' << res.F + res.S - 1;
