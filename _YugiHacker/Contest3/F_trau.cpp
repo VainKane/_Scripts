@@ -37,7 +37,7 @@ int main()
     cin.tie(0); cout.tie(0);
 
     freopen(name".inp", "r", stdin);
-    freopen(name".out", "w", stdout);
+    freopen(name".ans", "w", stdout);
 
     cin >> n >> q;
     FOR(i, 1, n) cin >> a[i];
@@ -49,14 +49,6 @@ int main()
         l[i] = last[a[i]];
         last[a[i]] = i; 
     }
-
-    memset(last, 0x3f, sizeof last);
-
-    FORD(i, n, 1)
-    {
-        r[i] = last[a[i]];
-        last[a[i]] = i;
-    }
     
     while (q--)
     {
@@ -64,13 +56,7 @@ int main()
         cin >> u >> v;
     
         int res = N;
-        
-        FOR(i, u, v) 
-        {
-            if (l[i] >= u) mini(res, i - l[i]);
-            if (r[i] <= v) mini(res, r[i] - i);
-        }
-        
+        FOR(i, u, v) if (l[i] >= u) mini(res, i - l[i]);
         if (res == N) res = -1;
         
         cout << res << '\n';

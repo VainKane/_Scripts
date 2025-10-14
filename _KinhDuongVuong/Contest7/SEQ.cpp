@@ -14,11 +14,6 @@ template <class t> bool maxi(t &x, t const &y)
     return x < y ? x = y, 1 : 0;
 }
 
-template <class t> bool mini(t &x, t const &y)
-{
-    return x > y ? x = y, 1 : 0;
-}
-
 int const N = 1e5 + 5;
 int const BASE = 256;
 int const NMOD = 2;
@@ -54,7 +49,6 @@ int pw[NMOD][N];
 int hs[NMOD][N];
 
 int mode = 0;
-int pos;
 
 void Init()
 {
