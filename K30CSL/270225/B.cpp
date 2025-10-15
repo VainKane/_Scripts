@@ -2,14 +2,16 @@
 
 using namespace std;
 
+#define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
+#define FORD(i, b, a) for (int i = (b), _a = (a); i >= _a; i--)
+
 int const N = 1e6 + 5;
 
 int n;
 int a[N];
+
 int cnt[N];
 int cntDiv[N];
-
-int ma = 0;
 
 int main()
 {
@@ -17,39 +19,22 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> n;
-    for (int i = 1; i <= n; i++) 
+    FOR(i, 1, n) cin >> a[i], cnt[a[i]]++;
+
+    FOR(i, 1, 1e3) for (int j = i; j <= 1e6; j += i)
     {
-        cin >> a[i];
-        cnt[a[i]]++;        
+        cntDiv[i] += cnt[j];
+        if (i * i != j) cntDiv[j / i] += cnt[j];
     }
 
-    for (int i = 2; i <= 1e6; i++)
+    FORD(i, 1e6, 1) if (cntDiv[i] >= 2)
     {
-        for (int j = i; j <= 1e6; j += i)
+        FOR(u, 1, n) if (a[u] % i == 0) FOR(v, u + 1, n) if (a[v] % i == 0)
         {
-            cntDiv[i] += cnt[j];
+            cout << u << ' ' << v << '\n';
+            return 0;
         }
     }
 
-    for (int i = 1; i <= 1e6; i++)
-    {
-        if (cntDiv[i] >= 2) ma = max(ma, i);
-    }
-
-    int k = 0;
-    for (int i = 1; i <= n; i++)
-    {
-        if (a[i] % ma == 0)
-        {
-            if (k) 
-            {
-                cout << k << ' ' << i;
-                exit(0);
-            }
-            else k = i;
-        }
-    }
-
-
-    return 0;    
+    return 0;
 }

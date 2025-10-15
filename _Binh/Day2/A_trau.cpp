@@ -4,44 +4,41 @@ using namespace std;
 
 #define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
 
+template <class t> bool maxi(t &x, t const &y)
+{
+    return x < y ? x = y, 1 : 0;
+}
+
 int const M = 1e5 + 5;
 int const N = 1e2 + 5;
 
 int m, n;
+int h, w;
 
-char r[M], c[N];
-int a, b;
-
-int Count(int top, int bot, int left, int right)
-{
-    int res = 0;
-
-    FOR(i, top, bot) FOR(j, left, right)
-    {
-        if (r[i] == '1' && c[j] == '1') res++;
-        else if (r[i] == '0' && c[j] == '0') res++;
-    }
-
-    return res;
-}
+string r, c;
+int pre[M][N];
 
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    // freopen("A.inp", "r", stdin);
-
     cin >> m >> n;
-    cin >> a >> b;
-    FOR(i, 1, m) cin >> r[i];
-    FOR(i, 1, n) cin >> c[i];
+    cin >> h >> w;
+    cin >> r >> c;
 
     int res = 0;
-    FOR(i, 1, m - a + 1) FOR(j, 1, n - b + 1)
+
+    #define GetSum(top, bot, left, right) pre[bot][right] - pre[top - 1][right] - pre[bot][left - 1] + pre[top - 1][left - 1]
+
+    FOR(i, 1, m) FOR(j, 1, n)
     {
-        res = max(res, Count(i, i + a - 1, j, j + b - 1));
+        int x = r[i - 1] == c[j - 1];
+        pre[i][j] = pre[i - 1][j] + pre[i][j - 1] - pre[i - 1][j - 1] + x;
+
+        if (i >= h && j >= w) maxi(res, GetSum(i - h + 1, i, j - w + 1, j));
     }
+
     cout << res;
 
     return 0;

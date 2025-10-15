@@ -3,40 +3,52 @@
 using namespace std;
 
 #define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
+#define REP(i, n) for (int i = 0, _n = (n); i < _n; i++)
 
 template <class t> bool maxi(t &x, t const &y)
 {
     return x < y ? x = y, 1 : 0;
 }
 
-int const M = 1e5 + 5;
-int const N = 1e2 + 5;
+int const N = 1e5 + 5;
 
-int m, n;
+int r, c;
 int h, w;
 
-string r, c;
-int pre[M][N];
+int cntR[N][2];
+int cntC[N][2];
 
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    cin >> m >> n;
-    cin >> h >> w;
     cin >> r >> c;
+    cin >> h >> w;
+
+    FOR(i, 1, r)
+    {
+        char ch; cin >> ch;
+        REP(j, 2) cntR[i][j] = cntR[i - 1][j] + (ch == '0' + j);
+    }
+    FOR(i, 1, c)
+    {
+        char ch; cin >> ch;
+        REP(j, 2) cntC[i][j] = cntC[i - 1][j] + (ch == '0' + j);
+    }
 
     int res = 0;
 
-    #define GetSum(top, bot, left, right) pre[bot][right] - pre[top - 1][right] - pre[bot][left - 1] + pre[top - 1][left - 1]
-
-    FOR(i, 1, m) FOR(j, 1, n)
+    FOR(i, 1, r - h + 1) FOR(j, 1, c - w + 1)
     {
-        int x = r[i - 1] == c[j - 1];
-        pre[i][j] = pre[i - 1][j] + pre[i][j - 1] - pre[i - 1][j - 1] + x;
+        int cnt = 0;
+        REP(k, 2) 
+        {
+            cnt +=  (cntR[i + h - 1][k] - cntR[i - 1][k]) * 
+                    (cntC[j + w - 1][k] - cntC[j - 1][k]);
+        }
 
-        if (i >= h && j >= w) maxi(res, GetSum(i - h + 1, i, j - w + 1, j));
+        maxi(res, cnt);
     }
 
     cout << res;

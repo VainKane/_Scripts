@@ -2,33 +2,21 @@
 
 using namespace std;
 
-#define pii pair<int, int>
+#define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
 #define F first
 #define S second
+
+template <class t> bool maxi(t &x, t const &y)
+{
+    return x < y ? x = y, 1 : 0;
+}
 
 int const N = 1e6 + 5;
 
 int n;
-pii a[N];
+int a[N];
 
-int GCD(int a, int b)
-{
-    int r = a % b;
-    if (!r) return b;
-    
-    while (b)
-    {
-        r = a % b;
-        a = b;
-        b = r;
-    }
-
-    return a;
-}
-
-int ma = 0;
-int x;
-int y;
+pair<int, int> res;
 
 int main()
 {
@@ -36,29 +24,11 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> n;
-    for (int i = 1; i <= n; i++)
-    {
-        int x; cin >> x;
-        a[i] = {x, i};
-    }
+    FOR(i, 1, n) cin >> a[i];
 
-    sort(a + 1, a + n + 1);
-
-    for (int i = 1; i <= n; i++)
-    {
-        for (int j = i + 1; j <= n; j++)
-        {
-            int gcd = GCD(a[i].F, a[j].F);
-            if (gcd > ma)
-            {
-                ma = gcd;
-                x = a[i].S;
-                y = a[j].S;
-            }
-        }
-    }
-
-    cout << x << ' ' << y;
+    int ma = 0;
+    FOR(i, 1, n) FOR(j, i + 1, n) if (maxi(ma, __gcd(a[i], a[j]))) res = {i, j};
+    cout << res.F << ' ' << res.S;
 
     return 0;
 }

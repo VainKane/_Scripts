@@ -16,10 +16,10 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int m = Rand(1e3, 1e3);
+    int m = Rand(1e5, 1e5);
     int n = Rand(100, 100);
-    int h = Rand(m / 8, m / 2);
-    int w = Rand(n / 4, n / 2);
+    int h = Rand(1, m);
+    int w = Rand(1, n);
 
     cout << m << ' ' << n << '\n';
     cout << h << ' ' << w << '\n';
