@@ -2,129 +2,132 @@
 
 using namespace std;
 
-bool s[(int)1e4][(int)1e4];
+#define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
+#define REP(i, n) for (int i = 0, _n = (n); i < _n; i++)
+#define all(v) v.begin(), v.end()
+#define sz(v) ((int)v.size())
 
-int DP(string str)
+template <class t> bool maxi(t &x, t const &y)
 {
-    int res = 1;
+    return x < y ? x = y, 1 : 0;
+}
 
-    int n = str.length();
+int const N = 1e5 + 5;
+int const BASE = 256;
+int const NMOD = 2;
+int const MODS[] = {(int)1e9 + 2277, (int)1e9 + 5277};
 
-    for (int i = 0; i < n; i++)
+struct Hash
+{
+    int x[NMOD];
+
+    Hash()
     {
-        s[i][i] = true;
+        memset(x, 0, sizeof x);
     }
 
-    int i = 0;
-    int j = 1;
-    int dig = j;
-
-    while (i < n && j < n)
+    bool operator == (Hash const other) const
     {
-        if (j - i == 1)
+        REP(k, NMOD) if (x[k] != other.x[k]) return false;
+        return true;
+    }
+};
+
+int n;
+string s1, s2;
+
+int pw[NMOD][N];
+int hs1[NMOD][N];
+int hs2[NMOD][N];
+
+void Init()
+{
+    s2 = s1;
+    reverse(all(s2));
+    n = sz(s1);
+
+    s1 = " " + s1;
+    s2 = " " + s2;
+
+    REP(k, NMOD)
+    {
+        pw[k][0] = 1;
+        FOR(i, 1, n)
         {
-            if (str[i] == str[j])
-            {
-                s[i][j] = true;
-
-                if (j - i + 1 > res)
-                {
-                    res = j - i + 1;
-                }
-            }
+            pw[k][i] = 1ll * pw[k][i - 1] * BASE % MODS[k];
+            hs1[k][i] = (hs1[k][i - 1] + 1ll * s1[i] * pw[k][i - 1]) % MODS[k];
+            hs2[k][i] = (hs2[k][i - 1] + 1ll * s2[i] * pw[k][i - 1]) % MODS[k];
         }
+    }
+}
 
-        if ((str[i] == str[j]) && s[i + 1][j - 1])
-        {
-            s[i][j] = true;
+Hash GetHash(int l, int r, int hs[NMOD][N])
+{
+    Hash res;
 
-            if (j - i + 1 > res)
-            {
-                res = j - i + 1;
-            }
-        }
-
-        i++;
-        j++;
-
-        if (j == n)
-        {
-            dig++;
-            j = dig;
-            i = 0;
-        }
+    REP(k, NMOD)
+    {
+        int tmp = hs[k][r] - hs[k][l - 1];
+        if (tmp < 0) tmp += MODS[k];
+        res.x[k] = 1ll * tmp * pw[k][n - l + 1] % MODS[k];
     }
 
     return res;
 }
 
-int Solve(string str)
+bool Palin(int l, int r)
 {
-    int l;
-    int r;
-    int res = 0;
-
-    str = " " + str;
-
-    for (int i = 1; i < str.length(); i++)
-    {
-        l = i - 1;
-        r = i + 1;
-
-        while (str[l] == str[r] && l >= 0 && r < str.length())
-        {
-            if (r - l + 1 > res)
-            {
-                res = r - l + 1;
-            }
-
-            l--;
-            r++;
-        }
-
-        l = i;
-        r = i + 1;
-
-        if (str[i] == str[i + 1])
-        {
-            if (r - l + 1 > res)
-            {
-                res = r - l + 1;
-            }
-
-            while (str[l] == str[r])
-            {
-                if (r - l + 1 > res)
-                {
-                    res = r - l + 1;
-                }
-
-                l--;
-                r++;
-            }
-        }
-    }
-
-    if (res == 0)
-    {
-        res = 1;
-    }
-
-    return res;
+    if (l < 1 || r > n) return false;
+    return GetHash(l, r, hs1) == GetHash(n - r + 1, n - l + 1, hs2);
 }
-
-string str;
-
 
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    cin >> str;
+    cin >> s1;
+    Init();
 
-    cout << Solve(str);
+    int res = 1;
+    FOR(i, 1, n)
+    {
+        int l = 0;
+        int r = n;
+        int len = l;
 
+        while (l <= r)
+        {
+            int mid = (l + r) >> 1;
+            if (Palin(i - mid, i + mid))
+            {
+                len = mid;
+                l = mid + 1;
+            }
+            else r = mid - 1;
+        }
+
+        maxi(res, 2 * len + 1);
+
+        l = -1;
+        r = n;
+        len = l;
+
+        while (l <= r)
+        {
+            int mid = (l + r) >> 1;
+            if (Palin(i - mid, i + mid + 1))
+            {
+                len = mid;
+                l = mid + 1;
+            }
+            else r = mid - 1;
+        }
+
+        maxi(res, 2 * (len + 1));
+    }
+
+    cout << res;
 
     return 0;
 }

@@ -41,7 +41,7 @@ int main()
         }
     }
 
-    events.push_back({n, 0});
+    events.push_back({n + 1, 0});
     sort(all(events));
 
     pair<int, int> res;

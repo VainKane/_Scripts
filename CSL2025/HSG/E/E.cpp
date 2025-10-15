@@ -3,6 +3,7 @@
 using namespace std;
 
 #define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
+#define sz(v) ((int)v.size())
 #define F first
 #define S second
 
@@ -26,7 +27,35 @@ int main()
     FOR(i, 1, n) cin >> a[i].S >> a[i].F;
 
     sort(a + 1, a + n + 1);
-    FOR(i, 1, n) pre[i] = pre[i - 1] + a[i].S;
+
+    multiset<int> ms;
+
+    long long sum = 0, res = -1;
+
+    int j = 1;    
+    FOR(i, 1, n)
+    {
+        ms.insert(a[i].S);
+        sum += a[i].S;
+
+        int l = lower_bound(a + 1, a + i, make_pair(a[i].F - d, 0)) - a;
+        while (j < l)
+        {
+            auto it = ms.find(a[j].S);
+            if (it != ms.end()) ms.erase(it);
+            sum -= *it;
+            j++;
+        }
+        if (sz(ms) > k) 
+        {
+            auto it = ms.find(*ms.rbegin());
+            ms.erase(it);
+            sum -= *it;
+        }
+        if (sz(ms) == k) maxi(res, sum);
+    }    
+
+    cout << res;
 
     return 0;
 }

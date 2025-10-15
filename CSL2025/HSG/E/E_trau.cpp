@@ -6,7 +6,7 @@ int x[(int)1e5 + 10];
 int k;
 int n;
 
-long long res = 0;
+long long res = -1;
 
 int s[(int)1e5 + 10];
 int t[(int)1e5 + 10];
@@ -69,8 +69,6 @@ int main()
     }
 
     Try(1);
-
-    if (res == 0) res = -1;
     cout << res;
 
     return 0;

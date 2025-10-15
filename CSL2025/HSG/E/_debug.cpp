@@ -16,7 +16,7 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int n = Rand(1, 10);
+    int n = Rand(1, 5);
     int k = Rand(1, 10);
     int oo = 10;
 

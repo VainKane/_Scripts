@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#define name "CHIAKEO"
+#define name "D"
 int const ntest = 1e4;
 
 mt19937_64 rd(time(0));
@@ -17,10 +17,7 @@ void GenTest()
     ofstream cout(name".inp");
 
     int n = Rand(1, 1e5);
-    int m = Rand(1, 1e4);
-
-    cout << n << ' ' << m << '\n';
-    while (m--) cout << Rand(1, n) << ' ' << Rand(1, n) << '\n';
+    while (n--) cout << (char)Rand('a', 'd');
 }
 
 int main()
@@ -28,15 +25,15 @@ int main()
     for (int i = 1; i <= ntest; i++)
     {
         GenTest();
-        system(name".exe");
-        system(name"_trau.exe");
+        system(name".exe <"name".inp> "name".out");
+        system(name"_trau.exe <"name".inp> "name".ans");
 
         if (system("fc "name".out "name".ans") != 0)
         {
             cout << "Test: " << i << " WRONG!\n";
             return 0;
         }
-
+        
         cout << "Test: " << i << " CORRECT!\n";
     }
 
