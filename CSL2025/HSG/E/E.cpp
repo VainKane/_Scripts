@@ -2,75 +2,31 @@
 
 using namespace std;
 
-int x[(int)1e5 + 10];
-int k;
-int n;
+#define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
+#define F first
+#define S second
 
-long long res = 0;
-
-int s[(int)1e5 + 10];
-int t[(int)1e5 + 10];
-
-int d;
-
-void Cal()
+template <class t> bool maxi(t &x, t const &y)
 {
-    int mi = INT_MAX;
-    int ma = 0;
-    long long sum = 0;
-
-    for (int i = 1; i <= k; i++)
-    {
-        sum += (long long)s[x[i]];
-
-        if (mi > t[x[i]])
-        {
-            mi = t[x[i]];
-        }
-        if (ma < t[x[i]])
-        {
-            ma = t[x[i]];
-        }
-    }
-
-    if (ma - mi <= d)
-    {
-        if (sum > res)
-        {
-            res = sum;
-        }
-    }
+    return x < y ? x = y, 1 : 0;
 }
 
-void Try(int i)
-{
-    for (int j = x[i - 1] + 1; j <= n - k + i; j++)
-    {
-        x[i] = j;
+int const N = 1e5 + 5;
 
-        if (i == k)
-        {
-            Cal();
-        }
-        else
-        {
-            Try(i + 1);
-        }
-    }
-}
+int n, k, d;
+pair<int, int> a[N];
+long long pre[N];
 
 int main()
 {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0); cout.tie(0);
+
     cin >> n >> k >> d;
+    FOR(i, 1, n) cin >> a[i].S >> a[i].F;
 
-    for (int i = 1; i <= n; i++)
-    {
-        cin >> s[i] >> t[i];
-    }
-
-    Try(1);
-
-    cout << res;
+    sort(a + 1, a + n + 1);
+    FOR(i, 1, n) pre[i] = pre[i - 1] + a[i].S;
 
     return 0;
 }
