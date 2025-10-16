@@ -37,19 +37,8 @@ int main()
         REP(j, 2) cntC[i][j] = cntC[i - 1][j] + (ch == '0' + j);
     }
 
-    int res = 0;
+    long long res = 0;
 
-    FOR(i, 1, r - h + 1) FOR(j, 1, c - w + 1)
-    {
-        int cnt = 0;
-        REP(k, 2) 
-        {
-            cnt +=  (cntR[i + h - 1][k] - cntR[i - 1][k]) * 
-                    (cntC[j + w - 1][k] - cntC[j - 1][k]);
-        }
-
-        maxi(res, cnt);
-    }
 
     cout << res;
 
