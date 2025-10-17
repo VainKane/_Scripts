@@ -6,11 +6,8 @@ using namespace std;
 #define FORD(i, b, a) for (int i = (b), _a = (a); i >= _a; i--)
 #define REP(i, n) for (int i = 0, _n = (n); i < _n; i++)
 #define all(v) v.begin(), v.end()
-
-template <class t> bool maxi(t &x, t const &y)
-{
-    return x < y ? x = y, 1 : 0;
-}
+#define F first
+#define S second
 
 int const N = 1e6 + 5;
 int const BASE = 256;
@@ -36,7 +33,6 @@ struct Hash
 int n;
 
 string s1, s2;
-pair<int, int> res;
 
 int pw[NMOD][N];
 int hs1[NMOD][N];
@@ -78,15 +74,11 @@ Hash GetHash(int l, int r, int hs[NMOD][N])
     return res;
 }
 
-int GetPos(int len)
+bool Palin(int l, int r)
 {
-    FOR(l, 1, n - len + 1)
-    {
-        int r = l + len - 1;
-        if (GetHash(l, r, hs1) == GetHash(n - r + 1, n - l + 1, hs2)) return l;
-    }
-    
-    return 0;
+    if (l > r) return true;
+    if (l < 1 || r > n) return false;
+    return GetHash(l, r, hs1) == GetHash(n - r + 1, n - l + 1, hs2);
 }
 
 int main()
@@ -97,15 +89,46 @@ int main()
     cin >> s1;
     Init();
 
-    FORD(len, n, 1) 
+    pair<int, int> res = {1, 1};
+
+    FOR(i, 1, n)
     {
-        int pos = GetPos(len);
-        if (pos) 
+        int l = 1;
+        int r = n;
+        int len = l;
+
+        while (l <= r)
         {
-            FOR(i, pos, pos + len - 1)  cout << s1[i];
-            return 0;
+            int mid = (l + r) >> 1;
+            if (Palin(i - mid + 1, i + mid - 1))
+            {
+                len = mid;
+                l = mid + 1;
+            }
+            else r = mid - 1;
         }
+
+        if (2 * len - 1 > res.S - res.F + 1) res = {i - len + 1, i + len - 1};
+
+        l = 0;
+        r = n;
+        len = l;
+
+        while (l <= r)
+        {
+            int mid = (l + r) >> 1;
+            if (Palin(i - mid + 1, i + mid))
+            {
+                len = mid;
+                l = mid + 1;
+            }
+            else r = mid - 1;
+        }
+
+        if (2 * len > res.S - res.F + 1) res = {i - len + 1, i + len};
     }
+
+    FOR(i, res.F, res.S) cout << s1[i];
 
     return 0;
 }

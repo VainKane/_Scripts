@@ -21,10 +21,50 @@ void Sub(int &x, int const &y)
 
 struct FenwickTree
 {
-    vector<int> bit;
+    vector<long long> bit;
     int n;
 
     FenwickTree (int _n = 0)
+    {
+        n = _n;
+        bit.assign(n + 5, 0);
+    }
+
+    void Update(int idx, int val)
+    {
+        while (idx <= n)
+        {
+            bit[idx] += val;
+            idx += idx & -idx;
+        }
+    }
+
+    long long Get(int idx)
+    {
+        long long res = 0;
+
+        while (idx)
+        {
+            res += bit[idx];
+            idx ^= idx & -idx;
+        }
+
+        return res;
+    }
+
+    long long Get(int l, int r)
+    {
+        if (l > r) return 0;
+        return Get(r) - Get(l - 1);
+    }
+};
+
+struct FenwickTreeMod
+{
+    vector<int> bit;
+    int n;
+
+    FenwickTreeMod (int _n = 0)
     {
         n = _n;
         bit.assign(n + 5, 0);
@@ -66,7 +106,8 @@ struct FenwickTree
 int n, q;
 int a[N], w[N];
 
-FenwickTree bitS, bitP;
+FenwickTree bitS;
+FenwickTreeMod bitP;
 
 int main()
 {
@@ -75,7 +116,7 @@ int main()
 
     cin >> n >> q;
     bitS = FenwickTree(n);
-    bitP = FenwickTree(n);
+    bitP = FenwickTreeMod(n);
 
     FOR(i, 1, n) 
     {
@@ -97,7 +138,8 @@ int main()
         if (x < 0) 
         {
             x = -x;
-            
+
+            bitS.Update(x, -w[x]);
             bitS.Update(x, y);
             bitP.Update(x, -1ll * w[x] * a[x] % MOD);
             bitP.Update(x, 1ll * y * a[x] % MOD);
@@ -113,7 +155,7 @@ int main()
             while (l <= r)
             {
                 int mid = (l + r) >> 1;
-                if (bitP.Get(x, mid) >= (bitP.Get(x, y) + 1) / 2) // INVERSE MODULO NEEDED!
+                if (bitS.Get(x, mid) >= (bitS.Get(x, y) + 1) / 2)
                 {
                     med = mid;
                     r = mid - 1;
@@ -123,14 +165,13 @@ int main()
 
             int res = 0;
             
-            Add(res, 1ll * a[med] * bitS.Get(x, med) % MOD);
+            Add(res, 1ll * a[med] * (bitS.Get(x, med) % MOD) % MOD);
             Sub(res, bitP.Get(x, med));
             
             Add(res, bitP.Get(med, y));
-            Sub(res, 1ll * a[med] * bitS.Get(med, y) % MOD);
+            Sub(res, 1ll * a[med] * (bitS.Get(med, y) % MOD) % MOD);
 
             cout << res << '\n';
-            // cout << med << ' ' << y << '\n';
         }
     }
 
