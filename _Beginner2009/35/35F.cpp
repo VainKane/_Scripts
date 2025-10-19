@@ -19,8 +19,7 @@ vector<int> dagAdj[N];
 
 int in[N], low[N];
 int sccId[N];
-int inDeg[N], outDeg[N];
-bool used[N], mark[N];
+bool inDeg[N], outDeg[N];
 
 stack<int> st;
 int cnt = 0, scc = 0;
@@ -51,22 +50,17 @@ void Tarjan(int u)
             v = st.top();
             st.pop();
             sccId[v] = scc;
-        
-            mark[scc] = used[v];    
         }
     }
 }
 
 void Reset()
 {
-    memset(mark, false, sizeof mark);
-    memset(used, false, sizeof used);
+    memset(inDeg, false, sizeof inDeg);
+    memset(outDeg, false, sizeof outDeg);
 
     memset(sccId, 0, sizeof sccId);
     memset(in, 0, sizeof in);
-    
-    memset(inDeg, 0, sizeof inDeg);
-    memset(outDeg, 0, sizeof outDeg);
     
     scc = cnt = 0;
 
@@ -82,15 +76,15 @@ bool Solve()
     bool st = false;
     bool ed = false;
 
-    FOR(u, 1, scc) if (mark[u])
+    FOR(u, 1, scc) 
     {
-        if (inDeg[u] == 0)
+        if (inDeg[u] == false)
         {
             if (st) return false;
             st = true;
         }
 
-        if (outDeg[u] == 0)
+        if (outDeg[u] == false)
         {
             if (ed) return false;
             ed = true;
@@ -116,10 +110,9 @@ int main()
             int u, v;
             cin >> u >> v;
             adj[u].push_back(v);
-            used[u] = used[v] = true;
         }
 
-        FOR(u, 1, n) if (!in[u]) Tarjan(u);
+        FOR(u, 1, n) if (!in[u] && sz(adj[u])) Tarjan(u);
         FOR(i, 1, n) for (auto &j : adj[i])
         {
             int u = sccId[i];
@@ -134,10 +127,10 @@ int main()
             sort(all(dagAdj[u]));
             dagAdj[u].erase(unique(all(dagAdj[u])), dagAdj[u].end());
 
-            for (auto &v : dagAdj[u])
+            for (auto &v : dagAdj[u]) if (!inDeg[v])
             {
-                inDeg[v]++;
-                outDeg[u]++;   
+                inDeg[v] = true;
+                outDeg[u] = true;   
             }
         }
 

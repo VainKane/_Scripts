@@ -127,7 +127,7 @@ int main()
             sort(all(dagAdj[u]));
             dagAdj[u].erase(unique(all(dagAdj[u])), dagAdj[u].end());
 
-            for (auto &v : dagAdj[u])
+            for (auto &v : dagAdj[u]) if (!inDeg[v])
             {
                 inDeg[v] = true;
                 outDeg[u] = true;   

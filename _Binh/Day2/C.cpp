@@ -3,10 +3,6 @@
 using namespace std;
 
 #define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
-#define all(v) v.begin(), v.end()
-#define sz(v) ((int)v.size())
-#define F first
-#define S second
 
 template <class t> bool maxi(t &x, t const &y)
 {
@@ -23,42 +19,50 @@ int const N = 3e5 + 5;
 int n;
 vector<int> adj[N];
 
-int f[N];
-int r[N];
+int par[N];
+int f1[N], f2[N], f3[N];
+int f[N], fPar[N], g[N];
 
-bool DFS(int u, int p, int &dia)
+void DFSPrepare(int u, int p)
 {
-    vector<pair<int, int>> d = {0, 0};
-
     for (auto &v : adj[u]) if (v != p)
     {
-        if (!DFS(v, u, dia)) return false;
-        
-        maxi(f[u], f[v] + 1);
-        maxi(r[u], max(f[u], r[v]));
-        d.push_back({f[v] + 1, v});
+        DFSPrepare(v, u);
+
+        if (f1[v] + 1 > f1[u]) 
+        {
+            f3[u] = f2[u];
+            f2[u] = f1[u];
+            f1[u] = f1[v] + 1;
+        }
+        else if (f1[v] + 1 > f2[u])
+        {
+            f3[u] = f2[u];
+            f2[u] = f1[v] + 1;
+        }
+        else maxi(f3[u], f1[v] + 1);
+
+        maxi(f[u], max(f[v], f1[u] + f2[u]));
+        par[v] = u;
     }
+}
 
-    sort(all(d), greater<int> ());
-    bool cut = false;
-
-    FOR(i, 1, sz(d) - 1)
+void DFS(int u, int p)
+{
+    for (auto &v : adj[u]) if (v != p)
     {
-        if (d[i].F + d[i - 1].F > dia)
+        int maxChild = f1[u];
+        if (f1[u] == f1[v] + 1)
         {
-            if (cut) return false;
-            if (r[d[i].S] + r[d[i + 1].S] > dia) return false;
-            cut = true;
+            if (f2[u] == f2[v] + 1) maxChild = f3[u];
+            else maxChild = f2[u];
         }
-        else
-        {
-            f[u] = d[i].F;
-            r[u] = r[]
-            break;
-        }
-    }
+ 
+        g[v] = max(f1[u] == f1[v] + 1 ? f2[u] : f1[u], g[u]) + 1;
 
-    return true;
+        fPar[v] = max({fPar[u], g[u], maxChild, g[u] + maxChild});
+        DFS(v, u);
+    }
 }
 
 int main()
@@ -75,15 +79,22 @@ int main()
         adj[v].push_back(u);
     }
 
-    int l = 1;
-    int r = n;
-    int res = r;
+    DFSPrepare(1, -1);
+    DFS(1, -1);
+    
+    int res = n - 1;
 
-    while (l <= r)
+    FOR(u, 1, n) for (auto &v : adj[u]) if (u == par[v])
     {
-        int mid = (l + r) >> 1;
+        int d1 = fPar[v];
+        int d2 = f[v];
 
+        mini(res, max({d1, d2, (d1 + 1) / 2 + (d2 + 1) / 2 + 1}));
     }
+
+    FOR(u, 1, n) cout << "debug: " << u << ' ' << f[u] << ' ' << fPar[u] << '\n';
+
+    cout << res;
 
     return 0;
 }

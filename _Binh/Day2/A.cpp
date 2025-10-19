@@ -10,13 +10,17 @@ template <class t> bool maxi(t &x, t const &y)
     return x < y ? x = y, 1 : 0;
 }
 
+template <class t> bool mini(t &x, t const &y)
+{
+    return x > y ? x = y, 1 : 0;
+}
+
 int const N = 1e5 + 5;
 
 int r, c;
 int h, w;
 
-int cntR[N][2];
-int cntC[N][2];
+int cntR[N], cntC[N];
 
 int main()
 {
@@ -29,16 +33,34 @@ int main()
     FOR(i, 1, r)
     {
         char ch; cin >> ch;
-        REP(j, 2) cntR[i][j] = cntR[i - 1][j] + (ch == '0' + j);
+        cntR[i] = cntR[i - 1] + (ch == '1');
     }
     FOR(i, 1, c)
     {
         char ch; cin >> ch;
-        REP(j, 2) cntC[i][j] = cntC[i - 1][j] + (ch == '0' + j);
+        cntC[i] = cntC[i - 1] + (ch == '1');
     }
 
+    int x2Max = 0;
+    int x2Min = N;
     long long res = 0;
 
+    FOR(i, 1, r - h + 1) 
+    {
+        int x2 = cntR[i + h - 1] - cntR[i - 1];
+        mini(x2Min, x2);
+        maxi(x2Max, x2);
+    }
+
+    FOR(i, 1, c - w + 1)
+    {
+        int x1 = cntC[i + w - 1] - cntC[i - 1];
+        long long delta = 1ll * w * h - 1ll * h * x1;
+        int k = 2 * x1 - w;
+
+        maxi(res, 1ll * k * x2Max + delta);
+        maxi(res, 1ll * k * x2Min + delta);
+    }
 
     cout << res;
 
