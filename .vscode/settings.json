@@ -84,7 +84,10 @@
         "**/.DS_Store": true,
         "**/Thumbs.db": true,
         "**/*.exe": true,
-        "**/*.e:": true,    
+        "**/*.bin": true,
+        "**/*.e:": true, 
+        "**/.cph": true, 
+        "**/.vscode": false,  
     },
     "C_Cpp.errorSquiggles": "disabled",
 

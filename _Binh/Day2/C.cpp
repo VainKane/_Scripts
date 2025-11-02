@@ -51,16 +51,20 @@ void DFS(int u, int p)
 {
     for (auto &v : adj[u]) if (v != p)
     {
-        int maxChild = f1[u];
+        int max1 = f1[u];
+        int max2 = f2[u];
+
         if (f1[u] == f1[v] + 1)
         {
-            if (f2[u] == f2[v] + 1) maxChild = f3[u];
-            else maxChild = f2[u];
+            max1 = f2[u];
+            max2 = f3[u];
         }
- 
-        g[v] = max(f1[u] == f1[v] + 1 ? f2[u] : f1[u], g[u]) + 1;
+        else if (f2[u] == f1[v] + 1) max2 = f3[u];
 
-        fPar[v] = max({fPar[u], g[u], maxChild, g[u] + maxChild});
+        g[v] = max(f1[u] == f1[v] + 1 ? f2[u] : f1[u], g[u]) + 1;
+        fPar[v] = max({max1 + max2, max(max1, max2) + g[u], fPar[u]});
+        for (auto &v1 : adj[u]) if (v1 != v && v1 != p) maxi(fPar[v], f[v1]);
+
         DFS(v, u);
     }
 }
@@ -91,8 +95,6 @@ int main()
 
         mini(res, max({d1, d2, (d1 + 1) / 2 + (d2 + 1) / 2 + 1}));
     }
-
-    FOR(u, 1, n) cout << "debug: " << u << ' ' << f[u] << ' ' << fPar[u] << '\n';
 
     cout << res;
 

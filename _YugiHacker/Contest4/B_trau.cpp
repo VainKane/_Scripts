@@ -28,7 +28,7 @@ int main()
     FOR(i, 1, n) cin >> b[i];
 
     long long res = 0;
-    FOR(i, 1, n) FOR(j, 1, n) maxi(res, min(1ll * a[i] * a[j], 1ll * b[i] * b[j]));
+    FOR(i, 1, n) FOR(j, 1, n) if (i != j) maxi(res, min(1ll * a[i] * a[j], 1ll * b[i] * b[j]));
     cout << res;
 
     return 0;
