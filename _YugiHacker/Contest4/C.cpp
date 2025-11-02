@@ -96,10 +96,9 @@ SegmentTree it;
 
 void DFS(int u)
 {
-    for (auto &v : adj[u])
-    {
-        
-    }
+    in[u] = ++cnt;
+    for (auto &v : adj[u]) DFS(v, u);
+    out[u] = cnt;
 }
 
 int main()
@@ -122,7 +121,7 @@ int main()
 
     FOR(u, 1, n) if (!inDeg[u]) 
     {
-        cout << "debug " << u << '\n';
+        // cout << "debug " << u << '\n';
         DFS(u);
     }
 
@@ -145,18 +144,14 @@ int main()
         if (type == 1)
         {
             cin >> u >> v;
-            
             swap(pos[u], pos[v]);
         }
         else 
         {
             cin >> u;
-            // cout << it.Get(in[u], out[u]) << '\n';
+            cout << it.Get(in[u], out[u]) << '\n';
         }
     }
-
-    // for (auto &v : adj[1]) cout << v << ' ';
-    FOR(u, 1, n) cout << u << ' ' << in[u] << ' ' << out[u] << '\n';
 
     return 0;
 }
