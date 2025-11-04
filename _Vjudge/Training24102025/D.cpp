@@ -25,6 +25,7 @@ vector<int> dagAdj[N];
 long long d[N];
 
 bool visited[N];
+bool inDeg[N];
 vector<int> topo;
 
 int f[N], g[N];
@@ -80,21 +81,7 @@ void Sub(int &x, int const &y)
     if (x < 0) x += MOD;
 }
 
-int PowMod(int a, int b)
-{
-    int res = 1;
-
-    while (b)
-    {
-        if (b & 1) res = 1ll * res * a % MOD;
-        b >>= 1;
-        a = 1ll * a * a % MOD;
-    }
-
-    return res;
-}
-
-signed main()
+int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
@@ -110,18 +97,22 @@ signed main()
     cin >> s >> t;
 
     Dijkstra();
-    FOR(u, 1, n) for (auto &v : revDagAdj[u]) dagAdj[v].push_back(u);
-    FOR(u, 1, n) if (!visited[u]) DFS(u);
+    
+    FOR(u, 1, n) for (auto &v : revDagAdj[u]) 
+    {
+        dagAdj[v].push_back(u);
+        inDeg[v] = true;
+    }
 
-    f[topo[0]] = g[topo[0]] = 1;
+    DFS(t);
+
+    g[topo[0]] = 1;
     for (auto &u : topo) for (auto &v : dagAdj[u]) Add(g[v], g[u]);
-   
-    int inv2 = PowMod(2, MOD - 2);
 
-    FOR(i, 1, sz(topo) - 1) 
+    FOR(i, 1, sz(topo) - 1)
     {
         int u = topo[i];
-        f[u] = 1ll * g[u] * (g[u] - 1) % MOD * inv2 % MOD;
+        f[u] = (1ll * g[u] * g[u] + MOD) % MOD;
 
         REP(j, i)
         {
@@ -130,13 +121,15 @@ signed main()
         }
     }
 
-    cout << f[t];
-    // FOR(u, 1, n) cout << g[u] << ' ';
+    // cout << f[t];
+    FOR(u, 1, n) cout << g[u] << ' ';
+    cout << '\n';
+    FOR(u, 1, n) cout << f[u] << ' ';
 
-    cout << '\n';
-    cout << "topo: ";
-    REP(i, sz(topo)) cout << topo[i] << ' ';
-    cout << '\n';
+    // cout << '\n';
+    // cout << "topo: ";
+    // REP(i, sz(topo)) cout << topo[i] << ' ';
+    // cout << '\n';
 
     // cout << inv2;
 
