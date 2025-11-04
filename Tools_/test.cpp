@@ -86,5 +86,8 @@ int main()
 
     // cout << res;
 
-    cout << (int)'(' << ' ' << (int)')';
+    // cout << (int)'(' << ' ' << (int)')';
+
+    int x = 9;
+    assert(x == 7);
 }

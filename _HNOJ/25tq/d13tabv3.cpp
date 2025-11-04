@@ -25,6 +25,9 @@ vector<int> topo;
 int h[N * N];
 int inDeg[N * N];
 
+int dist[109][109];
+int res = 0;
+
 int GetId(int i, int j)
 {
     return (i - 1) * m + j;
@@ -70,6 +73,8 @@ int main()
     BFS();
     for (auto &u : topo) for (auto &v : adj[u]) maxi(h[v], h[u] + 1);
     cout << *max_element(h + 1, h + m * n + 1) + 1 << '\n';
+
+    exit(0);
 
     return 0;
 }
