@@ -6,7 +6,7 @@ using namespace std;
 
 struct FenwickTree
 {
-    vector<int> bit;
+    vector<long long> bit;
     int n;
 
     FenwickTree (int _n = 0)
@@ -15,7 +15,7 @@ struct FenwickTree
         bit.assign(n + 5, 0);
     }
 
-    void Update(int idx, int val)
+    void Update(int idx, long long val)
     {
         while (idx <= n)
         {
@@ -24,9 +24,9 @@ struct FenwickTree
         }
     }    
 
-    int Get(int idx)
+    long long Get(int idx)
     {
-        int res = 0;
+        long long res = 0;
 
         while (idx)
         {
@@ -37,7 +37,7 @@ struct FenwickTree
         return res;
     }
 
-    void Update(int l, int r, int val)
+    void Update(int l, int r, long long val)
     {
         Update(l, val);
         Update(r + 1, val);
@@ -47,7 +47,7 @@ struct FenwickTree
 int const N = 2e5 + 5;
 
 int n, k, q;
-int a[N], b[N];
+long long a[N], b[N];
 
 FenwickTree bit;
 
@@ -58,15 +58,19 @@ int Solve()
     
     FOR(i, 1, n - k + 1)
     {
-        int cur = a[i] ^ bit.Get(i);
+        long long cur = a[i] ^ bit.Get(i);
         if (cur == b[i]) continue;
 
-        int x = b[i] ^ cur;
+        long long x = b[i] ^ cur;
         bit.Update(i, i + k - 1, x);
         res++;
     }
 
-    FOR(i, n - k + 2, n) if ((a[i] ^ bit.Get(i)) != b[i]) return -1;
+    FOR(i, n - k + 2, n) if ((a[i] ^ bit.Get(i)) != b[i]) 
+    {
+        cout << i << ' ';
+        return -1;
+    }   
     return res;
 }
 
@@ -84,7 +88,8 @@ int main()
     while (q--)
     {
         char type; 
-        int pos, val;
+        int pos;
+        long long val;
 
         cin >> type >> pos >> val;
         if (type == 'a') a[pos] = val;

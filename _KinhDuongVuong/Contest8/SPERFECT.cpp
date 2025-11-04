@@ -6,7 +6,7 @@ using namespace std;
 #define all(v) v.begin(), v.end()
 #define sz(v) ((int)v.size())
 
-template <class t> mini(t &x, t const &y)
+template <class t> bool mini(t &x, t const &y)
 {
     return x > y ? x = y, 1 : 0;
 }

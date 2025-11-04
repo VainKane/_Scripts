@@ -138,6 +138,8 @@ signed main()
     REP(i, sz(topo)) cout << topo[i] << ' ';
     cout << '\n';
 
+    // cout << inv2;
+
     // FOR(u, 1, n)
     // {
     //     cout << "Dag adj of " << u << ": ";

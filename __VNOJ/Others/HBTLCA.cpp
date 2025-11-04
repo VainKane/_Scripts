@@ -14,24 +14,18 @@ vector<int> adj[N];
 int h[N];
 int up[N][20];
 
-int in[N], out[N];
-int cnt = 0;
-
 int root = 1;
 
 void DFS(int u, int p)
 {
-    in[u] = ++cnt;
     for (auto &v : adj[u]) if (v != p) 
     {
         h[v] = h[u] + 1;
         up[v][0] = u;
 
         FOR(i, 1, LOG) up[v][i] = up[up[v][i - 1]][i - 1];
-
         DFS(v, u);
     }
-    out[u] = cnt;
 }
 
 int LCA(int u, int v)
@@ -54,11 +48,6 @@ int LCA(int u, int v)
     }
 
     return up[u][0];
-}
-
-bool Inside(int u, int v)
-{
-    return in[u] <= in[v] && out[u] >= out[v];
 }
 
 int main()
