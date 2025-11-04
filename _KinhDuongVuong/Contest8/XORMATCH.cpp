@@ -20,7 +20,7 @@ struct FenwickTree
         while (idx <= n)
         {
             bit[idx] ^= val;
-            idx += idx & idx;
+            idx += idx & -idx;
         }
     }    
 
@@ -66,11 +66,7 @@ int Solve()
         res++;
     }
 
-    FOR(i, n - k + 2, n) if ((a[i] ^ bit.Get(i)) != b[i]) 
-    {
-        cout << i << ' ';
-        return -1;
-    }   
+    FOR(i, n - k + 2, n) if ((a[i] ^ bit.Get(i)) != b[i]) return -1;
     return res;
 }
 

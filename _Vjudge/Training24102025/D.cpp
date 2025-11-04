@@ -112,7 +112,7 @@ int main()
     FOR(i, 1, sz(topo) - 1)
     {
         int u = topo[i];
-        f[u] = (1ll * g[u] * g[u] + MOD) % MOD;
+        f[u] = (1ll * g[u] * g[u] - g[u] + MOD) % MOD;
 
         REP(j, i)
         {
@@ -121,10 +121,10 @@ int main()
         }
     }
 
-    // cout << f[t];
-    FOR(u, 1, n) cout << g[u] << ' ';
-    cout << '\n';
-    FOR(u, 1, n) cout << f[u] << ' ';
+    cout << f[t];
+    // FOR(u, 1, n) cout << g[u] << ' ';
+    // cout << '\n';
+    // FOR(u, 1, n) cout << f[u] << ' ';
 
     // cout << '\n';
     // cout << "topo: ";
