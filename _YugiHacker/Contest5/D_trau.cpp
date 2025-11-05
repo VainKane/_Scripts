@@ -23,16 +23,10 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-int const N = 260;
 int const MOD = 1e9 + 7;
 
 int m, n, k;
-
-vector<int> v;
-vector<vector<int>> valid;
-
-vector<int> dp[2][N];
-int cur = 0, pre = 1;
+int pre[256][256][MK(8)];
 
 bool Check(int mask)
 {
@@ -40,7 +34,7 @@ bool Check(int mask)
     return true;
 }
 
-bool CheckPair(int &mask1, int &mask2)
+bool CheckPair(int mask1, int mask2)
 {
     if (mask1 & mask2) return false;
     if (mask1 & (mask2 << 1)) return false;
@@ -60,35 +54,26 @@ int main()
     cin.tie(0); cout.tie(0);
 
     freopen(name".inp", "r", stdin);
-    freopen(name".out", "w", stdout);
+    freopen(name".ans", "w", stdout);
 
     cin >> m >> n >> k;
-
     if (n > m) swap(m, n);
-    
-    REP(mask, MK(n)) if (Check(mask)) v.push_back(mask);
-    valid.assign(sz(v), vector<int> ());
 
-    REP(i, sz(v)) REP(j, sz(v)) if (CheckPair(v[i], v[j])) valid[i].push_back(j);
-    REP(id, 2) FOR(cnt, 0, k) dp[id][cnt].assign(sz(v), 0);
-
-    dp[cur][0][0] = 1;
-
-    FOR(haha, 1, m)
+    pre[0][0][0] = 1;
+    FOR(i, 1, m) FOR(cnt, 0, min(n * i, k)) REP(mask1, MK(n)) 
     {
-        swap(cur, pre);
-        FOR(cnt, 0, k) dp[cur][cnt].assign(sz(v), 0);
+        int tmp = __builtin_popcount(mask1);
+        if (cnt < tmp) continue;
 
-        FOR(cnt, 0, k) REP(i, sz(v))
+        if (Check(mask1)) REP(mask2, MK(n)) if (CheckPair(mask1, mask2))
         {
-            int tmp = __builtin_popcount(v[i]);
-            if (cnt >= tmp) for (auto &j : valid[i])
-                Add(dp[cur][cnt][i], dp[pre][cnt - tmp][j]);
+            int dp = pre[i - 1][cnt - tmp][mask2];
+            Add(pre[i][cnt][mask1], dp);
         }
     }
 
     int res = 0;
-    REP(i, sz(v)) Add(res, dp[cur][k][i]);
+    REP(mask, MK(n)) Add(res, pre[m][k][mask]);
     cout << res;
 
     return 0;
