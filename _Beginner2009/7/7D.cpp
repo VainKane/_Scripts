@@ -3,38 +3,77 @@
 using namespace std;
 
 #define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
-#define FORD(i, a, b) for (int i = (a), _b = (b); i >= _b; i--)
+#define FORD(i, b, a) for (int i = (b), _a = (a); i >= _a; i--)
 #define REP(i, n) for (int i = 0, _n = (n); i < _n; i++)
+#define BIT(i, x) (((x) >> (i)) & 1)
+#define MK(i) (1ll << (i))
+#define all(v) v.begin(), v.end()
+#define sz(v) ((int)v.size())
+#define F first
+#define S second
 
-int const N = 40;
+template <class t> bool maxi(t &x, t const &y)
+{
+    return x < y ? x = y, 1 : 0;
+}
+
+template <class t> bool mini(t &x, t const &y)
+{
+    return x > y ? x = y, 1 : 0;
+}
+
+int const N = 50;
 
 int n;
 string s[N];
 
-int a[N];
-int cnt[N];
+int id[N];
 
-vector<int> adj[N];
-bool visited[N];
+bool c[N][N];
+int deg[N];
 
-int res = 0;
+int res;
 
 bool Equal(string a, string b)
 {
-    if (a.size() != b.size()) return false;
-    FOR(i, 1, a.size()) if (a[i] != b[i] && a[i] != '*' && b[i] != '*') return false;
+    if (sz(a) != sz(b)) return false;
+    REP(i, sz(a))
+    {
+        if (a[i] == '*' || b[i] == '*') continue;
+        if (a[i] != b[i]) return false;
+    }
     return true;
 }
 
-bool cmp(int a, int b)
+bool cmp(int id1, int id2)
 {
-    return cnt[a] > cnt[b];
+    return deg[id1] > deg[id2];
 }
 
-void DFS(int u)
+bool Check(vector<int> &clique, int i)
 {
-    visited[u] = true;
-    for (auto v : adj[u]) if (!visited[v]) DFS(v);
+    for (auto &j : clique) if (!c[i][j]) return false;
+    return true;
+}
+
+void Try(vector<vector<int>> &cliques, int pos)
+{
+    if (pos > n)
+    {
+        mini(res, sz(cliques));
+        // cliques.clear();
+        return;
+    }
+
+    for (auto &clique : cliques) if (Check(clique, id[pos]))
+    {
+        clique.push_back(id[pos]);
+        Try(cliques, pos + 1);
+        clique.pop_back();
+    }
+
+    cliques.push_back(vector<int> {id[pos]});
+    Try(cliques, pos + 1);
 }
 
 int main()
@@ -43,20 +82,19 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> n;
-    FOR(i, 1, n) cin >> s[i];
+    FOR(i, 1, n) cin >> s[i], id[i] = i;
 
-    FOR(i, 1, n) FOR(j, 1, n) if (i != j) cnt[i] += Equal(s[i], s[j]);
-
-    FOR(i, 1, n) a[i] = i;
-    sort(a + 1, a + n + 1, cmp);
-
-    FOR(i, 1, n) FOR(j, i + 1, n) if (Equal(s[j], s[i])) adj[j].push_back(j);
-    FORD(i, n, 1) if (!visited[i])
+    FOR(i, 1, n) FOR(j, 1, n) if (i != j && Equal(s[i], s[j]))
     {
-        DFS(i);
-        res++;
+        c[i][j] = true;
+        deg[i]++;
     }
 
+    sort(id + 1, id + n + 1, cmp);
+
+    res = n;
+    vector<vector<int>> cliques;
+    Try(cliques, 1);
     cout << res;
 
     return 0;

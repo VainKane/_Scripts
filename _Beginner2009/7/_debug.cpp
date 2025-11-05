@@ -9,6 +9,7 @@ mt19937_64 rd(time(0));
 
 long long Rand(long long l, long long r)
 {
+    assert(l <= r);
     return l + rd() * 1ll * rd() % (r - l + 1);
 }
 
@@ -16,15 +17,15 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int n = Rand(5, 5);
+    int n = Rand(20, 20);
     cout << n << '\n';
 
     for (int i = 1; i <= n; i++)
     {
-        int k = Rand(20 / n, 20 / n);
+        int k = Rand(15, 15);
         while (k--) 
         {
-            int r = Rand(3, 6);
+            int r = Rand(3, 7);
             int type = Rand(0, r);
             if (type >= 2) cout << '*';
             else cout << char('a' + type);
