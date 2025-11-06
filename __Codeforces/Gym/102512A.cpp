@@ -35,12 +35,16 @@ int blockId[N];
 int up[N][20];
 int h[N];
 
+bool cut[N];
+int cnt[N];
+
 stack<int> st;
-int cnt = 0, bc = 0;
+int timer = 0, bc = 0;
 
 void Tarjan(int u, int p)
 {
-    low[u] = in[u] = ++cnt;
+    int child = (p != -1);
+    low[u] = in[u] = ++timer;
     st.push(u);
 
     for (auto &v : adj[u])
@@ -55,7 +59,7 @@ void Tarjan(int u, int p)
             if (low[v] >= in[u])
             {
                 int node = 0;
-                bc++;
+                child++, bc++;
 
                 while (node != v)
                 {
@@ -67,12 +71,15 @@ void Tarjan(int u, int p)
             }
         }
     }
+
+    cut[u] = child >= 2;
 }
 
 void DFS(int u, int p)
 {
     for (auto &v : bcAdj[u]) if (v != p)
     {
+        cnt[v] = cnt[u] + cut[v];
         h[v] = h[u] + 1;
         up[v][0] = u;
 
@@ -96,11 +103,10 @@ int LCA(int u, int v)
     return up[u][0];
 }
 
-int Dist(int u, int v)
+int Query(int u, int v)
 {
-    if (u == v) return 1;
     int p = LCA(u, v);
-    return h[u] + h[v] - 2 * h[p];
+    return cnt[u] + cnt[v] - 2 * h[p] + cut[p];
 }
 
 int main()
@@ -143,8 +149,11 @@ int main()
     {
         int u, v;
         cin >> u >> v;
-        cout << Dist(blockId[u], blockId[v]) - 1 << '\n';
+        // cout << Dist(blockId[u], blockId[v]) << '\n';
     }
+
+    FOR(u, 1, n) cout << blockId[u] << ' ';
+    // cout << sz(st);
 
     return 0;
 }
