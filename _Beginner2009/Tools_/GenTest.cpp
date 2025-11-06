@@ -18,9 +18,19 @@ int main()
     // cout << ' ';
     // while (n--) cout << (char)Rand('a', 'a');
 
-    int n = Rand(1, 1e5);
-    cout << n << '\n';
-    while (n--) cout << "2 ";
+    cout << "1\n";
+    int n = Rand(1, 2e5);
+    int m = Rand(1, 2e5);
+
+    cout << n << ' ' << m << '\n';
+    for (int i = 1; i <= m; i++)
+    {
+        int a = Rand(1, n);
+        int d = Rand(1, 10);
+        int k = Rand(0, (n - a) / d);
+
+        cout << a << ' ' << d << ' ' << k << '\n';
+    }
     
     return 0;
 }

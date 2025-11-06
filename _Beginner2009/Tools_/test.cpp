@@ -88,6 +88,6 @@ int main()
 
     // cout << (int)'(' << ' ' << (int)')';
 
-    int x = 9;
-    assert(x == 7);
+    // int x = 9;
+    // assert(x == 7);
 }

@@ -26,6 +26,7 @@ struct DSU
 {
     vector<int> par;
     vector<int> sz;
+    int sets = 0;
     int n;
 
     void MakeSet()
@@ -35,13 +36,15 @@ struct DSU
             par[i] = i;
             sz[i] = 1;
         }
+
+        sets = n;
     }
 
     DSU(int _n = 0)
     {
         n = _n;
         par.assign(n + 5, 0);
-        sz.assign(n _ 5, 0);
+        sz.assign(n + 5, 0);
     
         MakeSet();
     }
@@ -60,18 +63,27 @@ struct DSU
         if (a == b) return;
 
         if (sz[a] < sz[b]) swap(a, b);
+
         sz[a] += sz[b];
         par[b] = a;
+        sets--;
     }
 };
 
+int const N = 2e5 + 5;
+
 int n, m;
 DSU dsu;
+
+int maxR[11][N];
+bool used[N];
 
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
+
+    // freopen("testcase.inp", "r", stdin);
 
     int t; cin >> t;
     while (t--)
@@ -79,12 +91,35 @@ int main()
         cin >> n >> m;
         dsu = DSU(n);
 
+        memset(maxR, 0, sizeof maxR);
+
         while (m--)
         {
             int a, d, k;
             cin >> a >> d >> k;
-            
+
+            maxi(maxR[d][a], a + d * k);
         }
+
+        FOR(d, 1, 10    )
+        {
+            memset(used, false, sizeof used);
+            FOR(i, 1, n) if (maxR[d][i] > i && !used[i])
+            {
+                int j = i + d;
+                int r = maxR[d][i];
+
+                while (j <= r)
+                {
+                    dsu.Union(j, j - d);
+                    maxi(r, maxR[d][j]);
+                    used[j] = true;
+                    j += d;
+                }
+            }
+        }
+
+        cout << dsu.sets << '\n';
     }
 
     return 0;

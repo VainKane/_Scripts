@@ -17,12 +17,13 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int n = Rand(20, 20);
+    int oo = 5;
+    int n = Rand(oo, oo);
     cout << n << '\n';
 
     for (int i = 1; i <= n; i++)
     {
-        int k = Rand(15, 15);
+        int k = Rand(oo, oo);
         while (k--) 
         {
             int r = Rand(3, 7);

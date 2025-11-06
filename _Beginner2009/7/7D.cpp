@@ -61,19 +61,25 @@ void Try(vector<vector<int>> &cliques, int pos)
     if (pos > n)
     {
         mini(res, sz(cliques));
-        // cliques.clear();
         return;
     }
 
-    for (auto &clique : cliques) if (Check(clique, id[pos]))
+    bool inserted = false;
+    REP(i, sz(cliques)) if (Check(cliques[i], id[pos]))
     {
-        clique.push_back(id[pos]);
+        cliques[i].push_back(id[pos]);
         Try(cliques, pos + 1);
-        clique.pop_back();
+        cliques[i].pop_back();
+
+        inserted = true;
     }
 
-    cliques.push_back(vector<int> {id[pos]});
-    Try(cliques, pos + 1);
+    if (!inserted)
+    {
+        cliques.push_back(vector<int> {id[pos]});
+        Try(cliques, pos + 1);
+        cliques.pop_back();
+    }
 }
 
 int main()
@@ -92,8 +98,9 @@ int main()
 
     sort(id + 1, id + n + 1, cmp);
 
-    res = n;
     vector<vector<int>> cliques;
+    res = n;
+
     Try(cliques, 1);
     cout << res;
 

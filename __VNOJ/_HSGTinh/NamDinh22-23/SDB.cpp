@@ -49,6 +49,5 @@ int main()
         cout << *lower_bound(all(lst), x) << ' ';
     }
 
-
     return 0;
 }
