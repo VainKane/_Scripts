@@ -22,17 +22,18 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-int const N = 2e5 + 5;
-int const LOG = 17;
+int const N = 4e5 + 5;
+int const LOG = 18;
 
 int n, m;
 vector<int> adj[N];
+vector<int> tmpAdj[N];
 vector<int> bcAdj[N];
 
 int in[N], low[N];
 int blockId[N];
 
-int up[N][20];
+int up[N][22];
 int h[N];
 
 bool cut[N];
@@ -43,13 +44,12 @@ int timer = 0, bc = 0;
 
 void Tarjan(int u, int p)
 {
-    int child = (p != -1);
     low[u] = in[u] = ++timer;
     st.push(u);
 
     for (auto &v : adj[u])
     {
-        if (v == p || blockId[v]) continue;
+        if (v == p) continue;
         if (in[v]) mini(low[u], in[v]);
         else
         {
@@ -58,21 +58,18 @@ void Tarjan(int u, int p)
         
             if (low[v] >= in[u])
             {
+                tmpAdj[u].push_back(++bc);
                 int node = 0;
-                child++, bc++;
 
                 while (node != v)
                 {
-                    node = st.top();
-                    st.pop();
-
-                    blockId[node] = bc;
+                    node = st.top(); st.pop();
+                    in[node] = n + 1;
+                    tmpAdj[node].push_back(bc);
                 }
             }
         }
     }
-
-    cut[u] = child >= 2;
 }
 
 void DFS(int u, int p)
@@ -106,7 +103,7 @@ int LCA(int u, int v)
 int Query(int u, int v)
 {
     int p = LCA(u, v);
-    return cnt[u] + cnt[v] - 2 * h[p] + cut[p];
+    return cnt[u] + cnt[v] - 2 * cnt[p] + cut[p];
 }
 
 int main()
@@ -125,21 +122,20 @@ int main()
 
     Tarjan(1, -1);
 
-    FOR(i, 1, n) for (auto &j : adj[i])
+    FOR(u, 1, n) 
     {
-        int u = blockId[i];
-        int v = blockId[j];
-
-        if (u == v) continue;
-
-        bcAdj[u].push_back(v);
-        bcAdj[v].push_back(u);
-    }
-
-    FOR(u, 1, bc)
-    {
-        sort(all(bcAdj[u]));
-        bcAdj[u].erase(unique(all(bcAdj[u])), bcAdj[u].end());
+        if (sz(tmpAdj[u]) >= 2)
+        {
+            blockId[u] = ++bc;
+            cut[bc] = true;
+            
+            for (auto &v : tmpAdj[u])
+            {
+                bcAdj[v].push_back(bc);
+                bcAdj[bc].push_back(v);
+            }
+        }
+        else if (sz(tmpAdj[u]) == 1) blockId[u] = tmpAdj[u][0];
     }
 
     DFS(1, -1);
@@ -149,11 +145,8 @@ int main()
     {
         int u, v;
         cin >> u >> v;
-        // cout << Dist(blockId[u], blockId[v]) << '\n';
+
+        u = blockId[u]; v = blockId[v];
+        cout << Query(u, v) - cut[u] - cut[v] * (u != v) << '\n';
     }
-
-    FOR(u, 1, n) cout << blockId[u] << ' ';
-    // cout << sz(st);
-
-    return 0;
 }
