@@ -25,35 +25,27 @@ template <class t> bool mini(t &x, t const &y)
 int const N = 1e5 + 5;
 int const LOG = 17;
 
-int n, m;
+int n, m, q;
 vector<int> adj[N];
 vector<int> tmpAdj[N];
-
 vector<int> bcAdj[2 * N];
-vector<int> bridgeAdj[N];
 
-int in[N], low[N];
-int timer = 0;
+int blockId[N];
 
-int ccId[N], bccId[N];
-int cc = 0, bcc = 0;
+int up[2 * N][20];
 
-int upCut[2 * N][20];
-int upBridge[2 * N][20];
-
-int hCut[2 * N], hBridge[N];
-int cnt[2 * N];
+int h[2 * N];
 bool cut[2 * N];
 
-int cntRep[N];
+int in[N], low[N];
+int timer = 0, bcc = 0;
 
-stack<int> st1, st2;
+stack<int> st;
 
 void Tarjan(int u, int p)
 {
     low[u] = in[u] = ++timer;
-    st1.push(u);
-    st2.push(u);
+    st.push(u);
 
     for (auto &v : adj[u]) if (v != p)
     {
@@ -62,7 +54,7 @@ void Tarjan(int u, int p)
         {
             Tarjan(v, u);
             mini(low[u], low[v]);
-
+            
             if (low[v] >= in[u])
             {
                 tmpAdj[u].push_back(++bcc);
@@ -70,49 +62,32 @@ void Tarjan(int u, int p)
 
                 while (node != v)
                 {
-                    node = st1.top(); st1.pop();
+                    node = st.top(); st.pop();
                     tmpAdj[node].push_back(bcc);
                 }
             }
-        } 
-    }
-
-    if (low[u] == in[u])
-    {
-        int v = 0;
-        cc++;
-
-        while (v != u)
-        {
-            v = st2.top(); st2.pop();
-            in[v] = n + 1;
-            ccId[v] = cc;
         }
     }
 }
 
-void DFS(int u, vector<int> adj[], int up[][20], int h[], bool count = false)
+void DFS(int u, int p)
 {
-    for (auto &v : adj[u]) if (v != up[u][0])
+    for (auto &v : bcAdj[u]) if (v != p)
     {
-        if (count) cnt[v] = cnt[u] + cut[v];
-        else cntRep[v] = cntRep[u] + (upper_bound(all(bridgeAdj[u]), v) -
-                                     lower_bound(all(bridgeAdj[u]), v) - 1 > 0);
-
         h[v] = h[u] + 1;
         up[v][0] = u;
 
         FOR(i, 1, LOG) up[v][i] = up[up[v][i - 1]][i - 1];
-        DFS(v, adj, up, h, count);
+        DFS(v, u);
     }
 }
 
-int LCA(int u, int v, int up[][20], int h[])
+int LCA(int u, int v)
 {
     if (h[u] < h[v]) swap(u, v);
     FORD(i, LOG, 0) if (h[up[u][i]] >= h[v]) u = up[u][i];
     if (u == v) return u;
-    
+
     FORD(i, LOG, 0) if (up[u][i] != up[v][i])
     {
         u = up[u][i];
@@ -122,17 +97,13 @@ int LCA(int u, int v, int up[][20], int h[])
     return up[u][0];
 }
 
-int QueryBride(int u, int v)
+bool Query(int u, int v, int node)
 {
-    int p = LCA(u, v, upBridge, hBridge);
-    return  hBridge[u] + hBridge[v] - 2 * hBridge[p] -
-            (cntRep[u] + cntRep[v] - 2 * cntRep[p]);
-}
+    if (node == u || node == v) return false;
+    u = blockId[u], v = blockId[v], node = blockId[node];
 
-int QueryCut(int u, int v)
-{
-    int p = LCA(u, v, upCut, hCut);
-    return cnt[u] + cnt[v] - 2 * cnt[p] + cut[p];
+    if (!cut[node]) return true;
+    return (LCA(u, v) ^ LCA(u, node) ^ LCA(v, node)) != node;
 }
 
 int main()
@@ -140,7 +111,7 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    cin >> n >> m;
+    cin >> n >> m >> q;
     FOR(i, 1, m)
     {
         int u, v;
@@ -155,7 +126,7 @@ int main()
     {
         if (sz(tmpAdj[u]) >= 2)
         {
-            bccId[u] = ++bcc;
+            blockId[u] = ++bcc;
             cut[bcc] = true;
 
             for (auto &v : tmpAdj[u])
@@ -164,29 +135,16 @@ int main()
                 bcAdj[v].push_back(bcc);
             }
         }
-        else if (sz(tmpAdj[u]) == 1) bccId[u] = tmpAdj[u][0];
+        else if (sz(tmpAdj[u]) == 1) blockId[u] = tmpAdj[u][0];
     }
 
-    FOR(i, 1, n) for (auto &j : adj[i])
-    {
-        int u = ccId[i];
-        int v = ccId[j];
-        if (u != v) bridgeAdj[u].push_back(v);
-    }
+    DFS(1, -1);
 
-    FOR(u, 1, cc) sort(all(bridgeAdj[u]));
-
-    DFS(1, bridgeAdj, upBridge, hBridge);
-    DFS(1, bcAdj, upCut, hCut, true);
-
-    int q; cin >> q;
     while (q--)
     {
-        int u, v;
-        cin >> u >> v;
-
-        cout << QueryCut(bccId[u], bccId[v]) + !cut[bccId[u]] + (u != v) * !cut[bccId[v]] 
-             << ' ' << QueryBride(ccId[u], ccId[v]) << '\n';
+        int u, v, c;
+        cin >> u >> v >> c;
+        cout << (Query(u, v, c) ? "YES\n" : "NO\n");
     }
 
     return 0;

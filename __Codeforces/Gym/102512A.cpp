@@ -22,22 +22,22 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-int const N = 4e5 + 5;
+int const N = 2e5 + 5;
 int const LOG = 18;
 
 int n, m;
 vector<int> adj[N];
 vector<int> tmpAdj[N];
-vector<int> bcAdj[N];
+vector<int> bcAdj[2 * N];
 
 int in[N], low[N];
 int blockId[N];
 
-int up[N][22];
-int h[N];
+int up[2 * N][22];
+int h[2 * N];
 
-bool cut[N];
-int cnt[N];
+bool cut[2 * N];
+int cnt[2 * N];
 
 stack<int> st;
 int timer = 0, bc = 0;

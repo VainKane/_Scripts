@@ -83,15 +83,13 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    // freopen("testcase.inp", "r", stdin);
-
     int t; cin >> t;
     while (t--)
     {
         cin >> n >> m;
         dsu = DSU(n);
 
-        memset(maxR, 0, sizeof maxR);
+        FOR(d, 1, 10) memset(maxR[d], 0, (n + 1) * 4);
 
         while (m--)
         {
@@ -101,9 +99,9 @@ int main()
             maxi(maxR[d][a], a + d * k);
         }
 
-        FOR(d, 1, 10    )
+        FOR(d, 1, 10)
         {
-            memset(used, false, sizeof used);
+            memset(used, false, n + 1);
             FOR(i, 1, n) if (maxR[d][i] > i && !used[i])
             {
                 int j = i + d;
