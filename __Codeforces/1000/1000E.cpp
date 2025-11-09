@@ -123,8 +123,5 @@ int main()
     FOR(u, 1, n) maxi(res, fPar[ccId[u]] + f[ccId[u]]);
     cout << res;
 
-    // FOR(u, 1, n) cout << blockId[u] << ' ';
-    // for (auto &v : bcAdj[4]) cout << v << ' ';
-
     return 0;
 }

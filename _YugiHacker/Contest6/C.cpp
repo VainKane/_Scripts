@@ -23,13 +23,55 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
+int const N = 1009;
+int const oo = 1e9;
+
+int n, m;
+string s, t;
+
+int f[N][N];
+int g[N];
+
+int last[256];
+int nxt[N][256];
+
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    // freopen(name".inp", "r", stdin);
-    // freopen(name".out", "w", stdout);
+    freopen(name".inp", "r", stdin);
+    freopen(name".out", "w", stdout);
+
+    cin >> s >> t;
+
+    n = sz(s), m = sz(t);
+    s = " " + s;
+    t = " " + t;
+
+    REP(i, 256) last[i] = m + 1;
+
+    FORD(i, m, 0) 
+    {
+        REP(j, 256) nxt[i][j] = last[j];
+        last[t[i]] = i;        
+    }
+
+    int res = oo;
+
+    FOR(i, 1, n) 
+    {
+        FOR(j, 1, i) 
+        {
+            maxi(f[i][j], nxt[g[j - 1]][s[i]]);
+            if (f[i][j] > m) mini(res, j);
+        }
+    
+        FOR(j, 1, i) maxi(g[j], f[i][j]);
+    }
+
+    if (res == oo) res = -1;
+    cout << res;
 
     return 0;
 }

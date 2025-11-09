@@ -110,7 +110,7 @@ void DFS(int u, vector<int> adj[], int up[][20], int h[], bool count = false)
 int LCA(int u, int v, int up[][20], int h[])
 {
     if (h[u] < h[v]) swap(u, v);
-    FORD(i, LOG, 0) if (h[up[u][i]] >= h[v]) u = up[u][i];
+    FORD(i, LOG, 0) if (up[u][i] && h[up[u][i]] >= h[v]) u = up[u][i];
     if (u == v) return u;
     
     FORD(i, LOG, 0) if (up[u][i] != up[v][i])

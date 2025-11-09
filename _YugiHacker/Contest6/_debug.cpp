@@ -2,8 +2,8 @@
 
 using namespace std;
 
-#define name "A"
-#define ioname "METRO"
+#define name "C"
+#define ioname "nexist"
 int const ntest = 1e4;
 
 mt19937_64 rd(time(0));
@@ -18,19 +18,12 @@ void GenTest()
     ofstream cout(ioname".inp");
 
     int n = Rand(1, 1000);
+    int m = Rand(1, 1000);
     int oo = 1e9;
 
-    cout << n << '\n';
-
-    for (int i = 1; i <= n; i++) cout << Rand(1, oo) << ' ';
+    while (n--) cout << (char)Rand('a', 'z');
     cout << '\n';
-    for (int i = 1; i <= n; i++)
-    {
-        int l = 1;
-        int r = Rand(l, n);
-
-        cout << l << ' ' << r << '\n';
-    }
+    while (m--) cout << (char)Rand('a', 'z');
 }
 
 int main()

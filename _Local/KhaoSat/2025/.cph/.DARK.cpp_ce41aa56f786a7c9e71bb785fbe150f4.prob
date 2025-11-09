@@ -1,1 +1,0 @@
-{"name":"Local: DARK","url":"d:\\Dev\\_Scripts\\_Local\\KhaoSat\\2025\\DARK.cpp","tests":[{"id":1761834739945,"input":"4 1\n1 2\n2 3\n1 4\n3 4","output":"3"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"d:\\Dev\\_Scripts\\_Local\\KhaoSat\\2025\\DARK.cpp","group":"local","local":true}
