@@ -25,9 +25,23 @@ template <class t> bool mini(t &x, t const &y)
 int const N = 3e5 + 5;
 
 int n;
+vector<int> adj[N];
+
+int in[N];
 int deg[N];
 
-vector<int> v;
+int timer = 0;
+
+void DFS(int u, int p)
+{
+    in[u] = ++timer;
+    for (auto &v : adj[u]) if (v != p) DFS(v, u);
+}
+
+bool cmp(int u, int v)
+{
+    return in[u] < in[v];
+}
 
 int main()
 {
@@ -39,17 +53,21 @@ int main()
     {
         int u, v;
         cin >> u >> v;
+    
+        adj[u].push_back(v);
+        adj[v].push_back(u);
         deg[u]++; deg[v]++;
     }
 
+    DFS(1, -1);
+
+    vector<int> v;
     FOR(u, 1, n) if (deg[u] == 1) v.push_back(u);
+    sort(all(v), cmp);
 
-    cout << (sz(v) + 1) / 2 << '\n';
-
-    // for (int i = 0; i < sz(v) - 1; i += 2) cout << v[i] << ' ' << v[i + 1] << '\n';
-    // if ((sz(v) & 1) && sz(v) >= 3) cout << v[sz(v) - 1] << ' ' << v[sz(v) - 2];
-
-    for (auto &u : v) cout << u << ' ';
+    if (sz(v) & 1) v.push_back(v.back());
+    cout << sz(v) / 2 << '\n';
+    REP(i, sz(v) / 2) cout << v[i] << ' ' << v[i + sz(v) / 2] << '\n';
 
     return 0;
 }
