@@ -42,7 +42,7 @@ def check_codeforces_problem(url: str):
 
         bannedTags = ("constructive algorithms", "greedy", "interactive")
         minRating = 1400
-        maxRating = 2600
+        maxRating = 2500
 
         print(f"\n📘 Problem: {name}")
         # print(f"🏷️ Tags: {', '.join(tags) if tags else 'No tags available'}")
