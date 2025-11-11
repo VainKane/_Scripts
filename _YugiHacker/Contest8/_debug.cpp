@@ -16,7 +16,7 @@ long long Rand(long long l, long long r)
 void GenTest()
 {
     ofstream cout(ioname".inp");
-
+ 
     int oo = 10;
     int n = Rand(1, 10);
     int k = Rand(0, oo);

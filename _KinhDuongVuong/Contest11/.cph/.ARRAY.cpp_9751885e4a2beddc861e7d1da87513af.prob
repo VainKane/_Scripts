@@ -1,1 +1,0 @@
-{"name":"Local: ARRAY","url":"d:\\Dev\\_Scripts\\_KinhDuongVuong\\Contest11\\ARRAY.cpp","tests":[{"id":1762833058959,"input":"4 3\n1 2 3 4\n1 2 1\n1 1 2\n2 3 1","output":"2\n2\n0"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"d:\\Dev\\_Scripts\\_KinhDuongVuong\\Contest11\\ARRAY.cpp","group":"local","local":true}
