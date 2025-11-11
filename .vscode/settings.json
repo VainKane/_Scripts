@@ -74,7 +74,8 @@
         "271d": "cpp",
         "any": "cpp",
         "compare": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "text_encoding": "cpp"
     },
         "files.exclude": {
         "**/.git": true,
