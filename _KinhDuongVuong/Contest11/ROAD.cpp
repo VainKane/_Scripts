@@ -109,11 +109,5 @@ int main()
 
     FOR(u, 1, n) cout << res[u] << '\n';
 
-    // cout << Dist(3, 6);
-    // cout << LCA(3, 6);
-    // cout << up[3][0];
-
-    // FOR(u, 1, n) cout << up[u][0];
-
     return 0;
 }

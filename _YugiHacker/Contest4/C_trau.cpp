@@ -31,18 +31,19 @@ int n, m, q;
 int a[N];
 vector<int> adj[N];
 
-bool go[N][N];
-bool inDeg[N];
-
+bool visited[N];
 int pos[N];
+int f[N];
 
 void DFS(int u)
 {
+    visited[u] = true;
+    f[u] = oo;
+    
     for (auto &v : adj[u])
     {
-        FOR(p, 1, n) if (go[p][u]) go[p][v] = true;
-        go[u][v] = true;
-        DFS(v);
+        if (true) DFS(v);
+        mini(f[u], min(f[v], a[v]));
     }
 }
 
@@ -62,19 +63,9 @@ int main()
         int u, v;
         cin >> u >> v;
         adj[v].push_back(u);
-        
-        inDeg[u] = true;
     }
 
-    FOR(u, 1, n) 
-    {
-        if (!inDeg[u]) 
-        {
-            go[u][u] = true;
-            DFS(u);        
-        }
-        pos[u] = u;
-    }
+    FOR(u, 1, n) pos[u] = u;
 
     while (q--)
     {
@@ -92,13 +83,10 @@ int main()
             cin >> v;
             v = pos[v];
 
-            if (n != 7) continue;
+            memset(visited, false, sizeof(typeid(visited)));
 
-            int res = oo;
-            FOR(u, 1, n) if (u != v && go[v][u]) mini(res, a[u]);
-            if (res == oo) res = 0;
-
-            cout << res << '\n';
+            DFS(v);
+            cout << (f[v] < oo ? f[v] : 0) << '\n';
         }
     }
 
