@@ -29,8 +29,7 @@ int const M = 1e6 + 5;
 int n, k;
 pair<int, int> a[N];
 
-int cnt[M];
-int cntDiv[M];
+int cnt[M], cntDiv[M];
 int res[N];
 
 int main()
@@ -42,7 +41,28 @@ int main()
     freopen(name".out", "w", stdout);
 
     cin >> n >> k;
-    
+    FOR(i, 1, n) 
+    {
+        int x; cin >> x;
+        a[i] = {x, i};
+        cnt[x]++;
+    }
+
+    FOR(i, k + 1, 1e6) if (i != k) for (int j = i; j <= 1e6; j += i)
+    {
+        cntDiv[j] += cnt[i];
+    }
+
+    sort(a + 1, a + n + 1, greater<pair<int, int>> ());
+
+    FOR(i, 1, n)
+    {
+        if (a[i].F > k) res[a[i].S] = cntDiv[a[i].F - k];
+        else if (a[i].F == k) res[a[i].S] = i - 1;
+    }
+
+    FOR(i, 1, n) cout << res[i] << ' ';
+    // cout << cntDiv[5];
 
     return 0;
 }

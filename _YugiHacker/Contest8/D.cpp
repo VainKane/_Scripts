@@ -27,7 +27,9 @@ int const N = 2e5 + 5;
 
 int n;
 int a[N];
-vector<int> pos[N];
+
+int last[N];
+int nxt[N], pre[N];
 
 int main()
 {
@@ -39,15 +41,25 @@ int main()
 
     cin >> n;
 
-    FOR(i, 1, n) pos[i].push_back(0);
-    FOR(i, 1, n) cin >> a[i], pos[a[i]].push_back(i);
-    FOR(i, 1, n) pos[i].push_back(n + 1);
+    FOR(i, 1, n) cin >> a[i];
 
     FOR(i, 1, n)
     {
-        int l = i;
-        int r =        
+        pre[i] = last[a[i]];
+        last[a[i]] = i;
     }
+
+    FOR(i, 1, n) last[i] = n + 1;
+
+    FORD(i, n, 1)
+    {
+        nxt[i] = last[a[i]];
+        last[a[i]] = i;
+    }
+
+    int res = 0;
+    FOR(i, 1, n) FOR(j, i + 1, nxt[i] - 1) res += pre[j] <= i;
+    cout << res;
 
     return 0;
 }

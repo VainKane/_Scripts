@@ -71,7 +71,7 @@ int main()
         FOR(i, 1, n) 
         {
             dp[i] = 0;
-            FOR(j, 0, i - 1) maxi(dp[i], dp[j] + *max_element(a + j + 1, a + i + 1) - *min_element(a + j + 1, a + i + 1));
+            REP(j, i) maxi(dp[i], dp[j] + GetDelta(j + 1, i));
         }
 
         cout << dp[n] << '\n';

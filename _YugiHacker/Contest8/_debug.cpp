@@ -19,7 +19,7 @@ void GenTest()
  
     int oo = 10;
     int n = Rand(1, 10);
-    int k = Rand(0, oo);
+    int k = Rand(1, oo);
 
     cout << n << ' ' << k << '\n';
     while (n--) cout << Rand(1, oo) << ' ';

@@ -75,7 +75,10 @@
         "any": "cpp",
         "compare": "cpp",
         "variant": "cpp",
-        "text_encoding": "cpp"
+        "text_encoding": "cpp",
+        "barrier": "cpp",
+        "latch": "cpp",
+        "semaphore": "cpp"
     },
         "files.exclude": {
         "**/.git": true,
