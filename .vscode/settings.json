@@ -78,7 +78,8 @@
         "text_encoding": "cpp",
         "barrier": "cpp",
         "latch": "cpp",
-        "semaphore": "cpp"
+        "semaphore": "cpp",
+        "SEQ.C": "cpp"
     },
         "files.exclude": {
         "**/.git": true,
