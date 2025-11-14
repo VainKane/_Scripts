@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#define name "XOREX"
+#define name "CEDGE"
 int const ntest = 1e4;
 
 mt19937_64 rd(time(0));
@@ -37,38 +37,36 @@ void GenTest1()
     }
 }
 
-void GenTest6()
+void GenTest()
 {
     ofstream cout(name".inp");
 
-    int n = (1 << (Rand(0, 19)));
-    int q = Rand(1, 1e3);
-    int oo = 1e6;
+    int oo = 10;
 
-    cout << n << ' ' << q << '\n';
-    for (int i = 0; i < n; i++) cout << Rand(0, oo) << ' ';
-    cout << '\n';
+    int n = Rand(1, oo);
+    int m = Rand(n - 1, oo);
 
-    while (q--)
+    set<pair<int, int>> edges;
+
+    cout << n << ' ' << m << '\n';
+    for (int i = 2; i <= n; i++) edges.insert({Rand(1, i - 1), i});
+
+    while (edges.size() < m)
     {
-        int type = Rand(1, 3);
-        cout << type << ' ';
-        if (type == 1) cout << Rand(0, n - 1);
-        else cout << "0 " << n - 1;
-        cout << '\n';
-    }
-}
+        int u = Rand(1, n - 1);
+        int v = Rand(u + 1, n);
 
-void GenTest()
-{
-    
+        edges.insert({u, v});
+    }
+
+    for (auto &p : edges) cout << p.first << ' ' << p.second << '\n';
 }
 
 int main()
 {
     for (int i = 1; i <= ntest; i++)
     {
-        GenTest6();
+        GenTest();
         system(name".exe");
         system(name"_trau.exe");
 
