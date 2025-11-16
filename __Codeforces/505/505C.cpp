@@ -29,15 +29,18 @@ int main()
         a[p]++;
     }
 
-    // memset(dp, -1, sizeof dp);
-    dp[d][d] = a[d];
+    int os = max(d - 245, 1);
+
+    memset(dp, -1, sizeof dp);
+    dp[d][d - os] = a[d];
     int res = 0;
 
-    FOR(i, d, oo) FOR(j, d - 245, min(oo, d + 245))
+
+    FOR(i, d, oo) FOR(j, os, min(d + 245, oo)) if (dp[i][j - os] != -1)
     {
-        maxi(res, dp[i][j + d]);
+        maxi(res, dp[i][j - os]);
         FOR(k, max(j - 1, 1), min(j + 1, oo - i))
-            maxi(dp[i + k][k + d], dp[i][j + d] + a[i + k]);
+            maxi(dp[i + k][k - os], dp[i][j - os] + a[i + k]);
     }
     
     cout << res;

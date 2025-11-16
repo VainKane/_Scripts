@@ -31,18 +31,23 @@ int n, m, q;
 int a[N];
 vector<int> adj[N];
 
-bool go[N][N];
-bool inDeg[N];
+bitset<N> go[N];
+
+vector<int> topo;
+int inDeg[N];
 
 int pos[N];
 
-void DFS(int u)
+void BFS()
 {
-    for (auto &v : adj[u])
+    queue<int> q;
+    FOR(u, 1, n) if (!inDeg[u]) q.push(u);
+
+    while (!q.empty())
     {
-        FOR(p, 1, n) if (go[p][u]) go[p][v] = true;
-        go[u][v] = true;
-        DFS(v);
+        int u = q.front(); q.pop();
+        topo.push_back(u);
+        for (auto &v : adj[u]) if (!--inDeg[v]) q.push(v);
     }
 }
 
@@ -61,20 +66,18 @@ int main()
     {
         int u, v;
         cin >> u >> v;
-        adj[v].push_back(u);
-        
-        inDeg[u] = true;
+        adj[u].push_back(v);
+        inDeg[v]++;
     }
 
-    FOR(u, 1, n) 
+    BFS();
+    for (auto &u : topo) for (auto &v : adj[u])
     {
-        if (!inDeg[u]) 
-        {
-            go[u][u] = true;
-            DFS(u);        
-        }
-        pos[u] = u;
+        go[v][u] = true;
+        go[v] |= go[u];
     }
+
+    FOR(u, 1, n) pos[u] = u;
 
     while (q--)
     {
@@ -91,8 +94,6 @@ int main()
         {
             cin >> v;
             v = pos[v];
-
-            if (n != 7) continue;
 
             int res = oo;
             FOR(u, 1, n) if (u != v && go[v][u]) mini(res, a[u]);

@@ -26,7 +26,15 @@ int const N = 209;
 int const MOD = 1e9 + 7;
 
 int n, k;
+
 int a[N];
+int dp[N][N][1009];
+
+void Add(int &x, int const &y)
+{
+    x += y;
+    if (x >= MOD) x -= MOD;
+}
 
 int main()
 {
@@ -35,6 +43,26 @@ int main()
 
     cin >> n >> k;
     FOR(i, 1, n) cin >> a[i];
+
+    sort(a + 1, a + n + 1);
+    dp[0][0][0] = 1;
+
+    REP(i, n) FOR(j, 0, i) FOR(s, 0, k)
+    {
+        int nxtS = s + j * (a[i + 1] - a[i]);
+        int tmp = 1ll * j * dp[i][j][s] % MOD;
+
+        if (nxtS > k) continue;
+
+        Add(dp[i + 1][j][nxtS], tmp);
+        if (j) Add(dp[i + 1][j - 1][nxtS], tmp);
+        Add(dp[i + 1][j + 1][nxtS], dp[i][j][s]);
+        Add(dp[i + 1][j][nxtS], dp[i][j][s]);
+    }
+
+    int res = 0;
+    FOR(s, 0, k) Add(res, dp[n][0][s]);
+    cout << res;
 
     return 0;
 }
