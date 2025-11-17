@@ -22,25 +22,26 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-int const N = 1e5 + 5;
+int const N = 25;
 
 int n, m;
+
+pair<int, int> edges[N];
 vector<int> adj[N];
 vector<int> dagAdj[N];
 
+bool visited[N];
+int inDeg[N];
+
+vector<int> topo;
+bitset<N> go[N];
+
+stack<int> st;
 int ccId[N];
+vector<int> scc[N];
 
 int in[N], low[N];
 int timer = 0, cc = 0;
-
-stack<int> st;
-vector<int> scc[N];
-
-int inDeg[N];
-int f[N], g[N];
-
-vector<int> topo;
-int h[N];
 
 void Tarjan(int u)
 {
@@ -49,7 +50,6 @@ void Tarjan(int u)
 
     for (auto &v : adj[u])
     {
-        if (ccId[v]) continue;
         if (in[v]) mini(low[u], in[v]);
         else
         {
@@ -66,6 +66,7 @@ void Tarjan(int u)
         while (v != u)
         {
             v = st.top(); st.pop();
+            in[v] = n + 1;
             ccId[v] = cc;
         }
     }
@@ -80,28 +81,31 @@ void BFS()
     {
         int u = q.front(); q.pop();
         topo.push_back(u);
-
-        for (auto &v : dagAdj[u]) if (!--inDeg[v]) 
-        {
-            h[v] = h[u] + 1;
-            q.push(v);
-        }
+        for (auto &v : dagAdj[u]) if (!--inDeg[v]) q.push(v);
     }
 }
 
-int main()  
+void Reset()
 {
-    ios_base::sync_with_stdio(false);
-    cin.tie(0); cout.tie(0);
+    memset(inDeg, 0, sizeof inDeg);
+    memset(in, 0, sizeof in);
 
-    cin >> n >> m;
-    FOR(i, 1, m)
+    FOR(u, 1, n) 
     {
-        int u, v;
-        cin >> u >> v;
-        adj[u].push_back(v);
+        adj[u].clear();
+        scc[u].clear();
+        dagAdj[u].clear();
+        go[u] = 0;
     }
 
+    timer = cc = 0;
+
+    topo.clear();
+    st = stack<int> ();
+}
+
+bool Check()
+{
     FOR(u, 1, n) if (!in[u]) Tarjan(u);
 
     FOR(u, 1, n) scc[ccId[u]].push_back(u);
@@ -125,16 +129,41 @@ int main()
 
     for (auto &u : topo) for (auto &v : dagAdj[u])
     {
-        if (maxi(f[v], h[u])) g[v] = 1;
-        else if (f[v] == h[u]) g[v]++;
+        go[v] |= go[u];
+        go[v][u] = true;
+        go[u][u] = true;
     }
 
-    int res = 0;
-
-    FOR(u, 1, cc) 
+    REP(i, m) 
     {
-        if (sz(scc[u]) > 1) res += sz(scc[u]);
-        res += g[u];
+        int u = ccId[edges[i].F];
+        int v = ccId[edges[i].S];
+        if (!go[v][u]) return false;
+    }
+    return true;
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(0); cout.tie(0);
+
+    cin >> n >> m;
+    REP(i, m) cin >> edges[i].F >> edges[i].S;
+
+    int res = m;
+
+    REP(mask, MK(m))
+    { 
+        Reset();
+
+        for (int tmp = mask; tmp; tmp ^= tmp & -tmp)
+        {
+            int i = __builtin_ctz(tmp & -tmp);
+            adj[edges[i].F].push_back(edges[i].S);
+        }
+
+        if (Check()) mini(res, __builtin_popcount(mask));
     }
 
     cout << res;

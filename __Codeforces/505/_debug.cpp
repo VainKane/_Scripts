@@ -2,8 +2,8 @@
 
 using namespace std;
 
-#define name ""
-int const ntest = 1e4;
+#define name "505D"
+int const ntest = 1;
 
 mt19937_64 rd(time(0));
 
@@ -15,6 +15,20 @@ long long Rand(long long l, long long r)
 void GenTest()
 {
     ofstream cout(name".inp");
+
+    int n = Rand(2, 20);
+    int m = Rand(1, min(n * (n - 1), 15));
+
+    set<pair<int, int>> edges;
+    while (edges.size() < m)
+    {
+        int u = Rand(1, n - 1);
+        int v = Rand(u + 1, n);
+        edges.insert({u, v});
+    }    
+    
+    cout << n << ' ' << m << '\n';
+    for (auto &p : edges) cout << p.first << ' ' << p.second << '\n';
 }
 
 int main()
@@ -22,8 +36,8 @@ int main()
     for (int i = 1; i <= ntest; i++)
     {
         GenTest();
-        system(name".exe");
-        system(name"_trau.exe");
+        system(name".exe <"name".inp> "name".out");
+        system(name"_trau.exe <"name".inp> "name".ans");
 
         if (system("fc "name".out "name".ans") != 0)
         {
