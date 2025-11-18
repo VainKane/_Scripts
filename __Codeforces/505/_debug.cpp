@@ -3,7 +3,7 @@
 using namespace std;
 
 #define name "505D"
-int const ntest = 1;
+int const ntest = 1e4;
 
 mt19937_64 rd(time(0));
 
@@ -16,16 +16,17 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int n = Rand(2, 20);
-    int m = Rand(1, min(n * (n - 1), 15));
+    int n = Rand(2, 10);
+    int m = Rand(1, 30);
 
     set<pair<int, int>> edges;
-    while (edges.size() < m)
+    while (m--)
     {
         int u = Rand(1, n - 1);
-        int v = Rand(u + 1, n);
-        edges.insert({u, v});
-    }    
+        edges.insert({u, Rand(u + 1, n)});
+    }  
+
+    m = edges.size();
     
     cout << n << ' ' << m << '\n';
     for (auto &p : edges) cout << p.first << ' ' << p.second << '\n';

@@ -26,7 +26,7 @@ int const N = 1e5 + 5;
 
 int n, m;
 vector<int> adj[N];
-vector<int> dagAdj[N];
+vector<int> adj2[N];
 
 int ccId[N];
 
@@ -34,13 +34,13 @@ int in[N], low[N];
 int timer = 0, cc = 0;
 
 stack<int> st;
-vector<int> scc[N];
+int scc[N];
 
-int inDeg[N];
-int f[N], g[N];
+bool visited[N];
+int cnt[N];
+int chain = 0;
 
-vector<int> topo;
-int h[N];
+bool cycle[N];
 
 void Tarjan(int u)
 {
@@ -67,29 +67,21 @@ void Tarjan(int u)
         {
             v = st.top(); st.pop();
             ccId[v] = cc;
+            scc[cc]++;
         }
     }
 }
 
-void BFS()
+void DFS(int u, int &id)
 {
-    queue<int> q;
-    FOR(u, 1, cc) if (!inDeg[u]) q.push(u);
+    visited[u] = true;
+    cycle[id] |= (scc[ccId[u]] > 1);
+    cnt[id]++;
 
-    while (!q.empty())
-    {
-        int u = q.front(); q.pop();
-        topo.push_back(u);
-
-        for (auto &v : dagAdj[u]) if (!--inDeg[v]) 
-        {
-            h[v] = h[u] + 1;
-            q.push(v);
-        }
-    }
+    for (auto &v : adj2[u]) if (!visited[v]) DFS(v, id);
 }
 
-int main()  
+int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
@@ -100,43 +92,15 @@ int main()
         int u, v;
         cin >> u >> v;
         adj[u].push_back(v);
+        adj2[u].push_back(v);
+        adj2[v].push_back(u);
     }
 
     FOR(u, 1, n) if (!in[u]) Tarjan(u);
-
-    FOR(u, 1, n) scc[ccId[u]].push_back(u);
-    FOR(i, 1, n) for (auto &j : adj[i])
-    {
-        int u = ccId[i];
-        int v = ccId[j];
-
-        if (u == v) continue;
-        dagAdj[u].push_back(v);
-        inDeg[v]++;
-    }
-
-    FOR(u, 1, cc)
-    {
-        sort(all(dagAdj[u]));
-        dagAdj[u].erase(unique(all(dagAdj[u])), dagAdj[u].end());
-    }
-
-    BFS();
-
-    for (auto &u : topo) for (auto &v : dagAdj[u])
-    {
-        if (maxi(f[v], h[u])) g[v] = 1;
-        else if (f[v] == h[u]) g[v]++;
-    }
+    FOR(u, 1, n) if (!visited[u]) DFS(u, ++chain);
 
     int res = 0;
-
-    FOR(u, 1, cc) 
-    {
-        if (sz(scc[u]) > 1) res += sz(scc[u]);
-        res += g[u];
-    }
-
+    FOR(id, 1, chain) res += cnt[id] - 1 + cycle[id];
     cout << res;
 
     return 0;
