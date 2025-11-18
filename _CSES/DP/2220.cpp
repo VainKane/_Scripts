@@ -22,15 +22,36 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-int const N = 1e6 + 5;
-int const MOD = 1e9 + 7;
+int const N = 20;
 
-int dp[N][2];
+long long a, b;
+long long dp[N][2][11];
 
-void Add(int &x, int const &y)
+long long Get(long long x)
 {
-    x += y;
-    if (x >= MOD) x -= MOD;
+    vector<int> digits;
+
+    while (x)
+    {
+        digits.push_back(x % 10);
+        x /= 10;
+    }
+
+    reverse(all(digits));
+
+    int n = sz(digits);
+    memset(dp, 0, sizeof dp);
+    dp[0][0][0] = 1;
+
+    REP(i, n) REP(r, 2) FOR(digit, 0, 9) if (dp[i][r][digit])
+    {
+        int lim = r ? 9 : digits[i];
+        FOR(d, 0, lim) if (d != digit || !i) dp[i + 1][r | (d < lim)][d] += dp[i][r][digit];
+    }
+
+    long long res = 0;
+    FOR(d, 0, 9) res += dp[n][0][d] + dp[n][1][d];
+    return res;
 }
 
 int main()
@@ -38,19 +59,10 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    dp[1][1] = dp[1][0] = 1;
-    FOR(i, 2, 1e6)
-    {
-        dp[i][1] = (4ll * dp[i - 1][1] + dp[i - 1][0]) % MOD;
-        dp[i][0] = (2ll * dp[i - 1][0] + dp[i - 1][1]) % MOD;
-    }
+    cin >> a >> b;
+    // cout << Get(b) - Get(a - 1);
 
-    int t; cin >> t;
-    while (t--)
-    {
-        int n; cin >> n;
-        cout << (dp[n][0] + dp[n][1]) % MOD << '\n';
-    }
+    cout << Get(b);
 
     return 0;
 }
