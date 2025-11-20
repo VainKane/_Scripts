@@ -25,7 +25,7 @@ template <class t> bool mini(t &x, t const &y)
 int const N = 20;
 
 long long a, b;
-long long dp[N][2][11];
+long long dp[N][2][10][2];
 
 long long Get(long long x)
 {
@@ -41,16 +41,16 @@ long long Get(long long x)
 
     int n = sz(digits);
     memset(dp, 0, sizeof dp);
-    dp[0][0][0] = 1;
+    dp[0][0][0][1] = 1;
 
-    REP(i, n) REP(r, 2) FOR(digit, 0, 9) if (dp[i][r][digit])
+    REP(i, n) REP(r, 2) FOR(digit, 0, 9) REP(lead, 2) if (dp[i][r][digit][lead])
     {
         int lim = r ? 9 : digits[i];
-        FOR(d, 0, lim) if (d != digit || !i) dp[i + 1][r | (d < lim)][d] += dp[i][r][digit];
+        FOR(d, 0, lim) if (d != digit || lead) dp[i + 1][r | (d < lim)][d][lead && !d] += dp[i][r][digit][lead];
     }
 
     long long res = 0;
-    FOR(d, 0, 9) res += dp[n][0][d] + dp[n][1][d];
+    REP(r, 2) FOR(d, 0, 9) REP(lead, 2) res += dp[n][r][d][lead];
     return res;
 }
 
@@ -60,9 +60,7 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> a >> b;
-    // cout << Get(b) - Get(a - 1);
-
-    cout << Get(b);
+    cout << Get(b) - Get(a - 1);
 
     return 0;
 }
