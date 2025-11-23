@@ -11,7 +11,7 @@ using namespace std;
 #define sz(v) ((int)v.size())
 #define F first
 #define S second
-#define name ""
+#define name "STABILITY"
 
 template <class t> bool maxi(t &x, t const &y)
 {
@@ -23,35 +23,36 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-mt19937_64 rd(time(0));
-int const ntest = 1e4;
+int const N = 2e5 + 5;
+int const MOD = 1e9 + 7;
 
-long long Rand(long long l, long long r)
-{
-    return l + rd() * 1ll * rd() % (r - l + 1);
-}
+int n;
 
-void GenTest()
+int a[N];
+int pre[N];
+
+void Add(int &x, int const &y)
 {
-    ofstream cout(name".inp");
+    x += y;
+    if (x >= MOD) x -= MOD;
 }
 
 int main()
 {
-    FOR(i, 1, ntest)
+    freopen(name".inp", "r", stdin);
+    freopen(name".out", "w", stdout);
+
+    cin >> n;
+    FOR(i, 1, n) cin >> a[i], pre[i] = pre[i - 1] + a[i];
+
+    int res = 0;
+    FOR(l, 1, n) FOR(r, l, n)
     {
-        GenTest();
-        system(name".exe");
-        system(name"_trau.exe");
-
-        if (system("fc "name".out "name".ans") != 0)
-        {
-            cout << "Test: " << i << " WRONG!\n";
-            return 0;
-        }
-
-        cout << "Test: " << i << " CORRECT!\n";
+        int sum = pre[r] - pre[l - 1];
+        Add(res, sum & -sum);
     }
+
+    cout << res;
 
     return 0;
 }
