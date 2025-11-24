@@ -27,10 +27,26 @@ struct SegmentTree
     vector<int> t;
     int n;
 
+    void Build(int v, int l, int r)
+    {
+        if (l == r)
+        {
+            t[v] = 1;
+            return;
+        }
+
+        int mid = (l + r) >> 1;
+        Build(2 * v, l, mid);
+        Build(2 * v + 1, mid + 1, r);
+
+        t[v] = t[2 * v] + t[2 * v + 1];
+    }
+
     SegmentTree(int _n = 0)
     {
         n = _n;
-        t.assgin(4 * n, 0);
+        t.assign(4 * n, 0);
+        if (n) Build(1, 1, n);
     }
 
     void Update(int v, int l, int r, int pos, int val)
@@ -42,21 +58,29 @@ struct SegmentTree
         }
 
         int mid = (l + r) >> 1;
-        Update(2 * v, l, mid, pos, val);
-        Update(2 * v + 1, mid + 1, r, pos, val);
+        if (pos <= mid) Update(2 * v, l, mid, pos, val);
+        else Update(2 * v + 1, mid + 1, r, pos, val);
 
         t[v] = t[2 * v] + t[2 * v + 1];
     }
 
-    int Get(int v, int l, int r, int left, int right, int k)
+    int Get(int v, int l, int r, int k)
     {
-        if (l > right || r < left) return;
-        if (left <= l && right >= r) return t[v];
+        if (l == r) return l;
 
         int mid = (l + r) >> 1;
-        int val1 = Get(2 * v, l, mid, left, right, k);
-        
-        if (k <= val1) 
+        if (t[2 * v] >= k) return Get(2 * v, l, mid, k);
+        else return Get(2 * v + 1, mid + 1, r, k - t[2 * v]);
+    }
+
+    void Update(int pos, int val)
+    {
+        Update(1, 1, n, pos, val);
+    }
+
+    int Get(int k)
+    {
+        return Get(1, 1, n, k);
     }
 };
 
@@ -65,7 +89,7 @@ int const N = 1e5 + 5;
 int n;
 long long m;
 
-bool used[N];
+SegmentTree it;
 
 int main()
 {
@@ -75,16 +99,29 @@ int main()
     while (cin >> n >> m)
     {
         if (n == -1) return 0;
-    
-        set<int> s;
-        FOR(i, 1, n) s.insert(i);
+        it = SegmentTree(n);
 
         FOR(i, 1, n)
         {
-            long long cnt = 1LL * (n - i) * (n - i - 1);
+            long long cnt = 1LL * (n - i) * (n - i - 1) / 2;
+            if (cnt >= m)
+            {
+                int x = it.Get(1);
+                it.Update(x, 0);
 
+                cout << x << ' ';
+            }
+            else
+            {
+                int x = it.Get(m - cnt + 1);
+                it.Update(x, 0);
+                m -= m - cnt;
 
+                cout << x << ' ';
+            }
         }
+
+        cout << '\n';
     }
 
     return 0;
