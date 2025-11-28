@@ -22,7 +22,7 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-int const N = 309;
+int const N = 5009;
 long long const oo = 1e18;
 
 int n, m, c;
@@ -32,11 +32,10 @@ vector<int> adj[N];
 int low[N], in[N];
 
 int ccId[N];
-int scc[N];
+int ccSz[N];
 
 stack<int> st;
 int timer = 0, cc = 0;
-int bridges = 0;
 
 int dp[N][N];
 
@@ -53,7 +52,6 @@ void Tarjan(int u, int p)
         {
             Tarjan(v, u);
             mini(low[u], low[v]); 
-            bridges += low[v] == in[v];
         }
     }
 
@@ -66,6 +64,7 @@ void Tarjan(int u, int p)
         {
             v = st.top(); st.pop();
             ccId[v] = cc;
+            ccSz[cc]++;
         }
     }
 }
@@ -79,7 +78,7 @@ void Reset()
     }
 
     memset(dp, 0, sizeof dp);
-    bridges = cc = timer = 0;
+    cc = timer = 0;
 }
 
 int main()
@@ -102,36 +101,8 @@ int main()
         }
 
         FOR(u, 1, n) if (!in[u]) Tarjan(u, -1);
-        FOR(u, 1, n) scc[ccId[u]]++;
 
-        if (cc == 1)
-        {
-            cout << "-1\n";
-            continue;
-        }
-
-        dp[0][0] = 1;
-        FOR(i, 1, cc) REP(j, n)
-        {
-            dp[i][j] = dp[i - 1][j];
-            if (j >= scc[i]) dp[i][j] |= dp[i - 1][j - scc[i]];
-        }
-        
-        long long res = oo;
-        FOR(i, 1, n - 1) if (dp[cc][i])
-        {
-            int cnt = n - i;
-            mini(res, 1LL * i * i + 1LL * cnt * cnt);
-        }
-
-        // FOR(u, 1, n) cout << ccId[u] << ' ';
-        // cout << '\n';
-        // FOR(u, 1, cc) cout << scc[u] << ' ';
-        // cout << "\n---\n";
-
-        // res = 0;
-        cout << res + 1LL * c * (cc - 1 - bridges) << '\n';
-        // cout << bridges << '\n';
+           
     }
 
     return 0;
