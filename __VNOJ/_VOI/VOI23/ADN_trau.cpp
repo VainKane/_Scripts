@@ -27,7 +27,9 @@ int const N = 109;
 int const oo = 1e9;
 
 int n;
-string s, t = "ATGX";
+string s;
+
+int a[N][2];
 char x[N];
 
 int res = oo;
@@ -36,14 +38,11 @@ int Cal()
 {
     int res = 0;
 
+    int j = 1;
     FOR(i, 1, n) 
     {
-        set<char> st;
-        FOR(j, i, n)
-        {
-            st.insert(x[j]);
-            res += sz(st) > 1;
-        }
+        while (x[i] == x[j] && j < n) j++;
+        if (x[i] != x[j]) res += n - j + 1;
     }
 
     return res;
@@ -54,19 +53,21 @@ void Try(int pos)
     if (pos > n)
     {
         mini(res, Cal());
+        // FOR(i, 1, n) cout << x[i];
+        // cout << '\n' << Cal() << '\n';
         return;
     }
 
-    if (s[pos] != '?')
+    if (s[pos] != '?') 
     {
         x[pos] = s[pos];
         Try(pos + 1);
         return;
     }
 
-    REP(i, 4)
+    REP(i, 2)
     {
-        x[pos] = t[i];
+        x[pos] = a[pos][i];
         Try(pos + 1);
     }
 }
@@ -77,12 +78,27 @@ int main()
     cin.tie(0); cout.tie(0);
 
     freopen(name".inp", "r", stdin);
-    freopen(name".ans", "w", stdout);
+    freopen(name".out", "w", stdout);
 
     cin >> s;
 
     n = sz(s);
-    s = " " + s;
+    s = "A" + s + "A";
+
+    FOR(i, 1, n) if (s[i] == '?')
+    {
+        FORD(j, i - 1, 0) if (s[j] != '?')
+        {
+            a[i][0] = s[j];
+            break;
+        }
+
+        FOR(j, i + 1, n + 1) if (s[j] != '?')
+        {
+            a[i][1] = s[j];
+            break;
+        }
+    }
 
     Try(1);
     cout << res;

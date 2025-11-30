@@ -11,7 +11,7 @@ using namespace std;
 #define sz(v) ((int)v.size())
 #define F first
 #define S second
-#define name "D"
+#define name "474E"
 
 template <class t> bool maxi(t &x, t const &y)
 {
@@ -23,8 +23,8 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-int const ntest = 1e4;
 mt19937_64 rd(time(0));
+int const ntest = 1e4;
 
 long long Rand(long long l, long long r)
 {
@@ -35,25 +35,18 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int lim = 2500;
-    int oo = 1e9;
+    int lim = 5000;
+    long long oo = 1e8;
 
     int n = Rand(1, lim);
-    int m = Rand(n - 1, 5000);
-
-    int a[n + 1];
-
-    FOR(i, 1, n) a[i] = i;
-    random_shuffle(a + 1, a + n + 1);
-
-    cout << n << ' ' << m << '\n';
-    FOR(i, 2, n) cout << a[i] << ' ' << a[Rand(1, i - 1)] << ' ' << Rand(1, oo) << '\n';
-    FOR(i, 1, m - n + 1) cout << Rand(1, n) << ' ' << Rand(1, n) << ' ' << Rand(1, oo) << '\n';
+    
+    cout << n << ' ' << Rand(1, min((long long)1e9, oo)) << '\n';
+    while (n--) cout << Rand(1, oo) << ' ';
 }
 
 int main()
 {
-    for (int i = 1; i <= ntest; i++)
+    FOR(i, 1, ntest)
     {
         GenTest();
         system(name".exe <"name".inp> "name".out");

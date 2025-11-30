@@ -42,6 +42,8 @@ struct DSU
         n = _n;
         par.assign(n + 5, 0);
         sz.assign(n + 5, 0);
+
+        MakeSet();
     }
 
     int Find(int v)
@@ -76,18 +78,33 @@ struct Edge
 };
 
 int const N = 5e4 + 5;
+long long const oo = 1e18;
 
 int n, m;
-Edge edges[N];
+Edge edges[(int)1e5 + 5];
 
 DSU dsu;
+bool mark[N];
 
-long long Kruskal(int id)
+long long Kruskal(int banned)
 {
-    long long res = 0;
-    dsu.MakeSet();
+    dsu = DSU(n);
 
-    FOR(i, 1, m) if (i != id && dsu.Union(edges[i].u, edges[i].v)) res += edges[i].w;
+    long long res = 0;
+    int cnt = 0;
+
+    FOR(i, 1, m) if (i != banned)
+    {
+        if (cnt == n - 1) break;
+        if (dsu.Union(edges[i].u, edges[i].v))
+        {
+            if (banned == -1) mark[i] = true;
+            res += edges[i].w;
+            cnt++;
+        }
+    }
+
+    if (cnt != n - 1) res = oo;
     return res;
 }
 
@@ -105,16 +122,17 @@ int main()
     }
 
     sort(edges + 1, edges + m + 1);
-    dsu = DSU(n);
-
-    long long cost = Kruskal(0);
+    long long mst = Kruskal(-1);
 
     vector<pair<int, int>> res;
-    FOR(i, 1, m) if (Kruskal(i) == cost)
+
+    FOR(i, 1, m) if (mark[i] && Kruskal(i) > mst)
     {
         int u = edges[i].u;
         int v = edges[i].v;
-        res.push_back({min(u, v), max(u, v)});
+
+        if (u > v) swap(u, v);
+        res.push_back({u, v});
     }
 
     sort(all(res));

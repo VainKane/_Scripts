@@ -42,7 +42,6 @@ struct DSU
         n = _n;
         par.assign(n + 5, 0);
         sz.assign(n + 5, 0);
-
         MakeSet();
     }
 
@@ -55,7 +54,7 @@ struct DSU
     void Union(int a, int b)
     {
         if (a == b) return;
-        
+
         if (sz[a] < sz[b]) swap(a, b);
         sz[a] += sz[b];
         par[b] = a;
@@ -72,22 +71,19 @@ struct Edge
     }
 };
 
-int const N = 1e5 + 5;
+int const N = 5e4 + 5;
+int const M = 1e5 + 5;
 
 int n, m;
-Edge edges[N];
+Edge edges[M];
+DSU dsu;
 
 vector<pair<int, int>> adj[N];
 
-int res[N];
-
-int par[N];
-int sz[N];
-
-int low[N], in[N];
+int in[N], low[N];
 int timer = 0;
 
-DSU dsu;
+bool mark[M];
 multiset<pair<int, int>> s;
 
 void Add(int a, int b, int &id)
@@ -96,8 +92,7 @@ void Add(int a, int b, int &id)
     b = dsu.Find(b);
 
     if (a == b) return;
-    
-    res[id] = 1;
+
     adj[a].push_back({b, id});
     adj[b].push_back({a, id});
 
@@ -112,17 +107,14 @@ void Tarjan(int u, int p)
     for (auto &e : adj[u])
     {
         int v = e.F;
-
         if (v == p) continue;
         if (in[v]) mini(low[u], in[v]);
         else
         {
             Tarjan(v, u);
             mini(low[u], low[v]);
-            if (low[v] == in[v])
-            {
-                if (s.count({u, v}) == 1) res[e.S] = 2;
-            }
+
+            if (low[v] == in[v] && s.count({u, v}) == 1) mark[e.S] = true;
         }
     }
 }
@@ -146,38 +138,47 @@ int main()
     for (int i = 1; i <= m;)
     {
         int j = i;
-        timer = 0;
-
-        for (j = i; edges[i].w == edges[j].w; j++) 
+        for (j = i; edges[j].w == edges[i].w; j++) 
+        {
             Add(edges[j].u, edges[j].v, edges[j].id);
+        }
         
-        for (j = i; edges[i].w == edges[j].w; j++)
+        for (j = i; edges[j].w == edges[i].w; j++)
         {
             int u = dsu.Find(edges[j].u);
             if (!in[u]) Tarjan(u, -1);
         }
 
-        for (j = i; edges[i].w == edges[j].w; j++) 
+        for (j = i; edges[j].w == edges[i].w; j++)
         {
             int u = dsu.Find(edges[j].u);
             int v = dsu.Find(edges[j].v);
-            
+
             adj[u].clear(); adj[v].clear();
             in[u] = in[v] = 0;
-            
+
             dsu.Union(u, v);
         }
 
         s.clear();
+        timer = 0;
         i = j;
     }
 
-    FOR(i, 1, m)
+    vector<pair<int, int>> res;
+    FOR(i, 1, m) if (mark[edges[i].id])
     {
-        if (res[i] == 1) cout << "at least one\n";
-        else if (res[i] == 2) cout << "any\n";
-        else cout << "none\n";
+        int u = edges[i].u;
+        int v = edges[i].v;
+
+        if (u > v) swap(u, v);
+        res.push_back({u, v});
     }
+
+    sort(all(res));
+
+    cout << sz(res) << '\n';
+    for (auto &p : res) cout << p.F << ' ' << p.S << '\n';
 
     return 0;
 }

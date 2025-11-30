@@ -22,10 +22,34 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
+int const N = 1e5 + 5;
+
+int n;
+int a[N];
+
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
+
+    cin >> n;
+    FOR(i, 1, n) cin >> a[i];
+
+    int t; cin >> t;
+    while (t--)
+    {
+        int l, r;
+        cin >> l >> r;
+
+        int res = 0;
+        FOR(i, l, r) FOR(j, l, r) if (a[j] % a[i])
+        {
+            res++;
+            break;
+        }
+
+        cout << res << '\n';
+    }
 
     return 0;
 }

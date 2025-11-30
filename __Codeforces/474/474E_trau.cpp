@@ -22,10 +22,43 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
+int const N = 1e5 + 5;
+
+int n, d;
+long long a[N];
+
+int dp[N];
+int trace[N];
+
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
+
+    cin >> n >> d;
+    FOR(i, 1, n) cin >> a[i];
+
+    FOR(i, 1, n) dp[i] = 1;
+
+    FOR(i, 1, n) FOR(j, 1, i - 1) if (abs(a[i] - a[j]) >= d)
+    {
+        if (maxi(dp[i], dp[j] + 1)) trace[i] = j;
+    }
+
+    int idx = max_element(dp + 1, dp + n + 1) - dp;
+    
+    vector<int> res;
+
+    while (idx)
+    {
+        res.push_back(idx);
+        idx = trace[idx];
+    }
+
+    reverse(all(res));
+
+    cout << sz(res) << '\n';
+    // for (auto &i : res) cout << i << ' ';
 
     return 0;
 }
