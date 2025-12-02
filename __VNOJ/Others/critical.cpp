@@ -17,39 +17,39 @@ vector<int> adj[N];
 int f[N];
 
 int id[N], low[N];
-int timer = 0;
+int timer = 0, cnt = 0;
 
-double res = 0;
+int cc[N];
+int ccId[N];
+bool cut[N];
 
-void Tarjan(int u, int p)
+void Tarjan(int u, int p, int idx)
 {
     int child = (p != -1);
     low[u] = id[u] = ++timer;
     f[u] = 1;
 
+    cc[idx]++;
+    ccId[u] = idx;
+
     int sum = 0;
-    long long pairs = 1;
+    long long pairs = 0;
 
     for (auto &v : adj[u]) if (v != p)
     {
         if (id[v]) mini(low[u], id[v]);
         else
         {
-            Tarjan(v, u);
+            Tarjan(v, u, idx);
 
             mini(low[u], low[v]);
             f[u] += f[v];
 
-            if (low[v] >= id[u])
-            {
-                sum += f[v];
-                pairs += 1ll * f[v] * (n - sum - 1);
-                child++;
-            }
+            child += low[v] >= id[u];
         }        
     }
 
-    if (child >= 2) res += pairs;
+    cut[u] = child >= 2;
 }
 
 int main()
@@ -66,8 +66,12 @@ int main()
         adj[v].push_back(u);
     }
 
-    FOR(u, 1, n) if (!id[u]) Tarjan(u, -1);
-    cout << res / n;
+    FOR(u, 1, n) if (!id[u]) Tarjan(u, -1, ++cnt);
+
+    long long res = 0;
+    FOR(u, 1, n) if (cut[u]) for (auto &v : adj[u]) res += 1LL * f[v] * (cc[ccId[u]] - f[v]);
+
+    cout << fixed << setprecision(10) << (double)res / n;
 
     return 0;
 }

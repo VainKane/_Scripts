@@ -24,13 +24,12 @@ template <class t> bool mini(t &x, t const &y)
 }
 
 mt19937_64 rd(time(0));
-int const ntest = 1;
+int const ntest = 1e4;
 
 int const N = 4e5 + 5;
 
 int n, m;
 
-int a[N];
 vector<int> adj[N];
 bool visited[N];
 
@@ -45,11 +44,12 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int lim = 10;
+    int lim = 5000;
 
-    int n = Rand(2, lim);
-    int m = Rand(n - 1, lim);
+    n = Rand(2, lim);
+    m = Rand(n - 1, lim);
 
+    int a[n + 1];
     FOR(i, 1, n) a[i] = i;
     random_shuffle(a + 1, a + n + 1);
 
@@ -95,11 +95,12 @@ void DFS(int u)
     }
 }
 
-void Check()
+void Check(int &idTest)
 {
-    ifstream cin(name".inp");
+    ifstream cin(name".out");
 
     int res; cin >> res;
+    FOR(u, 1, n) adj[u].clear();
     FOR(i, 1, m)
     {
         int u, v;
@@ -120,7 +121,8 @@ void Check()
 
     if (mi != res) 
     {
-        cerr << "Your ans is not correct, the real value of given ans is: " << mi << '\n';
+        cout << "Got trouble on test " << idTest << ":\n";
+        cout << "Your ans is not correct, the real value of given ans is: " << mi << '\n';
         exit(0);
     }
 }
@@ -132,8 +134,8 @@ int main()
         GenTest();
         system(name".exe <"name".inp> "name".out");
 
-        Check();
-        cout << "Test: " << i << " CORRECT!\n";
+        Check(i);
+        cout << "Good boy, the ans is correct (Test " << i << ")\n";
     }
 
     return 0;

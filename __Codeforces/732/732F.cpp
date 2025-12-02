@@ -50,6 +50,11 @@ bool used[N];
 int scc[N];
 int ccId[N];
 
+int maxCC;
+int cnt = 0;
+
+int pos[N];
+
 void Tarjan(int u, int p)
 {
     low[u] = in[u] = ++timer;
@@ -84,8 +89,14 @@ void Tarjan(int u, int p)
             scc[cc]++;
         }
 
-        maxi(res, scc[cc]);
+        if (maxi(res, scc[cc])) maxCC = cc;
     }
+}
+
+void DFS(int u, int p)
+{
+    pos[u] = ++cnt;
+    for (auto &v : adj[u]) if (v != p) DFS(v, u);
 }
 
 int main()
@@ -106,13 +117,26 @@ int main()
 
     Tarjan(1, -1);
 
+    FOR(u, 1, n) adj[u].clear();
+    FOR(i, 1, m)
+    {
+        int u = ccId[edges[i].u];
+        int v = ccId[edges[i].v];
+
+        if (u == v) continue;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+
+    DFS(maxCC, -1);
+
     cout << res << '\n';
     FOR(i, 1, m)
     {
         int u = edges[i].u;
         int v = edges[i].v;
 
-        if (scc[ccId[u]] > scc[ccId[v]]) swap(u, v);
+        if (pos[ccId[u]] < pos[ccId[v]]) swap(u, v);
         cout << u << ' ' << v << '\n';
     }
 
