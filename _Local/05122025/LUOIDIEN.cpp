@@ -79,8 +79,6 @@ int main()
     REP(i, m) Dijkstra(a[i], d[i], c);
     REP(i, m) Dijkstra(a[i], dRev[i], cRev);
 
-    memset(dist, 0x3f, sizeof dist);
-
     REP(s, m)
     {
         REP(mask, MK(m)) memset(dp[mask], 0x3f, sizeof dp[mask]);
