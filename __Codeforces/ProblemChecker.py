@@ -46,7 +46,7 @@ def check_codeforces_problem(url: str):
 
         print(f"\n📘 Problem: {name}")
         # print(f"🏷️ Tags: {', '.join(tags) if tags else 'No tags available'}")
-        # print(f"⭐ Rating: {rating if rating else 'Unknown'}")
+        # print(f"X⭐ Rating: {rating if rating else 'Unknown'}")
 
         for tag in tags:
             if bannedTags.count(tag): 
