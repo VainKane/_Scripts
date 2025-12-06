@@ -53,7 +53,6 @@ void Dijkstra(int s, int d[], int c[][N])
 
         REP(i, n) if (!used[i] && mini(du, d[i])) u = i;
         if (u == -1) break;
-
         used[u] = true;
         REP(v, n) mini(d[v], d[u] + c[u][v]);
     }
