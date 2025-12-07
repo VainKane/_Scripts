@@ -22,42 +22,21 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-int const N = 1e5 + 5;
+int const N = 22;
 int const MOD = 998244353;
-int const LOG = 17;
+int const LOG = 4;
 
 int n, q;
 vector<int> adj[N];
 
-int up[N][22];
+int up[N][5];
 int h[N];
 
-int f[N], g[N];
-int s[N];
-
-int PowMod(int a, int b)
-{
-    int res = 1;
-
-    while (b)
-    {
-        if (b & 1) res = 1LL * res * a % MOD;
-        b >>= 1;
-        a = 1LL * a * a % MOD;
-    }
-
-    return res;
-}
-
-void Add(int &x, int const &y)
-{
-    x += y;
-    if (x >= MOD) x -= MOD;
-}
+int f[N];
+bool visited[N];
 
 void DFSPrepare(int u, int p)
 {
-    f[u] = 1;
     for (auto &v : adj[u]) if (v != p)
     {
         h[v] = h[u] + 1;
@@ -65,31 +44,15 @@ void DFSPrepare(int u, int p)
 
         FOR(i, 1, LOG) up[v][i] = up[up[v][i - 1]][i - 1];
         DFSPrepare(v, u);
-        
-        f[u] = 1LL * f[u] * (f[v] + 1) % MOD;
-    }
-
-    s[u] = f[u];
-}
-
-void DFS(int u, int p)
-{
-    for (auto &v : adj[u]) if (v != p)
-    {
-        g[v] = 1LL * f[u] * g[u] % MOD;
-        g[v] = (1LL * g[v] * PowMod(f[v] + 1, MOD - 2) + 1) % MOD;
-
-        Add(s[v], s[u]);
-
-        DFS(v, u);
     }
 }
+
 
 int LCA(int u, int v)
 {
     if (h[u] < h[v]) swap(u, v);
-    FORD(i, LOG, 0) if (up[u][i] && h[up[u][i]] >= h[v]) u = up[u][i];
 
+    FORD(i, LOG, 0) if (up[u][i] && h[up[u][i]] >= h[v]) u = up[u][i];
     if (u == v) return u;
 
     FORD(i, LOG, 0) if (up[u][i] != up[v][i])
@@ -101,13 +64,45 @@ int LCA(int u, int v)
     return up[u][0];
 }
 
+void DFS1(int u, int p)
+{
+    for (auto &v : adj[u]) if (v != p)
+    {
+        DFS1(v, u);
+        f[u] += f[v];
+    }
+}
+
+void DFS2(int u, int p, int &mask)
+{
+    visited[u] = true;
+    for (auto &v : adj[u]) if (BIT(v - 1, mask) && v != p) DFS2(v, u, mask);
+}
+
 void Reset()
 {
-    FOR(u, 1, n) 
+    FOR(u, 1, n)
     {
         memset(up[u], 0, sizeof up[u]);
         adj[u].clear();
     }
+}
+
+bool Check(int mask)
+{
+    for (int tmp = mask; tmp; tmp ^= tmp & -tmp)
+    {
+        int i = __builtin_ctz(tmp & -tmp);
+        if (!visited[i + 1]) return false;
+    }
+
+    for (int tmp = mask; tmp; tmp ^= tmp & -tmp)
+    {
+        int i = __builtin_ctz(tmp & -tmp);
+        if (f[i + 1]) return true;
+    }
+
+    return false;
 }
 
 int main()
@@ -115,24 +110,20 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    g[1] = 1;
-
     int t; cin >> t;
     while (t--)
     {
         cin >> n >> q;
-        Reset();
 
+        Reset();
         FOR(i, 2, n)
         {
             int p; cin >> p;
-            
             adj[i].push_back(p);
             adj[p].push_back(i);
         }
 
         DFSPrepare(1, -1);
-        DFS(1, -1);
 
         while (q--)
         {
@@ -140,7 +131,21 @@ int main()
             cin >> u >> v;
 
             int p = LCA(u, v);
-            int res = (1LL * f[p] * g[p] + s[u] + s[v] - 2 * s[p] + 2 * MOD) % MOD;
+            memset(f, 0, sizeof f);
+
+            f[u]++; f[v]++;
+            f[p]--; f[up[p][0]]--;
+        
+            DFS1(1, -1);
+        
+            int res = 0;
+            REP(mask, MK(n)) if (mask)
+            {
+                memset(visited, false, sizeof visited);
+                DFS2(__builtin_ctz(mask) + 1, -1, mask);
+                res += Check(mask);
+            }
+
             cout << res << '\n';
         }
     }

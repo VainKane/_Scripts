@@ -26,10 +26,10 @@ long long Get(long long val)
     memset(dp, 0, sizeof dp);
     dp[0][0][0][1] = 1;
 
-    REP(i, n) FOR(r, 0, 1) FOR(digit, 0, 9) FOR(zero, 0, 1) 
+    REP(i, n) FOR(r, 0, 1) FOR(digit, 0, 9) FOR(zero, 0, 1)
     {
         int lim = r ? 9 : x[i];
-        FOR(d, 0, lim) if ((digit + d) % k || i == 0 || zero)  
+        FOR(d, 0, lim) if ((digit + d) % k || i == 0 || zero)
             dp[i + 1][r | (d < lim)][d][zero && !d] += dp[i][r][digit][zero];
     }
 
@@ -38,6 +38,9 @@ long long Get(long long val)
         res += dp[n][r][d][zero];
 
     return res;
+
+    1ll
+
 }
 
 int main()
