@@ -27,28 +27,6 @@ int const N = 1009;
 int m, n, p, q;
 int a[N][N];
 
-int pre[N][N];
-
-int GetSum(int top, int bot, int left, int right)
-{
-    return pre[bot][right] - pre[top - 1][right] - pre[bot][left - 1] + pre[top - 1][left - 1];
-}
-
-int Cal(int x)
-{
-    FOR(i, 1, m) FOR(j, 1, n) 
-        pre[i][j] = pre[i][j - 1] + pre[i - 1][j] - pre[i - 1][j - 1] + (a[i][j] >= x);
-    
-    int cnt = 0;
- 
-    FOR(i, 1, m - p + 1) FOR(j, 1, n - q + 1)
-    {
-        cnt += GetSum(i, i + p - 1, j, j + q - 1) >= (p * q + 2) / 2;
-    }
-
-    return cnt;
-}
-
 int main()
 {
     ios_base::sync_with_stdio(false);
@@ -57,24 +35,19 @@ int main()
     cin >> m >> n >> p >> q;
     FOR(i, 1, m) FOR(j, 1, n) cin >> a[i][j];
 
-    int l = 1;
-    int r = 1e9;
-    pair<int, int> res = {l, 1};
+    int res = 0, cnt = 0;
 
-    while (l <= r)
+    FOR(i, 1, m - p + 1) FOR(j, 1, n - q + 1)
     {
-        int mid = (l + r) >> 1;
-        int cnt = Cal(mid);
-        
-        if (cnt)
-        {
-            res = {mid, cnt};
-            l = mid + 1;
-        }
-        else r = mid - 1;
+        vector<int> v = {0};
+        FOR(x, i, i + p - 1) FOR(y, j, j + q - 1) v.push_back(a[x][y]);
+
+        sort(all(v));
+        if (maxi(res, v[(p * q + 1) / 2])) cnt = 1;
+        else if (res == v[(p * q + 1) / 2]) cnt++;
     }
 
-    cout << res.F << ' ' << res.S;
+    cout << res << ' ' << cnt;
 
     return 0;
 }

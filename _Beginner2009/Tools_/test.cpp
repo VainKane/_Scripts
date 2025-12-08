@@ -90,4 +90,7 @@ int main()
 
     // int x = 9;
     // assert(x == 7);
+
+    freopen("blabla.out", "w", stdout);
+    cout << (char)32;
 }
