@@ -24,12 +24,12 @@ template <class t> bool mini(t &x, t const &y)
 
 int const N = 22;
 int const MOD = 998244353;
-int const LOG = 4;
+int const LOG = 10;
 
 int n, q;
 vector<int> adj[N];
 
-int up[N][5];
+int up[N][15];
 int h[N];
 
 int f[N];
@@ -46,7 +46,6 @@ void DFSPrepare(int u, int p)
         DFSPrepare(v, u);
     }
 }
-
 
 int LCA(int u, int v)
 {

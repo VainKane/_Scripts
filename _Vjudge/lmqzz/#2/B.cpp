@@ -122,7 +122,7 @@ int main()
     {
         cin >> n >> q;
         Reset();
-
+        
         FOR(i, 2, n)
         {
             int p; cin >> p;
