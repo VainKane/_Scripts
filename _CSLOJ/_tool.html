@@ -1,0 +1,9 @@
+let div = document.createElement("div");
+div.innerHTML = unformattedCode;
+let decoded = div.textContent;
+let w = window.open("", "_blank");
+w.document.write("<pre>" + 
+    decoded.replace(/</g, "&lt;").replace(/>/g, "&gt;") + 
+    "</pre>"
+);
+w.document.close();
