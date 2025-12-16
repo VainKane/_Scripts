@@ -34,8 +34,6 @@ int l[N], r[N];
 int up[N][22];
 int lg[N];
 
-int cur = 1, pre = 0;
-
 void Build()
 {
     FOR(i, 1, n) up[i][0] = b[i];
@@ -77,9 +75,6 @@ int main()
 
     FOR(res, 0, N)
     {
-        // cout << "year " << res << ":\n";
-        // FOR(i, 1, n) cout << a[i] << ' ';
-        // cout << '\n';
         if (SwapArray())
         {
             cout << res;

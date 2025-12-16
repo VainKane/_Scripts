@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#define name "ROBOT"
+#define name "ADN"
 int const ntest = 1e4;
 
 mt19937_64 rd(time(0));
@@ -16,14 +16,11 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int w = Rand(1, 1);
-    int l = Rand(1, 200);
-    int n = Rand(1, 2);
-    int q = Rand(1, 2);
+    int lim = 1e6;
+    int n = Rand(1, lim);
 
-    cout << w << ' ' << l << ' ' << n << ' ' << q << '\n';
-    while (n--) cout << Rand(1, w) << ' ' << Rand(1, l) << '\n';
-    while (q--) cout << Rand(1, w) << ' ' << Rand(1, l) << '\n';
+    string t = "ATGX?";
+    while (n--) cout << t[Rand(0, t.size() - 1)];
 }
 
 int main()

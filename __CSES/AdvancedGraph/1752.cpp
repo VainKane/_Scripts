@@ -46,9 +46,8 @@ void DFS(int u, int p)
         h[v] = h[u] + 1;
         DFS(v, u);
         dp[u].insert(all(dp[v]));
+        dp[v].clear();
     }
-
-    for (auto &v : adj[u]) if (v != p) dp[v].clear();
 
     while (true)
     {
