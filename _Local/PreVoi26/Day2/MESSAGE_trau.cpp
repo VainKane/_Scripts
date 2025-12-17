@@ -45,6 +45,14 @@ int const oo = 1e18;
 int n, m, s, t;
 vector<Edge> adj[N];
 
+int id[N];
+
+void DFS(int u, int &hehe)
+{
+    id[u] = hehe;
+    for (auto &v : adj[u]) if (!id[v]) DFS(v, hehe);
+}
+
 namespace Sub2
 {
     Edge par[N];
@@ -149,9 +157,7 @@ namespace Sub4
     void Process()
     {
         Dijkstra();
-        long long res = *min_element(d[t] + 1, d[t] + 21);
-        if (res > oo) res = -1;
-        cout << res;
+        cout << *min_element(d[t] + 1, d[t] + 21);
     }
 }
 
