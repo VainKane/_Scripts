@@ -11,7 +11,7 @@ using namespace std;
 #define sz(v) ((int)v.size())
 #define F first
 #define S second
-#define name "COLLECT"
+#define name "MESSAGE"
 
 template <class t> bool maxi(t &x, t const &y)
 {
@@ -38,43 +38,19 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int lim = 1000;
+    int lim = 2e5;
     int oo = 1e9;
 
-//    int n = Rand(1, lim);
-//    int m = n - 1;
-//
-//    FOR(i, 1, n) a[i] = i;
-//    random_shuffle(a + 1, a + n + 1);
-//
-//    cout << n << ' ' << m << ' ' << Rand(1, n) << ' ' << Rand(1, n) << '\n';
-//    FOR(i, 2, n)
-//    {
-//        cout << a[i] << ' ' << a[Rand(1, i - 1)] << ' ' << Rand(1, oo) << ' ' << Rand(1, 10) << '\n';
-//    }
-
     int n = Rand(1, lim);
-    int q = Rand(1, 10);
-    int ma = 0;
+    int m = Rand(n - 1, 3e5);
 
-    cout << n << '\n';
-    FOR(i, 1, n)
-    {
-        int x = Rand(1, oo / 8);
-        maxi(ma, x);
+    int a[n + 1];
+    FOR(i, 1, n) a[i] = i;
+    random_shuffle(a + 1, a + n + 1);
 
-        cout << x << ' ';
-    }
-    cout << '\n';
-
-    FOR(i, 1, n - 1) cout << Rand(1, oo) << ' ';
-    cout << '\n';
-
-    FOR(i, 1, n) cout << Rand(1, oo) << ' ';
-    cout << '\n';
-
-    cout << q << '\n';
-    while (q--) cout << Rand(ma, oo) << '\n';
+    cout << n << ' ' << m << ' ' << Rand(1, n) << ' ' << Rand(1, n) << '\n';
+    FOR(i, 2, n) cout << a[i] << ' ' << a[Rand(1, i - 1)] << ' ' << Rand(1, oo) << ' ' << Rand(1, 20) << '\n';
+    FOR(i, 1, m - n + 1) cout << Rand(1, n) << ' ' << Rand(1, n) << ' ' << Rand(1, oo) << ' ' << Rand(1, 20) << '\n';
 }
 
 int main()

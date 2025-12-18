@@ -25,13 +25,29 @@ template <class t> bool mini(t &x, t const &y)
 
 struct Edge
 {
-    int v, w, f;
+    int u, v, w, f;
+    int pos[2];    
+
+    void Input()
+    {
+        cin >> u >> v >> w >> f;
+    }
+
+    bool GetType(int p)
+    {
+        return p == u;
+    }
+
+    int GetNode(bool type)
+    {
+        return type ? u : v;
+    }
 };
 
 struct Data
 {
     long long du;
-    int f, u;
+    int id, type;
 
     bool operator < (Data const other) const
     {
@@ -40,10 +56,62 @@ struct Data
 };
 
 int const N = 2e5 + 5;
-int const oo = 1e18;
+int const M = 3e5 + 5;
+long long oo = 1e18;
 
 int n, m, s, t;
-vector<Edge> adj[N];
+
+vector<int> adj[N];
+Edge edges[M];
+
+long long d[M][2];
+
+void Dijkstra()
+{
+    priority_queue<Data> pq;
+
+    memset(d, 0x3f, sizeof d);
+    
+    for (auto &id : adj[s])
+    {
+        bool type = edges[id].GetType(s);
+        d[id][type] = 0;
+        pq.push({0, id, type});
+    }
+
+    while (!pq.empty())
+    {
+        int id = pq.top().id;
+        bool type = pq.top().type;
+        long long du = pq.top().du;
+        pq.pop();
+        
+        int u = edges[id].GetNode(type);
+        int pos = edges[id].pos[type];
+        int f = edges[id].f;
+
+        if (du > d[id][type]) continue;
+
+        if (pos > 0)
+        {
+            int newId = adj[u][pos - 1];
+            int newType = edges[newId].GetType(u);
+            if (mini(d[newId][newType], d[id][type] + f - edges[newId].f)) pq.push({d[newId][newType], newId, newType});
+        }
+        if (pos < sz(adj[u]) - 1)
+        {
+            int newId = adj[u][pos + 1];
+            int newType = edges[newId].GetType(u);
+            if (mini(d[newId][newType], d[id][type] + edges[newId].f - f)) pq.push({d[newId][newType], newId, newType});
+        }
+        if (mini(d[id][!type], d[id][type] + edges[id].w)) pq.push({d[id][!type], id, !type});
+    }
+}
+
+bool cmp(int i, int j)
+{
+    return edges[i].f < edges[j].f;
+}
 
 int main()
 {
@@ -53,11 +121,28 @@ int main()
     cin >> n >> m >> s >> t;
     FOR(i, 1, m)
     {
-        int u, v, w, f;
-        cin >> u >> v >> w >> f;
-        adj[u].push_back({v, w, f});
-        adj[v].push_back({u, w, f});
+        edges[i].Input();
+        adj[edges[i].u].push_back(i);
+        adj[edges[i].v].push_back(i);
     }
+
+    FOR(u, 1, n)
+    {
+        sort(all(adj[u]), cmp);
+        REP(i, sz(adj[u])) 
+        {
+            Edge &tmp = edges[adj[u][i]];
+            tmp.pos[tmp.GetType(u)] = i;
+        }
+    }
+
+    Dijkstra();
+
+    long long res = oo;
+    for (auto &id : adj[t]) mini(res, d[id][edges[id].GetType(t)]);
+    if (res == oo) res = -1;
+
+    cout << res;
 
     return 0;
 }

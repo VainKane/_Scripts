@@ -145,9 +145,6 @@ int main()
 
             sort(all(v), cmp2);
             FOR(i, 1, sz(v) - 1) tmp += Dist(v[i], v[i - 1]);
-
-            if (q == 8) cout << res << ' ' << tmp << '\n';
-            cout << min(res, tmp) << '\n';
         }
     }
 

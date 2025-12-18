@@ -40,18 +40,10 @@ struct Data
 };
 
 int const N = 2e5 + 5;
-int const oo = 1e18;
+long long const oo = 1e18;
 
 int n, m, s, t;
 vector<Edge> adj[N];
-
-int id[N];
-
-void DFS(int u, int &hehe)
-{
-    id[u] = hehe;
-    for (auto &v : adj[u]) if (!id[v]) DFS(v, hehe);
-}
 
 namespace Sub2
 {
