@@ -1,0 +1,42 @@
+body 
+{
+    font-family: "Quicksand", sans-serif;
+    background: url(https://img.freepik.com/free-vector/white-background-gradient-modern-abstract-design-wave_343694-2337.jpg?semt=ais_hybrid&w=740&q=80);
+    /* background-size: cover; */
+}
+
+*
+{
+    box-sizing: border-box;
+}
+
+.header
+{
+    position: fixed;
+    margin: 0px;
+    top: 0px;
+    border: 3px solid green;
+    padding: 2px;
+    text-align: center;
+    width: 100%;
+}
+
+.form
+{
+    border-style: groove;
+    
+    display: block;
+    
+    padding-inline: 30px;
+    padding-bottom: 12px;
+    padding-top: 12px;
+    
+    margin-top: 100px;
+    margin-left: 100px;
+
+    line-height: 30px;
+
+    font-weight: 500;
+    width: 600px;
+    /* float: left; */
+}

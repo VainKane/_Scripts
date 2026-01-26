@@ -100,4 +100,6 @@
     "terminal.integrated.fontFamily": "Fira Code",
     "editor.fontVariations": false,
     "editor.fontWeight": "460",
+    "cph-ng.cache.cleanOnStartup": false,
+    "cph-ng.cphCapable.enabled": true,
 }

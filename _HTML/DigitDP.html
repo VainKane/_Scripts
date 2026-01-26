@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title> Learn Digit DP </title>
+    </head>
+    <body>
+        <div>
+        <h1 id="DP"> Digit DP Basic </h1>
+
+        Digit dp is a very easy technique and also useful to solve many dynamic programming problems. <br /> <br />
+        Seeing the name “Digit DP” it’s easy to guess that we are going to do something using the digits. <br /> <br />
+        Yes we are actually going toplay with digits. <br /> <br />
+        Let’s explain the concept using a classical problem. <br /> <br />
+    </div>
+
+    <div>
+        Problem How many numbers x are there in the range a to b, where the digit d occurs exactly k times in x? <br />
+        <br />
+        There may have several solutions including number theory or combinatorics, <br /> <br />
+        but let’s see how we can solve this problem using digit dp. <br /> <br />
+    </div>
+
+    <div>
+        Solve for range (zero to a) <br /> <br />
+        Using digit dp we always focus on building a number satisfying all the conditions. <br /> <br />
+        If we finally manage to buildthat number then we say, yes we have got one ;-) <br /> <br />
+        But how we’ll build that number? For the time being let’s say a is zero. <br /> <br />
+        So we need to find the total numbers which are not greater than b and also satisfy the given conditions. <br />
+        <br />
+    </div>
+
+    <div>
+        Building a sequence of digits <br /> <br />
+        Let’s consider the number as a sequence of digits. <br /> <br />
+        Let’s name the sequence sq. Initially sq is empty. <br /> <br />
+        We’ll try to add new digits from left to right to build the sequence. <br /> <br />
+        In each recursive call we’ll place a digit in our current position and will call recursively to add a digit in
+        the next position. <br /> <br />
+        But can we place any of the digits from 0 to 9 in our current position? <br /> <br />
+        Of course not, because we need to make sure that the number is not
+        getting larger than b. <br /> <br />
+    </div>
+
+    <div>
+        Information we need to place a digit at the current position <br /> <br />
+        Let’s say during the building of the sequence, currently we are at position pos. <br /> <br />
+        We have already placed some digits in position from 1 to pos-1. <br /> <br />
+        So now we are trying to place a digit at current position pos. <br /> <br />
+        If we knew the whole sequence we have build so far till position pos-1 then we could easily find out which
+        digits we can
+        place now. <br /> <br />
+        But how... <br /> <br />
+    </div>
+    </body>
+</html>

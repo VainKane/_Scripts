@@ -2,10 +2,29 @@
 
 using namespace std;
 
-#define name "102512A"
-int const ntest = 1e4;
+#define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
+#define FORD(i, b, a) for (int i = (b), _a = (a); i >= _a; i--)
+#define REP(i, n) for (int i = 0, _n = (n); i < _n; i++)
+#define BIT(i, x) (((x) >> (i)) & 1)
+#define MK(i) (1LL << (i))
+#define all(v) v.begin(), v.end()
+#define sz(v) ((int)v.size())
+#define F first
+#define S second
+#define name "100886G"
+
+template <class t> bool maxi(t &x, t const &y)
+{
+    return x < y ? x = y, 1 : 0;
+}
+
+template <class t> bool mini(t &x, t const &y)
+{
+    return x > y ? x = y, 1 : 0;
+}
 
 mt19937_64 rd(time(0));
+int const ntest = 1e4;
 
 long long Rand(long long l, long long r)
 {
@@ -16,30 +35,17 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int oo = 1e5;
-    int n = Rand(1, oo);
-    int m = Rand(n - 1, oo);
-    int q = Rand(1, oo);
+    long long oo = 1e9;
 
-    cout << n << ' ' << m << '\n';
+    long long a = Rand(1, oo);
+    long long b = a + Rand(1, 1e6);
 
-    for (int i = 2; i <= n; i++)
-    {
-        cout << i << ' ' << Rand(1, i - 1) << '\n';
-    }
-
-    for (int i = 1; i <= m - n + 1; i++)
-    {
-        cout << Rand(1, n) << ' ' << Rand(1, n) << '\n';
-    }
-
-    cout << q << '\n';
-    while (q--) cout << Rand(1, n) << ' ' << Rand(1, n) << '\n';
+    cout << a << ' ' << b;
 }
 
 int main()
 {
-    for (int i = 1; i <= ntest; i++)
+    FOR(i, 1, ntest)
     {
         GenTest();
         system(name".exe <"name".inp> "name".out");
