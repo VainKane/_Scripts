@@ -2,6 +2,7 @@
 
 using namespace std;
 
+#define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
 #define REP(i, n) for (int i = 0, _n = (n); i < _n; i++)
 #define FORD(i, a, b) for (int i = (a), _b = (b); i >= _b; i--)
 
@@ -13,7 +14,7 @@ long long GCD(long long a, long long b)
     
 }
 
-int a[23] = {0, 1, 2, 3};
+int a[1000] = {0, 1, 2, 3};
 
 int Fibo(int n)
 {
@@ -92,5 +93,13 @@ int main()
     // assert(x == 7);
 
     freopen("blabla.out", "w", stdout);
-    cout << (char)32;
+    // cout << (char)32;
+
+    int n;
+    cin >> n;
+
+    FOR(i, 1, n) cin >> a[i];
+    // sort(a + 1, a + n + 1);
+
+    FOR(i, 1, n) cout << a[i] << '\n';
 }
