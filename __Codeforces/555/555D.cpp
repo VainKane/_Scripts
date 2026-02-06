@@ -27,22 +27,38 @@ int const N = 2e5 + 5;
 int n, m;
 
 int x[N], id[N];
+int pos[N];
+bool dir;
 
 bool cmp(int i, int j)
 {
     return x[i] < x[j];
 }
 
-int GetLeft(int len)
+int GetRight(int len)
 {
     x[0] = len;
     return id[upper_bound(id + 1, id + n + 1, 0, cmp) - id - 1];
 }
 
-int GetRight(int len)
+int GetLeft(int len)
 {
     x[0] = len;
     return id[lower_bound(id + 1, id + n + 1, 0, cmp) - id];
+}
+
+void SubCycle(int idx, int &len)
+{
+    int j = dir ? GetRight(x[idx] + len) : GetLeft(x[idx] - len);
+    long long d = 2LL * abs(x[idx] - x[j]);
+
+    idx = pos[idx];
+    
+    int d1 = abs(x[id[idx]] - (dir ? x[id[idx - 1]] : x[id[idx + 1]]));
+    if (len - d >= d1) return;
+    if (!d) return;
+
+    len -= len / d * d;
 }
 
 int main()
@@ -54,22 +70,28 @@ int main()
     FOR(i, 1, n) cin >> x[i], id[i] = i;
 
     sort(id + 1, id + n + 1, cmp);
+    FOR(i, 1, n) pos[id[i]] = i;
 
     while (m--)
     {
         int idx, len;
         cin >> idx >> len;
 
-        bool dir = 1;
+        dir = 1;
+        int cnt = 0;
+
+        long long d = 2LL * (x[id[n]] - x[id[1]]);
+        if (d) len -= len / d * d;
     
         while (true)
         {
+            SubCycle(idx, len);
             int j = idx;
 
-            if (dir) j = GetLeft(x[idx] + len);
-            else j = GetRight(x[idx] - len);
+            if (dir) j = GetRight(x[idx] + len);
+            else j = GetLeft(x[idx] - len);
 
-            if (idx == j)
+            if (idx == j && ++cnt == 2)
             {
                 cout << idx << '\n';
                 break;

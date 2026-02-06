@@ -11,7 +11,7 @@ using namespace std;
 #define sz(v) ((int)v.size())
 #define F first
 #define S second
-#define name "555E"
+#define name "555D"
 
 template <class t> bool maxi(t &x, t const &y)
 {
@@ -35,15 +35,19 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int lim = 20;
-    
-    int n = Rand(20, lim);
-    int m = Rand(10, n - 2);
-    int q = Rand(1, n);
+    int lim = 100;
 
-    cout << n << ' ' << m << ' ' << q << '\n';
-    // FOR(i, 2, n) cout << i << ' ' << Rand(1, i - 1) << '\n';
-    FOR(i, 1, m + q) cout << Rand(1, n) << ' ' << Rand(1, n) << '\n';
+    int n = Rand(1, lim);
+    int m = Rand(1, lim);
+
+    int a[3009];
+    FOR(i, 1, 3000) a[i] = i;
+    random_shuffle(a + 1, a + 3001);
+
+    cout << n << ' ' << m << '\n';
+    FOR(i, 1, n) cout << a[i] << ' ';
+    cout << '\n';
+    FOR(i, 1, m) cout << Rand(1, n) << ' ' << Rand(1, lim) << '\n';
 }
 
 int main()

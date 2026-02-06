@@ -22,39 +22,26 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-int const N = 10009;
+int const N = 2e5 + 5;
 
 int n, m;
+int x[N], id[N];
 
-int x[N];
-bool a[N];
-
-int l, r;
-
-void GoRight(int &pos, int &len)
-{   
-    int res = pos;
-
-    while (len && pos < r)
-    {
-        len--; pos++;
-        if (a[pos]) res = pos;
-    }
-
-    pos = res;    
+bool cmp(int i, int j)
+{
+    return x[i] < x[j];
 }
 
-void GoLeft(int &pos, int &len)
-{   
-    int res = pos;
+int GetLeft(int len)
+{
+    x[0] = len;
+    return id[upper_bound(id + 1, id + n + 1, 0, cmp) - id - 1];
+}
 
-    while (len && pos > l)
-    {
-        len--; pos--;
-        if (a[pos]) res = pos;
-    }
-
-    pos = res;    
+int GetRight(int len)
+{
+    x[0] = len;
+    return id[lower_bound(id + 1, id + n + 1, 0, cmp) - id];
 }
 
 int main()
@@ -63,35 +50,35 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> n >> m;
-    FOR(i, 1, n)
-    {
-        cin >> x[i];
-        x[i] += 5000;
-        a[x[i]] = true;
-    }
+    FOR(i, 1, n) cin >> x[i], id[i] = i;
 
-    l = *min_element(x + 1, x + n + 1);
-    r = *max_element(x + 1, x + n + 1);
+    sort(id + 1, id + n + 1, cmp);
 
     while (m--)
     {
         int idx, len;
         cin >> idx >> len;
 
-        idx = x[idx];
-
-        while (len)
+        bool dir = 1;
+        int cnt = 0;
+    
+        while (true)
         {
-            GoRight(idx, len);
-            GoLeft(idx, len);
-        }
+            int j = idx;
 
-        cout << idx - 5000 << '\n';
-        // FOR(i, 1, n) if (x[i] == idx)
-        // {
-        //     cout << i << '\n';
-        //     break;
-        // }
+            if (dir) j = GetLeft(x[idx] + len);
+            else j = GetRight(x[idx] - len);
+
+            if (idx == j && ++cnt == 2)
+            {
+                cout << idx << '\n';
+                break;
+            }
+
+            len -= abs(x[idx] - x[j]);
+            idx = j;
+            dir ^= 1;
+        }
     }
 
     return 0;
