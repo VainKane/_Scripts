@@ -40,7 +40,7 @@ def check_codeforces_problem(url: str):
         tags = problem.get("tags", [])
         rating = problem.get("rating", None)
 
-        bannedTags = ("constructive algorithms", "greedy", "interactive")
+        bannedTags = ("constructive algorithms", "interactive")
         minRating = 1400
         maxRating = 2500
 
