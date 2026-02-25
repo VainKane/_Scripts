@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Học Toán</title>
+    <style>
+        :root {
+            --bg1: linear-gradient(135deg, #e6f0ff 0%, #f7f7ff 50%, #fffaf0 100%);
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --accent: #5568ff;
+            --good: #16a34a;
+            --bad: #dc2626;
+            --muted: #6b7280;
+            --radius: 16px;
+            --shadow: 0 8px 30px rgba(20, 30, 80, 0.12);
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .wrap {
+            width: 100%;
+            max-width: 920px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .title {
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .back {
+            padding: 8px 14px;
+            background: #444;
+            color: white;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent);
+            transition: 0.3s;
+        }
+
+        .question {
+            font-weight: 600;
+            font-size: 17px;
+        }
+
+        .answers {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .answers label {
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .answers label:hover {
+            background: #f3f4ff;
+        }
+
+        .answers input {
+            margin-right: 8px;
+        }
+
+        button {
+            padding: 12px 18px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            background: var(--accent);
+            color: white;
+            font-size: 15px;
+        }
+
+        .result {
+            font-weight: 700;
+            min-height: 24px;
+        }
+
+        .correct {
+            color: var(--good);
+        }
+
+        .wrong {
+            color: var(--bad);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="card">
+            <div class="header">
+                <div class="title">HỌC TOÁN</div>
+                <a href="index.html" class="back">Quay về Menu</a>
+            </div>
+
+            <div class="progress-text" id="progressText"></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div class="question" id="question"></div>
+            <div class="answers" id="answers"></div>
+
+            <button id="mainButton" onclick="handleButton()">Nộp</button>
+
+            <div class="result" id="result"></div>
+
+        </div>
+    </div>
+
+    <audio id="soundCorrect" src="correct.mp3"></audio>
+    <audio id="soundWrong" src="wrong.mp3"></audio>
+
+    <script>
+        const questions = [
+            { q: "Hàm số nào là hàm bậc hai?", a: ["y=2x+1", "y=x²+3x+1", "y=5", "y=1/x"], c: 1 },
+            { q: "Điều kiện của hàm số bậc hai?", a: ["a≠0", "b≠0", "c≠0", "a=0"], c: 0 },
+            { q: "Đồ thị hàm số bậc hai là?", a: ["Đường thẳng", "Parabol", "Hyperbol", "Đường tròn"], c: 1 },
+            { q: "Nếu a>0 parabol?", a: ["Mở xuống", "Mở lên", "Song song Ox", "Không xác định"], c: 1 },
+            { q: "Nếu a<0 parabol?", a: ["Mở xuống", "Mở lên", "Không xác định", "Song song Oy"], c: 0 },
+            { q: "Hoành độ đỉnh là?", a: ["-b/2a", "b/2a", "Δ", "c"], c: 0 },
+            { q: "Khi Δ>0 phương trình có?", a: ["0 nghiệm", "1 nghiệm", "2 nghiệm", "3 nghiệm"], c: 2 },
+            { q: "Khi Δ=0 phương trình có?", a: ["2 nghiệm", "1 nghiệm kép", "0 nghiệm", "Vô số"], c: 1 },
+            { q: "Khi Δ<0 phương trình có?", a: ["0 nghiệm", "1 nghiệm", "2 nghiệm", "Vô số"], c: 0 },
+            { q: "Δ được tính bởi?", a: ["b²-4ac", "b²+4ac", "4ac", "2a"], c: 0 },
+            { q: "Vectơ là?", a: ["Đại lượng vô hướng", "Đại lượng có hướng", "Số thực", "Đoạn thẳng"], c: 1 },
+            { q: "Hai vectơ bằng nhau khi?", a: ["Cùng độ dài", "Cùng hướng và độ dài", "Song song", "Vuông góc"], c: 1 },
+            { q: "Vectơ 0 có độ dài?", a: ["0", "1", "-1", "2"], c: 0 },
+            { q: "Tổng hai vectơ theo quy tắc?", a: ["Tam giác", "Hình tròn", "Hình vuông", "Song song"], c: 0 },
+            { q: "Vectơ đối của a?", a: ["a", "-a", "2a", "0"], c: 1 },
+            { q: "Nhân vectơ với số âm?", a: ["Giữ hướng", "Đổi hướng", "Bằng 0", "Song song"], c: 1 },
+            { q: "Tọa độ vectơ AB?", a: ["B-A", "A-B", "A+B", "B+A"], c: 0 },
+            { q: "Độ dài vectơ (a,b)?", a: ["a+b", "√(a²+b²)", "a²+b²", "|a-b|"], c: 1 },
+            { q: "Hai vectơ vuông góc khi?", a: ["Tích vô hướng=0", "Song song", "Bằng nhau", "Đối nhau"], c: 0 },
+            { q: "Vectơ đơn vị có độ dài?", a: ["0", "1", "2", "-1"], c: 1 }
+        ];
+
+        while (questions.length < 50) {
+            questions.push(questions[Math.floor(Math.random() * 20)]);
+        }
+
+        questions.sort(() => Math.random() - 0.5);
+
+        let current = 0;
+        let correctCount = 0;
+        let answered = false;
+        let doneCount = 0;
+
+        function saveProgress() {
+            const percent = doneCount === 0 ? 0 : Math.round(correctCount / doneCount * 100);
+            localStorage.setItem("math_done", doneCount);
+            localStorage.setItem("math_correct", correctCount);
+            localStorage.setItem("math_percent", percent);
+        }
+
+        function loadQuestion() {
+            answered = false;
+            document.getElementById("mainButton").innerText = "Nộp";
+            document.getElementById("result").innerHTML = "";
+            const q = questions[current];
+            document.getElementById("question").innerHTML = q.q;
+
+            let ans = "";
+            q.a.forEach((opt, i) => {
+                ans += `<label><input type="radio" name="answer" value="${i}"> ${String.fromCharCode(65 + i)}. ${opt}</label>`;
+            });
+            document.getElementById("answers").innerHTML = ans;
+
+            document.getElementById("progressText").innerHTML =
+                "Câu " + (current + 1) + " / " + questions.length;
+
+            document.getElementById("progressFill").style.width =
+                (current / questions.length * 100) + "%";
+        }
+
+        function handleButton() {
+            if (!answered) { submitAnswer(); }
+            else { nextQuestion(); }
+        }
+
+        function submitAnswer() {
+            const selected = document.querySelector('input[name="answer"]:checked');
+            if (!selected) return;
+
+            answered = true;
+            doneCount++;
+
+            const answer = parseInt(selected.value);
+            const correct = questions[current].c;
+            const result = document.getElementById("result");
+
+            if (answer === correct) {
+                correctCount++;
+                result.innerHTML = "✔ Đúng! Đáp án: " + String.fromCharCode(65 + correct);
+                result.className = "result correct";
+                document.getElementById("soundCorrect").play();
+            } else {
+                result.innerHTML = "✘ Sai! Đáp án đúng: " + String.fromCharCode(65 + correct);
+                result.className = "result wrong";
+                document.getElementById("soundWrong").play();
+            }
+
+            saveProgress();
+            document.getElementById("mainButton").innerText = "Tiếp";
+        }
+
+        function nextQuestion() {
+            current++;
+            if (current >= questions.length) {
+                finishQuiz();
+                return;
+            }
+            loadQuestion();
+        }
+
+        function finishQuiz() {
+            document.querySelector(".card").innerHTML =
+                "<div class='title'>Hoàn thành 🎉</div>" +
+                "<div>Kết quả: " + correctCount + " / " + questions.length + "</div>" +
+                "<div>Tỷ lệ đúng: " + localStorage.getItem('math_percent') + "%</div>" +
+                "<a href='index.html' class='back'>Quay về Menu</a>";
+        }
+
+        loadQuestion();
+    </script>
+</body>
+
+</html>

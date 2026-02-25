@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Chọn môn học — Menu</title>
+  <style>
+    :root{
+      --bg1: linear-gradient(135deg,#e6f0ff 0%, #f7f7ff 50%, #fffaf0 100%);
+      --card-bg: rgba(255,255,255,0.85);
+      --accent: #5568ff;
+      --muted: #6b7280;
+      --radius: 16px;
+      --shadow: 0 8px 30px rgba(20,30,80,0.12);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background: radial-gradient(circle at 10% 10%, rgba(85,104,255,0.08), transparent 10%),
+                  radial-gradient(circle at 90% 90%, rgba(0,194,168,0.06), transparent 12%),
+                  var(--bg1);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+
+    .wrap{
+      width:100%;
+      max-width:980px;
+      display:grid;
+      grid-template-columns: 360px 1fr;
+      gap:28px;
+      align-items:center;
+    }
+
+    .profile-card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(250,250,255,0.75));
+      border-radius:var(--radius);
+      padding:22px;
+      box-shadow:var(--shadow);
+      border: 1px solid rgba(255,255,255,0.6);
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+
+    .profile-top{display:flex;gap:14px;align-items:center}
+
+    .avatar{
+      width:74px;height:74px;border-radius:14px;display:grid;place-items:center;
+      background:linear-gradient(135deg,var(--accent), #7b8dff);
+      color:white;font-weight:700;font-size:20px;
+      box-shadow: 0 6px 18px rgba(85,104,255,0.18);
+    }
+
+    .input-group{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+
+    .input-group label{
+      font-size:13px;
+      color:var(--muted);
+      font-weight:600;
+    }
+
+    .input-group input{
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid rgba(0,0,0,0.08);
+      font-size:14px;
+      outline:none;
+      transition:0.2s;
+    }
+
+    .result-box{
+      margin-top:10px;
+      padding:10px;
+      border-radius:10px;
+      font-size:14px;
+      background:#f3f4f6;
+    }
+
+    .good{color:#16a34a;font-weight:700;}
+    .medium{color:#ca8a04;font-weight:700;}
+    .bad{color:#dc2626;font-weight:700;}
+
+    .menu-card{
+      background:var(--card-bg);
+      border-radius:var(--radius);
+      padding:28px;
+      box-shadow:var(--shadow);
+      border: 1px solid rgba(255,255,255,0.6);
+      display:flex;flex-direction:column;gap:18px;
+    }
+
+    .title{font-size:20px;font-weight:800;color:#0b1220}
+    .subtitle{color:var(--muted);font-size:14px}
+
+    .subjects{
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-top:8px;
+    }
+
+    .subject{
+      flex:1 1 180px;
+      min-width:140px;
+      text-decoration:none;
+      color:inherit;
+      background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.75));
+      border-radius:12px;
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      transition:0.18s ease;
+      border:1px solid rgba(11,18,32,0.04);
+    }
+
+    .subject:hover{
+      transform:translateY(-6px);
+      box-shadow:0 18px 40px rgba(11,18,32,0.08);
+    }
+
+    .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      width:100%;
+    }
+
+    .icon{
+      width:48px;
+      height:48px;
+      border-radius:10px;
+      display:grid;
+      place-items:center;
+      font-weight:700;
+      font-size:18px;
+      color:white;
+    }
+
+    .icon.math{background:linear-gradient(135deg,#ff9a9e,#ff6a88)}
+    .icon.lit{background:linear-gradient(135deg,#ffd86b,#ffb86b)}
+    .icon.eng{background:linear-gradient(135deg,#7be4ff,#6aa7ff)}
+
+    @media (max-width:840px){
+      .wrap{grid-template-columns:1fr;max-width:720px}
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <aside class="profile-card">
+      <div class="profile-top">
+        <div class="avatar">HV</div>
+        <div style="font-weight:700;font-size:16px;">Thông tin học sinh</div>
+      </div>
+
+      <div class="input-group">
+        <label>Họ và tên</label>
+        <input type="text" id="name" placeholder="Họ và tên">
+      </div>
+
+      <div class="input-group">
+        <label>Lớp</label>
+        <input type="text" id="class" placeholder="Tên lớp">
+      </div>
+
+      <div class="result-box" id="mathResult"></div>
+      <div class="result-box" id="literatureResult"></div>
+      <div class="result-box" id="englishResult"></div>
+
+    </aside>
+
+    <section class="menu-card">
+      <div>
+        <div class="title">Chọn môn học</div>
+        <div class="subtitle">Chọn một môn để bắt đầu kiểm tra kiến thức.</div>
+      </div>
+
+      <div class="subjects">
+
+        <a href="math.html" class="subject">
+          <div class="row">
+            <div>
+              <div style="font-weight:700;">Toán</div>
+              <div style="font-size:13px;color:#6b7280;">Vector, Hàm số, hình học</div>
+            </div>
+            <div class="icon math">∑</div>
+          </div>
+        </a>
+
+        <a href="van.html" class="subject">
+          <div class="row">
+            <div>
+              <div style="font-weight:700;">Văn</div>
+              <div style="font-size:13px;color:#6b7280;">Đọc hiểu, nghị luận</div>
+            </div>
+            <div class="icon lit">文</div>
+          </div>
+        </a>
+
+        <a href="english.html" class="subject">
+          <div class="row">
+            <div>
+              <div style="font-weight:700;">Anh</div>
+              <div style="font-size:13px;color:#6b7280;">Ngữ pháp, từ vựng</div>
+            </div>
+            <div class="icon eng">A</div>
+          </div>
+        </a>
+
+      </div>
+
+    </section>
+  </main>
+
+<script>
+function renderResult(subject, elementId){
+  const done = localStorage.getItem(subject+"_done");
+  const correct = localStorage.getItem(subject+"_correct");
+  const percent = localStorage.getItem(subject+"_percent");
+
+  if(done && correct && percent){
+    let levelClass = "bad";
+    if(percent >= 75) levelClass = "good";
+    else if(percent >= 50) levelClass = "medium";
+
+    document.getElementById(elementId).innerHTML =
+      "<strong>"+subject.toUpperCase()+"</strong><br>"+
+      correct+" / "+done+" câu<br>"+
+      "Tỷ lệ đúng: <span class='"+levelClass+"'>"+percent+"%</span>";
+  }else{
+    document.getElementById(elementId).innerHTML =
+      "<strong>"+subject.toUpperCase()+"</strong><br>Chưa làm bài";
+  }
+}
+
+renderResult("math","mathResult");
+renderResult("literature","literatureResult");
+renderResult("english","englishResult");
+</script>
+
+</body>
+</html>
