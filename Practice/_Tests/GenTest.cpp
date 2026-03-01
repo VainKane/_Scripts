@@ -1,0 +1,50 @@
+#include <bits/stdc++.h>
+
+#define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
+
+using namespace std;
+
+mt19937_64 rd(time(0));
+
+long long Rand(long long l, long long r)
+{
+    return l + rd() * 1ll * rd() % (r - l + 1);
+}
+
+int main()
+{
+    ofstream cout("testcase.inp");
+
+    // int n = 1e5;
+    // for (int i = 1; i <= n; i++) cout << (char)Rand('a', 'a');
+    // cout << ' ';
+    // while (n--) cout << (char)Rand('a', 'a');
+
+    // cout << "1\n";
+    // int n = Rand(1, 2e5);
+    // int m = Rand(1, 2e5);
+
+    // cout << n << ' ' << m << '\n';
+    // for (int i = 1; i <= m; i++)
+    // {
+    //     int a = Rand(1, n);
+    //     int d = Rand(1, 10);
+    //     int k = Rand(0, (n - a) / d);
+
+    //     cout << a << ' ' << d << ' ' << k << '\n';
+    // }
+
+    int n = 2e5;
+
+    cout << n << '\n';
+    FOR(i, 1, n) cout << Rand(1, 2) << ' ';
+    cout << n << '\n';
+    FOR(i, 1, n)
+    {
+        int l = Rand(1, 400);
+        int r = Rand(n - 400, n);
+        cout << l << ' ' << r << ' ' << Rand(1, 2) << ' ' << Rand(1, 2) << '\n';
+    }
+    
+    return 0;
+}

@@ -29,7 +29,7 @@ int main()
     cin.tie(0); cout.tie(0);
 
     freopen(name".inp", "r", stdin);
-    freopen(name".out", "w", stdout);
+    freopen(name".ans", "w", stdout);
 
     cin >> n >> q;
     FOR(i, 1, n) cin >> a[i];
