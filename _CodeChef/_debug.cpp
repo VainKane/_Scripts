@@ -11,7 +11,7 @@ using namespace std;
 #define sz(v) ((int)v.size())
 #define F first
 #define S second
-#define name "PALPATH"
+#define name "FNCS"
 
 template <class t> bool maxi(t &x, t const &y)
 {
@@ -35,30 +35,31 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int lim = 10;
-    int oo = 10;
+    int const lim = 15;
+    int const oo = 100;
 
-    int tests = Rand(1, 1);
-    cout << tests << '\n';
+    int n = Rand(1, lim);
+    int q = Rand(1, 3);
 
-    while (tests--)
+    cout << n << '\n';
+    FOR(i, 1, n) cout << Rand(1, oo) << ' ';
+    FOR(i, 1, n)
     {
-        int n = Rand(2, lim);
-        int m = Rand(n - 1, lim);
-        int s = Rand(2, n);
-        int t = Rand(1, s - 1);
+        int l = Rand(1, n);
+        cout << l << ' ' << Rand(l, n) << '\n';
+    }
 
-        int a[n + 1];
-        FOR(i, 1, n) a[i] = i;
-        random_shuffle(a + 1, a + n + 1);
+    cout << q << '\n';
+    while (q--)
+    {
+        int type = Rand(1, 2);
+        cout << type << ' ';
 
-        cout << n << ' ' << m << ' ' << s << ' ' << t << '\n';
-        FOR(i, 2, n) cout << a[i] << ' ' << a[Rand(1, i - 1)] << ' ' << Rand(1, oo) << ' ' << (char)Rand('a', 'e') << '\n';
-        FOR(i, 1, m - n + 1)
+        if (type == 1) cout << Rand(1, n) << ' ' << Rand(1, oo) << '\n';
+        else
         {
-            int u = Rand(2, n);
-            int v = Rand(1, u - 1);
-            cout << u << ' ' << v << ' ' << Rand(1, oo) << ' ' << (char)Rand('a', 'e') << '\n';
+            int l = Rand(1, n);
+            cout << l << ' ' << Rand(l, n) << '\n'; 
         }
     }
 }
