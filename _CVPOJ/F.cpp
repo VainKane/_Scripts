@@ -22,45 +22,59 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-int const N = 2e5 + 5;
+int const N = 10;
 
-int n;
+int n, k;
 vector<pair<int, int>> adj[N];
 
 int h[N];
-long long f[N][2];
+long long d[N];
 
-void DFSPrepare(int u, int p)
+map<long long, int> mp[N];
+
+int res = N;
+
+void DFSPrepare(int u, int par)
 {
     for (auto &e : adj[u])
     {
         int v = e.F;
         int w = e.S;
 
-        if (v == p) continue;
-        h[v] = h[u] ^ w;
+        if (v == par) continue;
+
+        h[v] = h[u] + 1;
+        d[v] = d[u] + w;
         DFSPrepare(v, u);
     }
 }
 
-void DFS(int u, int p)
+void DFS(int u, int par)
 {
-    f[u][h[u]] = 1;
+    mp[u][d[u]] = h[u];
     for (auto &e : adj[u])
     {
         int v = e.F;
-        int w = e.S;
-
-        if (v == p) continue;
+        if (v == par) continue;
 
         DFS(v, u);
-        REP(i, 2) f[u][i] += f[v][i ^ w];
-    }
-}
+        if (sz(mp[v]) > sz(mp[u])) swap(mp[u], mp[v]);
 
-long long GetEven(int u, int cnt0, int cnt1)
-{
-    return ( 1LL * cnt0 * (cnt0 + 1) + 1LL * cnt1 * (cnt1 + 1)) / 2;
+        for (auto &p : mp[v])
+        {
+            auto it = mp[u].find(k + 2 * d[u] - p.F);
+            
+            if (it == mp[u].end())
+            {
+                mini(res, p.S + it->second - 2 * h[u]);
+                it = mp[u].find(p.F);
+            }
+
+            auto &x = mp[u][p.F];
+            if (x == 0) x = p.S;
+            else mini(x, p.S);
+        }
+    }
 }
 
 int main()
@@ -68,23 +82,21 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    cin >> n;
+    cin >> n >> k;
     FOR(i, 2, n)
     {
         int u, v, w;
         cin >> u >> v >> w;
-        w &= 1;
+        u++, v++;
 
         adj[u].push_back({v, w});
         adj[v].push_back({u, w});
     }
 
+    DFSPrepare(1, -1);
     DFS(1, -1);
-    long long res = abs(GetEven(1, f[1][0], f[1][1]) - 1LL * f[1][0] * f[1][1]);
-    long long haha = res;
 
-    FOR(u, 2, n) mini(res, GetEven(1, f[1][0], f[1][1]) - GetEven(u, f[u][0], f[u][1]) + GetEven(u, f[u][1], f[u][0]));
-    cout << res;
- 
+    cout << (res < N ? res : -1);
+
     return 0;
 }

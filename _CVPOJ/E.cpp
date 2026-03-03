@@ -22,51 +22,22 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-int const N = 1.5e5;
+int const N = 3e5 + 5;
 
-int n, m;
+int n, m, k;
+
+int a[N];
 vector<int> adj[N];
 
-int d[N];
-
-int BFS(int &s, int &k)
-{
-    queue<int> q;
-    q.push(s);
-
-    d[s] = 1;
-    k++;
-
-    vector<int> nodes;
-    int res = 0;
-
-    while (!q.empty())
-    {
-        int u = q.front();
-        q.pop();
-
-        nodes.push_back(u);
-        res += u;
-
-        if (d[u] == k) continue;
-
-        for (auto &v : adj[u]) if (!d[v])
-        {
-            d[v] = d[u] + 1;
-            q.push(v);
-        }
-    }
-
-    for (auto &u : nodes) d[u] = 0;
-    return res;
-}
+long long dp[N][MK(5) + 5]; 
 
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    cin >> n >> m;
+    cin >> n >> m >> k;
+    FOR(i, 1, n) cin >> a[i], a[i]--;
     FOR(i, 1, m)
     {
         int u, v;
@@ -75,13 +46,12 @@ int main()
         adj[v].push_back(u);
     }
 
-    int q; cin >> q;
-    while (q--)
-    {
-        int u, k;
-        cin >> u >> k;
-        cout << BFS(u, k) << '\n';
-    }
+    FOR(u, 1, n) dp[u][MK(a[u])] = 1;
+    REP(mask, MK(k)) FOR(u, 1, n) for (auto &v : adj[u]) if (!BIT(a[v], mask)) dp[v][mask | MK(a[v])] += dp[u][mask];
+
+    long long res = 0;
+    FOR(u, 1, n) REP(mask, MK(k)) if (__builtin_popcount(mask) > 1) res += dp[u][mask];
+    cout << res;
 
     return 0;
 }

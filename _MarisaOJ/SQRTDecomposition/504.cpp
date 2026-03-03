@@ -83,7 +83,7 @@ struct Query
 
     bool operator < (Query const other) const
     {
-        if (bkId[l] != bkId[l]) return l < other.l;
+        if (bkId[l] != bkId[other.l]) return l < other.l;
         if (bkId[l] & 1) return r > other.r;
         return r < other.r;
     } 

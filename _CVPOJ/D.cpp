@@ -22,32 +22,42 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-int const N = 3e5;
+int const N = 1.5e5 + 5;
 
-int n, m, k;
-
-int a[N];
+int n, m;
 vector<int> adj[N];
 
-long long res = 0;
+int d[N];
 
-long long BFS()
+long long BFS(int &s, int &k)
 {
-    queue<pair<int, int>> q;
-    FOR(u, 1, n) q.push({u, MK(a[u])});
+    queue<int> q;
+    q.push(s);
 
-    long long res = -n;
+    d[s] = 1;
+    k++;
+
+    vector<int> nodes;
+    long long res = 0;
 
     while (!q.empty())
     {
-        int u = q.front().F;
-        int mask = q.front().S;
+        int u = q.front();
         q.pop();
 
-        res++;
-        for (auto &v : adj[u]) if (!BIT(a[v], mask)) q.push({v, mask | MK(a[v])}); 
+        nodes.push_back(u);
+        res += u;
+
+        if (d[u] == k) continue;
+
+        for (auto &v : adj[u]) if (!d[v])
+        {
+            d[v] = d[u] + 1;
+            q.push(v);
+        }
     }
 
+    for (auto &u : nodes) d[u] = 0;
     return res;
 }
 
@@ -56,8 +66,7 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    cin >> n >> m >> k;
-    FOR(i, 1, n) cin >> a[i];
+    cin >> n >> m;
     FOR(i, 1, m)
     {
         int u, v;
@@ -66,7 +75,13 @@ int main()
         adj[v].push_back(u);
     }
 
-    cout << BFS();
+    int q; cin >> q;
+    while (q--)
+    {
+        int u, k;
+        cin >> u >> k;
+        cout << BFS(u, k) << '\n';
+    }
 
     return 0;
 }

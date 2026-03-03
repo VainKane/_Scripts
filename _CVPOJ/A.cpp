@@ -32,7 +32,7 @@ struct Segment
     }
 };
 
-int const N = 1e6;
+int const N = 1e6 + 5;
 
 int n, m;
 Segment a[N];
