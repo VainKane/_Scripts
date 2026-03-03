@@ -35,14 +35,16 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int const lim = 15;
-    int const oo = 100;
+    int const lim = 1e5;
+    int const oo = 1e9;
 
     int n = Rand(1, lim);
-    int q = Rand(1, 3);
+    int q = Rand(1, lim);
 
     cout << n << '\n';
     FOR(i, 1, n) cout << Rand(1, oo) << ' ';
+    cout << '\n';
+
     FOR(i, 1, n)
     {
         int l = Rand(1, n);

@@ -24,7 +24,7 @@ template <class t> bool mini(t &x, t const &y)
 
 struct FenwickTree
 {
-    vector<long long> bit;
+    vector<unsigned long long> bit;
     int n;
 
     FenwickTree(int _n = 0)
@@ -42,9 +42,9 @@ struct FenwickTree
         }
     }
 
-    long long Get(int idx)
+    unsigned long long Get(int idx)
     {
-        long long res = 0;
+        unsigned long long res = 0;
 
         while (idx)
         {
@@ -55,7 +55,7 @@ struct FenwickTree
         return res;
     }
 
-    long long Get(int l, int r)
+    unsigned long long Get(int l, int r)
     {
         if (l > r) return 0;
         return Get(r) - Get(l - 1);
@@ -63,65 +63,65 @@ struct FenwickTree
 };
 
 int const N = 1e5 + 5;
-int const BK = 2;
-int bkId[N];
+int const BK = 300;
+int const GR = N / BK + 5;
+int bkId[N], bkL[N], bkR[N];
 
 int n, m, q;
 
 int a[N];
-long long pre[N], f[N];
+unsigned long long pre[N], f[N];
 
 int lb[N], rb[N];
 
-int cnt[BK + 5][N];
-long long sum[BK + 5];
+int cnt[GR][N];
+unsigned long long sum[GR];
 FenwickTree bit;
-
-long long GetSum(int l, int r)
-{
-    if (l == 0) return pre[r];
-    return pre[r] - pre[l - 1];
-}
 
 void Init()
 {
-    REP(i, n) bkId[i] = i / BK;
-    REP(i, n)
+    FOR(i, 1, n) 
+    {
+        int id = bkId[i] = (i - 1) / BK + 1;
+        if (!bkL[id]) bkL[id] = i;
+        bkR[id] = i;
+    }
+
+    FOR(i, 1, n)
     {
         cnt[bkId[i]][lb[i]]++;
         cnt[bkId[i]][rb[i] + 1]--;
     }
 
-    REP(id, bkId[n - 1]) REP(i, n) cnt[id][i + 1] += cnt[id][i];
+    FOR(id, 1, bkId[n]) FOR(i, 1, n) cnt[id][i] += cnt[id][i - 1];
 
-    pre[0] = a[0];
-    FOR(i, 1, n - 1) pre[i] = pre[i - 1] + a[i];
-    REP(i, n) f[i] = GetSum(lb[i], rb[i]);
-    REP(i, n) sum[bkId[i]] += f[i];
+    FOR(i, 1, n) pre[i] = pre[i - 1] + a[i];
+    FOR(i, 1, n) f[i] = pre[rb[i]] - pre[lb[i] - 1];
+    FOR(i, 1, n) sum[bkId[i]] += f[i];
 
     bit = FenwickTree(n);
 }
 
 void Update(int &pos, int val)
 {
-    bit.Update(pos + 1, val);
-    FOR(i, 0, bkId[n - 1]) sum[i] += 1LL * val * cnt[i][pos];
+    bit.Update(pos, val);
+    FOR(i, 1, bkId[n]) sum[i] += 1LL * val * cnt[i][pos];
 }
 
-long long Get(int l, int r)
+unsigned long long Get(int l, int r)
 {
     if (bkId[l] == bkId[r])
     {
-        long long res = 0;
-        FOR(i, l, r) res += f[i] + bit.Get(lb[i] + 1, rb[i] + 1);
+        unsigned long long res = 0;
+        FOR(i, l, r) res += f[i] + bit.Get(lb[i], rb[i]);
         return res;
     }
 
-    long long res = 0;
+    unsigned long long res = 0;
 
     FOR(i, bkId[l] + 1, bkId[r] - 1) res += sum[i];
-    FOR(i, l, BK * (bkId[l] + 1) - 1) res += f[i] + bit.Get(lb[i] + 1, rb[i] + 1);
-    FOR(i, BK * bkId[r], r) res += f[i] + bit.Get(lb[i] + 1, rb[i] + 1);
+    FOR(i, l, bkR[bkId[l]]) res += f[i] + bit.Get(lb[i], rb[i]);
+    FOR(i, bkL[bkId[r]], r) res += f[i] + bit.Get(lb[i], rb[i]);
 
     return res;
 }
@@ -132,12 +132,8 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> n;
-    REP(i, n) cin >> a[i];
-    REP(i, n) 
-    {
-        cin >> lb[i] >> rb[i];
-        lb[i]--, rb[i]--;
-    }
+    FOR(i, 1, n) cin >> a[i];
+    FOR(i, 1, n) cin >> lb[i] >> rb[i];
 
     Init();
 
@@ -149,10 +145,9 @@ int main()
 
         if (type == 1)
         {
-            x--;
             Update(x, y - a[x]);
             a[x] = y;
         }
-        else cout << Get(x - 1, y - 1) << '\n';
+        else cout << Get(x, y) << '\n';
     }
 }
