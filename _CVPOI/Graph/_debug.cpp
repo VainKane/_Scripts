@@ -35,8 +35,8 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int const lim = 5000;
-    int const oo = 1e4;
+    int const lim = 10;
+    int const oo = 10;
 
     int n = Rand(1, lim);
 

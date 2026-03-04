@@ -34,17 +34,17 @@ int main()
     //     cout << a << ' ' << d << ' ' << k << '\n';
     // }
 
-    int n = 2e5;
+    // int n = 2e5;
 
-    cout << n << '\n';
-    FOR(i, 1, n) cout << Rand(1, 2) << ' ';
-    cout << n << '\n';
-    FOR(i, 1, n)
-    {
-        int l = Rand(1, 400);
-        int r = Rand(n - 400, n);
-        cout << l << ' ' << r << ' ' << Rand(1, 2) << ' ' << Rand(1, 2) << '\n';
-    }
-    
+    // cout << n << '\n';
+    // FOR(i, 1, n) cout << Rand(1, 2) << ' ';
+    // cout << n << '\n';
+    // FOR(i, 1, n)
+    // {
+    //     int l = Rand(1, 400);
+    //     int r = Rand(n - 400, n);
+    //     cout << l << ' ' << r << ' ' << Rand(1, 2) << ' ' << Rand(1, 2) << '\n';
+    // }
+
     return 0;
 }

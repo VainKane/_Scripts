@@ -22,59 +22,53 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-int const N = 10;
+int const N = 2e5 + 5;
 
-int n, k;
+int n;
 vector<pair<int, int>> adj[N];
 
-int h[N];
-long long d[N];
+int h[N], d[N];
+long long f[N][2];
 
-map<long long, int> mp[N];
-
-int res = N;
-
-void DFSPrepare(int u, int par)
+void DFSPrepare(int u, int p)
 {
     for (auto &e : adj[u])
     {
         int v = e.F;
         int w = e.S;
 
-        if (v == par) continue;
+        if (v == p) continue;
 
         h[v] = h[u] + 1;
-        d[v] = d[u] + w;
+        d[v] = d[u] ^ w;
         DFSPrepare(v, u);
     }
 }
 
-void DFS(int u, int par)
+void DFS(int u, int p)
 {
-    mp[u][d[u]] = h[u];
+    f[u][d[u]] = 1;
     for (auto &e : adj[u])
     {
         int v = e.F;
-        if (v == par) continue;
+        int w = e.S;
+
+        if (v == p) continue;
 
         DFS(v, u);
-        if (sz(mp[v]) > sz(mp[u])) swap(mp[u], mp[v]);
-
-        for (auto &p : mp[v])
-        {
-            auto it = mp[u].find(k + 2 * d[u] - p.F);
-            
-            if (it == mp[u].end())
-            {
-                mini(res, p.S + it->second - 2 * h[u]);
-                it = mp[u].find(p.F);
-            }
-
-            auto &x = mp[u][p.F];
-            if (x == 0) x = p.S;
-            else mini(x, p.S);
-        }
+        REP(i, 2) f[u][i] += f[v][i ^ w];
     }
+}
+
+long long C2(int x)
+{
+    if (x < 2) return 0;
+    return 1LL * x * (x - 1) / 2;
+}
+
+long long Get(int cnt0, int cnt1)
+{
+    return abs(C2(cnt0) + C2(cnt1) - 1LL * cnt0 * cnt1);
 }
 
 int main()
@@ -82,12 +76,12 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    cin >> n >> k;
+    cin >> n;
     FOR(i, 2, n)
     {
         int u, v, w;
         cin >> u >> v >> w;
-        u++, v++;
+        w &= 1;
 
         adj[u].push_back({v, w});
         adj[v].push_back({u, w});
@@ -96,7 +90,21 @@ int main()
     DFSPrepare(1, -1);
     DFS(1, -1);
 
-    cout << (res < N ? res : -1);
+    long long res = Get(f[1][0], f[1][1]);
 
+    FOR(u, 1, n) for (auto &e : adj[u])
+    {
+        int v = e.F;
+        if (h[v] < h[u]) continue;
+
+        int odd = f[v][0] - f[v][1];
+        int even = -odd;
+
+        // if (d[u] == 1) swap(odd, even);
+        mini(res, Get(f[1][0] + even, f[1][1] + odd));
+    }
+    
+    cout << res;
+ 
     return 0;
 }

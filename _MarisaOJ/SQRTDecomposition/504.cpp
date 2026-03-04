@@ -23,46 +23,41 @@ template <class t> bool mini(t &x, t const &y)
 }
 
 int const N = 1e5 + 5;
-int const BK = 314;
-int bkId[N];
+int const BK = 447;
+int const GR = N / BK + 5;
+int bkId[N], bkL[GR], bkR[GR];
 
-struct FenwickTree
+struct SQRTDS
 {
-    vector<int> bit;
+    vector<int> cnt;
+    vector<int> sum;
     int n;
 
-    FenwickTree(int _n = 0)
+    SQRTDS(int _n = 0)
     {
         n = _n;
-        bit.assign(n + 5, 0);
+        cnt.assign(n + 5, 0);
+        sum.assign(GR, 0);
     }
 
-    void Update(int idx, int val)
+    void Update(int &idx, int &val)
     {
-        while (idx <= n)
-        {
-            bit[idx] += val;
-            idx += idx & -idx;
-        }
+        cnt[idx] += val;
+        sum[bkId[idx]] += val;
     }
 
-    int Get(int idx)
+    int Get(int &l, int &r)
     {
         int res = 0;
 
-        while (idx)
+        if (bkId[l] == bkId[r])
         {
-            res += bit[idx];
-            idx ^= idx & -idx;
+            FOR(i, l, r) res += cnt[i];
+            return res;
         }
 
-        return res;
-    }
-
-    int Get(int l, int r)
-    {
-        if (l > r) return 0;
-        return Get(r) - Get(l - 1);
+        FOR(i, bkId[l] + 1, bkId[r] - 1) res += sum[i];
+        return res + Get(l, bkR[bkId[l]]) + Get(bkL[bkId[r]], r);
     }
 };
 
@@ -93,25 +88,31 @@ int n, q;
 int a[N];
 
 Query qr[N];
-FenwickTree bit1, bit2;
+SQRTDS cnt1, cnt2;
+int cnt[N];
 
 pair<int, int> res[N];
-int cnt[N];
 
 void Init()
 {
-    FOR(i, 1, n) bkId[i] = i / BK;
+    FOR(i, 1, 1e5) 
+    {
+        int id = bkId[i] = (i - 1) / BK + 1;
+        if (!bkL[id]) bkL[id] = i;
+        bkR[id] = i;
+    }
+
     sort(qr + 1, qr + q + 1);
-    bit1 = bit2 = FenwickTree(N);
+    cnt1 = cnt2 = SQRTDS(N);
 }
 
 void Update(int &val, int delta)
 {
     if (val)
     {
-        if (cnt[val] == 0 && delta == 1) bit2.Update(val, delta);
-        if (cnt[val] == 1 && delta == -1) bit2.Update(val, delta);
-        bit1.Update(val, delta);
+        if (cnt[val] == 0 && delta == 1) cnt2.Update(val, delta);
+        if (cnt[val] == 1 && delta == -1) cnt2.Update(val, delta);
+        cnt1.Update(val, delta);
     }
 
     cnt[val] += delta;
@@ -137,7 +138,7 @@ int main()
         while (l > qr[i].l) Update(a[--l], 1);
         while (l < qr[i].l) Update(a[l++], -1);
 
-        res[qr[i].id] = {bit1.Get(qr[i].a, qr[i].b), bit2.Get(qr[i].a, qr[i].b)};
+        res[qr[i].id] = {cnt1.Get(qr[i].a, qr[i].b), cnt2.Get(qr[i].a, qr[i].b)};
     }
 
     FOR(i, 1, q) cout << res[i].F << ' ' << res[i].S << '\n'; 
