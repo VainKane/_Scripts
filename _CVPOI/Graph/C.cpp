@@ -27,7 +27,7 @@ int const N = 2e5 + 5;
 int n;
 vector<pair<int, int>> adj[N];
 
-int h[N], d[N];
+int d[N];
 long long f[N][2];
 
 void DFSPrepare(int u, int p)
@@ -39,7 +39,6 @@ void DFSPrepare(int u, int p)
 
         if (v == p) continue;
 
-        h[v] = h[u] + 1;
         d[v] = d[u] ^ w;
         DFSPrepare(v, u);
     }
@@ -56,7 +55,7 @@ void DFS(int u, int p)
         if (v == p) continue;
 
         DFS(v, u);
-        REP(i, 2) f[u][i] += f[v][i ^ w];
+        REP(i, 2) f[u][i] += f[v][i];
     }
 }
 
@@ -92,16 +91,10 @@ int main()
 
     long long res = Get(f[1][0], f[1][1]);
 
-    FOR(u, 1, n) for (auto &e : adj[u])
+    FOR(v, 2, n)
     {
-        int v = e.F;
-        if (h[v] < h[u]) continue;
-
-        int odd = f[v][0] - f[v][1];
-        int even = -odd;
-
-        // if (d[u] == 1) swap(odd, even);
-        mini(res, Get(f[1][0] + even, f[1][1] + odd));
+        long long haha = f[v][0] - f[v][1];
+        mini(res, Get(f[1][0] - haha, f[1][1] + haha));
     }
     
     cout << res;
