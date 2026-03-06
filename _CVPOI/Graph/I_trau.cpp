@@ -47,11 +47,6 @@ void Add(int &x, int const &y)
     if (x >= MOD) x -= MOD;
 }
 
-bool cmp(int i, int j)
-{
-    return edges[i].w < edges[j].w;
-}
-
 void BFS()
 {
     queue<int> q;
@@ -65,6 +60,15 @@ void BFS()
         topo.push_back(u);
         for (auto &v : dagAdj[u]) if (!--inDeg[v]) q.push(v);
     }
+
+    assert(sz(topo) == n);
+}
+
+bool Check(Edge a, Edge b)
+{
+    if (a.w + 1 != b.w) return false;
+    return (a.u == b.u || a.u == b.v ||
+            a.v == b.u || a.v == b.v);
 }
 
 int main()
@@ -82,31 +86,17 @@ int main()
         adj[v].push_back(i);
     }
 
-    FOR(u, 1, n) if (sz(adj[u]))
+    // FOR(u, 1, m) FOR(v, 1, m) if (Check(edges[u], edges[v]))
+    // {
+    //     dagAdj[u].push_back(v);
+    //     inDeg[v]++;
+    // }
+
+    FOR(i, 1, n) for (auto &u : adj[i]) for (auto &v : adj[i])
     {
-        sort(all(adj[u]), cmp);
-        vector<int> nodes[2];
-
-        int cur = 0;
-
-        for (int i = 0; i < sz(adj[u]);)
-        {
-            int id = adj[u][i];
-            int j = i;
-            for (; j < sz(adj[u]) && edges[adj[u][j]].w == edges[id].w; j++) 
-            {
-                if (sz(nodes[cur ^ 1]) && edges[nodes[cur ^ 1][0]].w + 1 == edges[id].w) for (auto &v : nodes[cur ^ 1])
-                {
-                    dagAdj[v].push_back(adj[u][j]);
-                    inDeg[id]++;
-                }
-                nodes[cur].push_back(adj[u][j]);
-            }
-            
-            i = j;
-            cur ^= 1;
-            nodes[cur].clear();
-        }
+        if (edges[u].w + 1 != edges[v].w) continue;
+        dagAdj[u].push_back(v);
+        inDeg[v]++;
     }
 
     BFS();

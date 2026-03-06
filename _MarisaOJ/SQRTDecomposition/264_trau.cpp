@@ -26,7 +26,7 @@ int const N = 5e4 + 5;
 int const LOG = 16;
 int const BK = 223;
 
-int n, m, q;
+int n, q;
 vector<int> adj[N];
 vector<int> c[N];
 
@@ -37,6 +37,7 @@ int cnt[N];
 
 int id[N];
 int d[N / BK + 5][N];
+int timer = 0;
 
 void DFS(int u, int p)
 {
@@ -65,32 +66,6 @@ int LCA(int u, int v)
     return up[u][0];
 }
 
-void BFS(int cl)
-{
-    queue<int> q;
-    // for (auto &u : c[cl])
-    // {
-    //     d[cl][u] = 1;
-    //     q.push(u);
-    // }
-
-    // while (!q.empty())
-    // {
-    //     int u = q.front();
-    //     q.pop();
-
-    //     for (auto &v : adj[u]) if (!d[cl][v])
-    //     {
-    //         d[cl][v] = d[cl][u] + 1;
-    //         q.push(v);
-    //     }
-    // }
-
-    // FOR(u, 1, n) d[cl][u]--;
-    memset(d[cl], 0x3f, (n + 1) * sizeof(int));
-    FOR(u, 1, n) for (auto &v : c[cl]) mini(d[cl][u], h[u] + h[v] - 2 * h[LCA(u, v)]);
-}
-
 int Query1(int u, int x)
 {
     int res = n;
@@ -102,8 +77,6 @@ int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
-
-    freopen("264.inp", "r", stdin);
 
     cin >> n >> q;
     FOR(i, 1, n)
@@ -124,15 +97,13 @@ int main()
     DFS(1, -1);
     h[0] = -1;
 
-    FOR(i, 1, n) if (cnt[i] > BK) BFS(id[i] = ++m);
-
     while (q--)
     {
         int u, x;
         cin >> u >> x;
 
         if (!cnt[x]) cout << "-1\n"; 
-        else cout << (cnt[x] <= BK ? Query1(u, x) : d[id[x]][u]) << '\n';
+        else cout << Query1(u, x) << '\n';
     }
 
     return 0;
