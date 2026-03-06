@@ -22,21 +22,32 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-int const N = 5e4 + 5;
-int const LOG = 16;
-int const BK = 128;
+int const N = 1e5 + 5;
+int const LOG = 18;
 
-int n, m, q;
+int n, q;
+int a[N];
+
 vector<int> adj[N];
-vector<int> c[N];
+int cnt[N];
 
 int up[N][20];
 int h[N];
 
-int cnt[N];
+void Compress()
+{
+    vector<int> vals;
+    
+    FOR(i, 1, n) vals.push_back(a[i]);
+    sort(all(vals));
+    vals.erase(unique(all(vals)), vals.end());
 
-int id[N];
-int d[N / BK + 5][N];
+    FOR(i, 1, n) 
+    {
+        a[i] = lower_bound(all(vals), a[i]) - vals.begin() + 1;
+        cnt[a[i]]++;
+    }
+}
 
 void DFS(int u, int p)
 {
@@ -44,56 +55,39 @@ void DFS(int u, int p)
     {
         h[v] = h[u] + 1;
         up[v][0] = u;
+
         FOR(i, 1, LOG) up[v][i] = up[up[v][i - 1]][i - 1];
-        
         DFS(v, u);
     }
 }
 
 int LCA(int u, int v)
 {
-    if (h[u] < h[v]) swap(u, v);
+    if (d[u] < d[v]) swap(u, v);
     FORD(i, LOG, 0) if (h[up[u][i]] >= h[v]) u = up[u][i];
     if (u == v) return u;
 
     FORD(i, LOG, 0) if (up[u][i] != up[v][i])
     {
-        u = up[u][i];
+        u = up[i][i];
         v = up[v][i];
     }
 
     return up[u][0];
 }
 
-void BFS(int cl)
+int QueryLight(int u, int v, int p, int exp)
 {
-    queue<int> q;
-    for (auto &u : c[cl])
+    while (u != p)
     {
-        d[id[cl]][u] = 1;
-        q.push(u);
+        cnt[a[u]]++;
+        u = up[u][0];
     }
-
-    while (!q.empty())
-    {
-        int u = q.front();
-        q.pop();
-
-        for (auto &v : adj[u]) if (!d[id[cl]][v])
-        {
-            d[id[cl]][v] = d[id[cl]][u] + 1;
-            q.push(v);
-        }
-    }
-
-    FOR(u, 1, n) d[id[cl]][u]--;
 }
 
-int Query1(int u, int x)
+int QueryHeavy(int u, int v, int p, int exp)
 {
-    int res = n;
-    for (auto &v : c[x]) mini(res, h[u] + h[v] - 2 * h[LCA(u, v)]);
-    return res;
+
 }
 
 int main()
@@ -102,13 +96,7 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> n >> q;
-    FOR(i, 1, n)
-    {
-        int x; cin >> x;
-        c[x].push_back(i);
-        cnt[x]++;
-    }
-
+    FOR(i, 1, n) cin >> a[i];
     FOR(i, 2, n)
     {
         int u, v;
@@ -117,22 +105,22 @@ int main()
         adj[v].push_back(u);
     }
 
+    Comress();
+
     DFS(1, -1);
     h[0] = -1;
 
-    FOR(i, 1, n) if (cnt[i] > BK) 
-    {
-        id[i] = ++m;
-        BFS(i);
-    }
-
     while (q--)
     {
-        int u, x;
-        cin >> u >> x;
+        int u, v;
+        cin >> u >> v;
 
-        if (!cnt[x]) cout << "-1\n"; 
-        else cout << (cnt[x] <= BK ? Query1(u, x) : d[id[x]][u]) << '\n';
+        int p = LCA(u, v);
+        int len = h[u] + h[v] - 2 * h[p] + 1;
+        int exp = (len + 1) / 2 + 1;
+
+        if (len < BK) cout << QueryLight(u, v, p, exp) << '\n';
+        else cout << QueryHeavy(u, v, p, exp) << '\n';
     }
 
     return 0;
