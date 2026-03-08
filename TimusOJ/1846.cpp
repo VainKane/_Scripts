@@ -23,7 +23,7 @@ template <class t> bool mini(t &x, t const &y)
 }
 
 int const N = 1e5 + 5;
-int const BK = 3;
+int const BK = 314;
 int const GR = N / BK + 5;
 int bkId[N], bkL[GR], bkR[GR];
 
@@ -34,6 +34,9 @@ int n, q;
 pair<char, int> qr[N];
 
 bool mark[N];
+int cnt0[N];
+
+vector<int> v;
 
 int GCD(int a, int b)
 {
@@ -64,19 +67,15 @@ void Compress()
     n = sz(vals);
 }
 
-int GetGCD(int l, int r)
+int GetGCD(int l, int r, bool reset = true, int res = 0)
 {
+    if (l > r) return 0;
     FOR(i, l, r) cnt[qr[i].S] += qr[i].F == '+' ? 1 : -1;
     
-    int res = 1;
-    FOR(i, 1, n) if (cnt[i])
-    {
-        res = vals[i - 1];
-        break;
-    }
-
-    FOR(i, 1, n) if (cnt[i]) res = GCD(res, vals[i - 1]);
-    FOR(i, l, r) cnt[qr[i].S] = 0;
+    FOR(i, l, r) if (cnt[qr[i].S] + cnt0[qr[i].S] && !mark[qr[i].S]) res = GCD(res, vals[qr[i].S - 1]);
+    for (auto &x : v) if (cnt[x] + cnt0[x]) res = GCD(res, vals[x - 1]);
+    
+    if (reset) FOR(i, l, r) cnt[qr[i].S] = 0;
     return res;
 }
 
@@ -91,13 +90,29 @@ int main()
     Init();
     Compress();
 
-    FOR(i, bkL[1], bkR[1]) cout << GetGCD(1, i) << '\n';
-    FOR(id, 2, bkId[q])
+    FOR(id, 1, bkId[q])
     {
+        memset(cnt0, 0, sizeof cnt);
+        v.clear();
+
         FOR(i, bkL[id], bkR[id]) if (qr[i].F == '-') mark[qr[i].S] = true;
-        int res = GetGCD(1, bkR[id - 1]);
-        memset(mark, 0, sizeof mark);
-        FOR(i, bkL[id], bkR[id]) cout << GCD(res, GetGCD(bkL[id], i)) << '\n';
+        int gcd = GetGCD(1, bkR[id - 1], false);
+
+        FOR(i, bkL[id], bkR[id]) if (qr[i].F == '-') v.push_back(qr[i].S);
+        memset(mark, false, sizeof mark);
+
+        FOR(i, 1, n)
+        {
+            cnt0[i] = cnt[i];
+            cnt[i] = 0;
+        }
+
+        FOR(i, bkL[id], bkR[id]) 
+        {
+            int res = GetGCD(bkL[id], i, true, gcd);
+            if (res == 0) res = 1;
+            cout << res << '\n';
+        }
     }
 
     return 0;
