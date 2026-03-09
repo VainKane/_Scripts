@@ -157,13 +157,14 @@ int main()
 
     cout << dsu.cc << ' ';
 
+    DSU ini = dsu;
     FOR(id, 1, bkId[q])
     {
         memset(cnt, 0, sizeof cnt);
         memset(mark, false, sizeof mark);
 
         FOR(i, bkL[id], bkR[id]) if (qr[i].type == 2) mark[qr[i].id] = -oo;
-        dsu = DSU(n);
+        dsu = ini;
         
         FOR(i, 1, bkR[id - 1]) cnt[qr[i].id] += qr[i].type == 1 ? 1 : -1;
         FOR(i, 1, bkR[id - 1]) if (!mark[qr[i].id] && cnt[qr[i].id] > 0) dsu.Union(qr[i].u, qr[i].v);
