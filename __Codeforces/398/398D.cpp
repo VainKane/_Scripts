@@ -24,65 +24,93 @@ template <class t> bool mini(t &x, t const &y)
 
 struct Query
 {
-    int type, u, v;
+    char type;
+    int u, v;
 
-    void Input(int _type)
+    void Input()
     {
-        type = _type;
-        if (type != 2) cin >> u;
-        else cin >> u >> v;
+        cin >> type;
+        if (type == 'A' || type == 'D') cin >> u >> v;
+        else cin >> u;
     }
 };
 
 int const N = 5e4 + 5;
 int const M = 2.5e5 + 5;
-int const BK = 244;
-int const GR = N / BK + 5;
+int const BK = 500;
 
 int n, m, q;
-
 bool online[N];
-unordered_map<int, bool> mp[N];
+
+vector<int> adj[N];
+vector<int> hvAdj[N];
+vector<int> everAdj[N];
 
 Query qr[M];
 
-int hvId[N], node[GR];
+int hvId[N];
 int hv = 0;
 
 int cnt[N];
 
 void Init()
 {
+    FOR(u, 1, n) everAdj[u] = adj[u];
     FOR(i, 1, q) if (qr[i].type == 2)
     {
-        mp[qr[i].u][qr[i].v];
-        mp[qr[i].v][qr[i].u];
+        everAdj[qr[i].u].push_back(qr[i].v);
+        everAdj[qr[i].v].push_back(qr[i].u);
     }
 
-    FOR(u, 1, n) if (sz(mp[u]) > BK) 
+    FOR(u, 1, n)
     {
-        hvId[u] = ++hv;
-        node[hvId[u]] = u;
+        sort(all(everAdj[u]));
+        everAdj[u].erase(unique(all(everAdj[u])), everAdj[u].end());
     }
 
-    FOR(u, 1, n) if (!hvId[u] && online[u]) for (auto &p : mp[u]) cnt[p.F] += p.S * mp[u][p.F];
+    FOR(u, 1, n) if (sz(everAdj[u]) > BK) hvId[u] = ++hv;
+    FOR(u, 1, n) if (!hvId[u] && online[u]) for (auto &v : adj[u]) cnt[v]++;
+    FOR(u, 1, n) for (auto &v : adj[u]) if (hvId[v]) hvAdj[u].push_back(v);
 }
 
-void Update(int u, int v)
+void Update(int u)
 {
-    mp[u][v] ^= 1;
-    mp[v][u] ^= 1;
+    online[u] ^= 1;
+    int delta = online[u] ? 1 : -1;
+    if (!hvId[u]) for (auto &v : adj[u]) cnt[v] += delta;
+}
 
-    int delta = mp[u][v] == 1 ? 1 : -1;
+void Add(int u, int v)
+{
+    adj[u].push_back(v);
+    if (hvId[v]) hvAdj[u].push_back(v);
+    else cnt[u] += online[v];
+}
 
-    if (!hvId[v]) cnt[u] += online[v] * delta;
-    if (!hvId[u]) cnt[v] += online[u] * delta;
+void Sub(int u, int v)
+{
+    vector<int> haha;
+
+    if (hvId[v])
+    {
+        haha = hvAdj[u];
+        hvAdj[u].clear();
+        for (auto &node : haha) if (node != v) hvAdj[u].push_back(node);
+    }
+    else cnt[u] -= online[v];
+
+    if (!hvId[u])
+    {
+        haha = adj[u];
+        adj[u].clear();
+        for (auto &node : haha) if (node != v) adj[u].push_back(node);
+    }
 }
 
 int Query(int u)
 {
     int res = cnt[u];
-    FOR(i, 1, hv) res += mp[u][node[i]] * online[node[i]];
+    for (auto &v : hvAdj[u]) res += online[v];
     return res;
 }
 
@@ -104,32 +132,23 @@ int main()
     {
         int u, v;
         cin >> u >> v;
-        mp[u][v] = mp[v][u] = true;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
     }
 
-    FOR(i, 1, q)
-    {
-        char type; cin >> type;
-        if (type == 'O' || type == 'F') qr[i].Input(1);
-        else if (type == 'A' || type == 'D') qr[i].Input(2);
-        else qr[i].Input(3);
-    }
-
+    FOR(i, 1, q) qr[i].Input();
+    
     Init();
 
     FOR(i, 1, q)
     {
-        if (qr[i].type == 1) 
-        {
-            int u = qr[i].u;
-            
-            online[u] ^= 1;
-            int delta = online[u] ? 1 : -1;
+        int u = qr[i].u;
+        int v = qr[i].v;
 
-            if (!hvId[u]) for (auto &p : mp[u]) cnt[p.F] += delta * p.S;
-        }
-        else if (qr[i].type == 2) Update(qr[i].u, qr[i].v);
-        else cout << Query(qr[i].u) << '\n';
+        if (qr[i].type == 'O' || qr[i].type == 'F') Update(u);
+        else if (qr[i].type == 'A') Add(u, v), Add(v, u);
+        else if (qr[i].type == 'D') Sub(u, v), Sub(v, u);
+        else cout << Query(u) << '\n';
     }
 
     return 0;
