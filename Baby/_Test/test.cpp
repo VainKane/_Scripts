@@ -101,5 +101,6 @@ int main()
     FOR(i, 1, n) cin >> a[i];
     // sort(a + 1, a + n + 1);
 
-    FOR(i, 1, n) cout << a[i] << '\n';
+    // FOR(i, 1, n) cout << a[i] << '\n';
+    
 }
