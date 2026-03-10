@@ -71,9 +71,11 @@ void Query(int pos)
     int res = 1;
     while (pos + a[pos] <= n)
     {
-        res += cnt[j + a[j]];
-        j = out[j + a[j]];
+        res += cnt[pos + a[pos]];
+        pos = out[pos + a[pos]];
     }
+
+    cout << pos << ' ' << res << '\n';
 }
 
 int main()
@@ -89,18 +91,14 @@ int main()
     while (q--)
     {
         int type, x, y;
-        cin >> type;
+        cin >> type >> x;
 
         if (type == 0)
         {
-            cin >> x >> y;
+            cin >> y;
             Update(x, y);
         }
-        else
-        {
-            cin >> x;
-            Query(x);
-        }
+        else Query(x);
     }
 
     return 0;
