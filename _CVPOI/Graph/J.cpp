@@ -23,6 +23,7 @@ template <class t> bool mini(t &x, t const &y)
 }
 
 int const N = 1e5 + 5;
+int const LOG = 18;
 int const oo = 1e9 + 4;
 
 int n, c;
@@ -30,40 +31,26 @@ int s[N], p[N];
 vector<int> adj[N];
 
 int preS[N], preP[N];
-map<int, int> mp[N];
+int up[N][20];
+int upP[N][20];
 
-int res = -oo;
-
-void DFSPrepare(int u, int par)
+void DFS(int u, int par)
 {
     for (auto &v : adj[u]) if (v != par)
     {
         preS[v] = preS[u] + s[v];
         preP[v] = preP[u] + p[v];
-        DFSPrepare(v, u);
-    }
-}
-
-void DFS(int u, int par)
-{
-    mp[u][preS[u]] = preP[u];
-    if (s[u] <= c) maxi(res, p[u]);
-
-    for (auto &v : adj[u]) if (v != par)
-    {
-        DFS(v, u);
-        if (sz(mp[u]) < sz(mp[v])) swap(mp[u], mp[v]);
-
-        for (auto &pr : mp[v])
+        
+        upP[v][0] = preP[v];
+        up[v][0] = u;
+        
+        FOR(i, 1, LOG) 
         {
-            if (pr.F - preS[u] + s[u] <= c) maxi(res, pr.S - preP[u] + p[u]);
-
-            auto &x = mp[u][pr.F];
-
-            auto it = mp[u].find(pr.F);
-            if (it == mp[u].end()) x = pr.S;
-            else maxi(x, pr.S);
+            up[v][i] = up[up[v][i - 1]][i - 1];
+            upP[v][i] = min(upP[v][i - 1], upP[up[v][i - 1]][i - 1]);
         }
+
+        DFS(v, u);
     }
 }
 
@@ -85,10 +72,22 @@ int main()
     }
 
     preS[1] = s[1], preP[1] = p[1];
-    DFSPrepare(1, -1);
     DFS(1, -1);
 
-    cout << res;
+    int res = 0;
+
+    FOR(u, 1, n)
+    {
+        int v = u;
+        FORD(i, LOG, 0) if (preS[v] - preS[up[v][i]] <= c)
+        {
+            maxi(res, preP[v] - upP[v][i]);
+            v = up[v][i];
+        }
+    }
+
+    // cout << res;
+    cout << upP[4][0];
 
     return 0;
 }

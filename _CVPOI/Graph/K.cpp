@@ -22,42 +22,64 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
+struct State
+{
+    int x, y;
+    int du;
+
+    bool operator < (State const other) const
+    {
+        return du > other.du;
+    }
+};
+
 int const N = 800;
 
 int m, n;
 int a[N][N];
-
-int ccId[N][N];
-int h[N * N];
-int cc = 0;
+int h[N][N];
 
 int dx[] = {-1, 0, 1, 0};
 int dy[] = {0, 1, 0, -1};
 
-void BFS(int xs, int ys)
+bool Inside(int x, int y)
 {
-    queue<pair<int, int>> q;
-    q.push({xs, ys});
-    ccId[xs][ys] = cc;
+    return  x >= 1 && x <= m &&
+            y >= 1 && y <= n;
+}
 
-    while (!q.empty())
+void Dijkstra()
+{
+    memset(h, 0x3f, sizeof h);
+    priority_queue<State> pq;
+
+    FOR(j, 1, n)
     {
-        int x = q.front().F;
-        int y = q.front().S;
-        q.pop();
+        pq.push({1, j, h[1][j] = a[1][j]});
+        pq.push({m, j, h[m][j] = a[m][j]});
+    }
+
+    FOR(i, 2, m - 1)
+    {
+        pq.push({i, 1, h[i][1] = a[i][1]});
+        pq.push({i, n, h[i][n] = a[i][n]});
+    }
+
+    while (!pq.empty())
+    {
+        int x = pq.top().x;
+        int y = pq.top().y;
+        int du = pq.top().du;
+        pq.pop();
+
+        if (du > h[x][y]) continue;
 
         REP(i, 4)
         {
             int u = x + dx[i];
             int v = y + dy[i];
 
-            if (ccId[u][v] == cc) continue;
-            if (a[u][v] != a[xs][ys]) mini(h[cc], a[u][v]);
-            else
-            {
-                ccId[u][v] = cc;
-                q.push({u, v});
-            }
+            if (Inside(u, v) && mini(h[u][v], max(h[x][y], a[u][v]))) pq.push({u, v, h[u][v]});
         }
     }
 }
@@ -67,28 +89,14 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    memset(a, -1, sizeof a);
-    memset(h, 0x3f, sizeof h);
-
     cin >> m >> n;
     FOR(i, 1, m) FOR(j, 1, n) cin >> a[i][j];
 
-    FOR(i, 1, m) FOR(j, 1, n) if (!ccId[i][j])
-    {
-        cc++;
-        BFS(i, j);
-    }
+    Dijkstra();
 
     long long res = 0;
-    FOR(i, 1, m) FOR(j, 1, n) res += max(0, h[ccId[i][j]] - a[i][j]);
+    FOR(i, 1, m) FOR(j, 1, n) res += h[i][j] - a[i][j];
     cout << res;
-
-    // cout << "--------------------\n";
-    // FOR(i, 1, m)
-    // {
-    //     FOR(j, 1, n) cout << ccId[i][j] << ' ';
-    //     cout << '\n';
-    // }
 
     return 0;
 }

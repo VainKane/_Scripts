@@ -25,46 +25,26 @@ template <class t> bool mini(t &x, t const &y)
 struct Edge
 {
     int u, v, w;
+
+    bool operator < (Edge const other) const
+    {
+        return w < other.w;
+    }
 };
 
 int const N = 1e6 + 5;
 int const MOD = 1e9 + 7;
 
 int n, m;
-
 Edge edges[N];
-vector<int> adj[N];
-vector<int> dagAdj[N];
 
-int inDeg[N];
-vector<int> topo;
-
-int dp[N];
+int dp[N][2];
+int f[N];
 
 void Add(int &x, int const &y)
 {
     x += y;
     if (x >= MOD) x -= MOD;
-}
-
-bool cmp(int i, int j)
-{
-    return edges[i].w < edges[j].w;
-}
-
-void BFS()
-{
-    queue<int> q;
-    FOR(u, 1, n) if (!inDeg[u]) q.push(u);
-
-    while (!q.empty())
-    {
-        int u = q.front();
-        q.pop();
-
-        topo.push_back(u);
-        for (auto &v : dagAdj[u]) if (!--inDeg[v]) q.push(v);
-    }
 }
 
 int main()
@@ -78,55 +58,40 @@ int main()
         int u, v, w;
         cin >> u >> v >> w;
         edges[i] = {u, v, w};
-        adj[u].push_back(i);
-        adj[v].push_back(i);
     }
 
-    FOR(u, 1, n) if (sz(adj[u]))
+    sort(edges + 1, edges + m + 1);
+
+    int pre = N;
+    for (int l = 1; l <= m;)
     {
-        sort(all(adj[u]), cmp);
-        vector<int> nodes[2];
-
-        int cur = 0;
-
-        for (int i = 0; i < sz(adj[u]);)
+        int r;
+        for (r = l; edges[r].w == edges[l].w; r++)
         {
-            int id = adj[u][i];
-            int j = i;
-            for (; j < sz(adj[u]) && edges[adj[u][j]].w == edges[id].w; j++) 
-            {
-                if (sz(nodes[cur ^ 1]) && edges[nodes[cur ^ 1][0]].w + 1 == edges[id].w) for (auto &v : nodes[cur ^ 1])
-                {
-                    dagAdj[v].push_back(adj[u][j]);
-                    inDeg[id]++;
-                }
-                nodes[cur].push_back(adj[u][j]);
-            }
-            
-            i = j;
-            cur ^= 1;
-            nodes[cur].clear();
+            Add(dp[r][1], f[edges[r].u] + 1);
+            Add(dp[r][0], f[edges[r].v] + 1);
         }
-    }
 
-    BFS();
-    FOR(u, 1, m) dp[u] = 1;
+        FOR(i, pre, l - 1) f[edges[i].u] = f[edges[i].v] = 0;
+        
+        if (edges[r].w == edges[l].w + 1) for (r = l; edges[r].w == edges[l].w; r++)
+        {
+            Add(f[edges[r].u], dp[r][0]);
+            Add(f[edges[r].v], dp[r][1]);
+        }
+
+        pre = l;
+        l = r;
+    }
 
     int res = 0;
-    for (auto &u : topo) 
+    FOR(i, 1, m) 
     {
-        Add(res, dp[u]);
-        for (auto &v : dagAdj[u]) Add(dp[v], dp[u]);
+        Add(res, dp[i][0]);
+        Add(res, dp[i][1]);
     }
-    
-    cout << res;
 
-    // FOR(u, 1, m)
-    // {
-    //     cout << "Adj of " << u << ":\n";
-    //     for (auto &v : dagAdj[u]) cout << v << ' ';
-    //     cout << '\n';
-    // }
+    cout << (res - m + MOD) % MOD;
 
     return 0;
 }
