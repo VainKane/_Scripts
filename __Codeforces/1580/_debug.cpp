@@ -35,14 +35,39 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int lim = 1000;
+    int const oo = 3;
+    int const lim = 2 * oo;
 
     int n = Rand(1, lim);
     int q = Rand(1, lim);
 
+    bool used[n + 1];
+    memset(used, false, sizeof used);
+
     cout << n << ' ' << q << '\n';
     FOR(i, 1, n) cout << Rand(1, oo) << ' ' << Rand(1, oo) << '\n';
-    FOR(i, 1, q) cout << Rand(1, 2) << ' ' << Rand()
+    FOR(i, 1, q)
+    {
+        vector<int> v1, v2;
+        FOR(i, 1, n) 
+        {
+            if (used[i]) v1.push_back(i);
+            else v2.push_back(i);
+        }
+
+        int k = Rand(1, 2);
+        if (sz(v1) == n) k = 2;
+        if (sz(v2) == n) k = 1;
+
+        int id;
+
+        if (k == 1) id = v2[Rand(0, sz(v2) - 1)];
+        else id = v1[Rand(0, sz(v1) - 1)];
+
+        used[id] ^= 1;
+
+        cout << k << ' ' << id << '\n';
+    }
 }
 
 int main()

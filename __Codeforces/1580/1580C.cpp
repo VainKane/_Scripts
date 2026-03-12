@@ -23,7 +23,7 @@ template <class t> bool mini(t &x, t const &y)
 }
 
 int const N = 2e5 + 5;
-int const BK = 447;
+int const BK = 0;
 
 int n, q;
 int x[N], y[N];
@@ -36,17 +36,28 @@ int cur = 0;
 
 void UpdateLight(int x, int y, int t, int delta)
 {
-    FOR(i, t + x, t + x + y - 1) cnt[x + y][i % (x + y)] += delta;
+    FOR(i, t - y, t - 1)
+    {
+        int rem = i % (x + y);
+        if (rem < 0) rem += x + y;
+        cnt[x + y][rem] += delta;
+    }
 }
 
-void UpdateHeavy(int x, int y, int t, int delta)
+void UpdateHeavy(int x, int y, int t, int delta, int pos)
 {
     for (int i = t + x; i <= q; i += x + y) 
     {
-        cur -= (delta == -1 && i <= t && t < i + y);
+        if (delta == -1 && i <= pos && pos < i + y)
+        {
+            d[pos]--;
+            d[i + y]++;
+        }
+
         d[i] += delta;
+        d[i + y] -= delta;
     }
-    for (int i = t + x + y; i <= q; i += x + y) d[i] -= delta;
+    // for (int i = t + x + y; i <= q; i += x + y) d[i] -= delta;
 }
 
 int main()
@@ -66,14 +77,21 @@ int main()
         int id = type == 1 ? i : in[idx];
         if (type == 1) in[idx] = i;
 
-        if (x[idx] + y[idx] > BK) UpdateHeavy(x[idx], y[idx], id, delta);
+        if (x[idx] + y[idx] > BK) UpdateHeavy(x[idx], y[idx], id, delta, i);
         else UpdateLight(x[idx], y[idx], id, delta);
 
-        cur += d[idx];
+        cur += d[i];
 
         int res = cur;
         FOR(mod, 2, BK) res += cnt[mod][i % mod];
-        cout << res << '\n'; 
+        // cout << res << '\n';
+
+        // if (i == 4) 
+        {
+            // cout << "After Query " << i << ":\n";
+            // FOR(i, 1, q) cout << d[i] << ' ';
+            // cout << '\n';
+        }
     }
 
     return 0;

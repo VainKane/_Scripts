@@ -45,6 +45,7 @@ struct FenwickTree
     void Update(int l, int r, int val)
     {
         if (l > r) return;
+
         Update(l, val);
         Update(r + 1, -val);
     }
@@ -79,17 +80,18 @@ int main()
     cin >> n >> q;
     FOR(i, 1, n) cin >> x[i] >> y[i];
 
-    bit = FenwickTree(n);
+    bit = FenwickTree(q);
 
     FOR(i, 1, q)
     {
         int type, idx;
         cin >> type >> idx;
 
-        if (type == 1) pos[idx] = i;
+        int delta = type == 1 ? 1 : -1;
         int id = type == 1 ? i : pos[idx];
+        if (type == 1) pos[idx] = i;
 
-        for (int j = id + x[idx]; j <= q; j += x[idx] + y[idx]) bit.Update(j, j + y[idx] - 1, type == 1 ? 1 : -1);
+        for (int j = id + x[idx]; j <= q; j += x[idx] + y[idx]) bit.Update(j, min(q, j + y[idx] - 1), delta);
         cout << bit.Get(i) << '\n';
     }
 
