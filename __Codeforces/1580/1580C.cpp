@@ -23,7 +23,7 @@ template <class t> bool mini(t &x, t const &y)
 }
 
 int const N = 2e5 + 5;
-int const BK = 0;
+int const BK = 314;
 
 int n, q;
 int x[N], y[N];
@@ -46,18 +46,17 @@ void UpdateLight(int x, int y, int t, int delta)
 
 void UpdateHeavy(int x, int y, int t, int delta, int pos)
 {
-    for (int i = t + x; i <= q; i += x + y) 
+    for (int i = t + x; i <= q; i += x + y)
     {
-        if (delta == -1 && i <= pos && pos < i + y)
-        {
-            d[pos]--;
-            d[i + y]++;
-        }
+        if (delta == -1 && i <= pos && pos < i + y && i != pos) cur--;
 
         d[i] += delta;
-        d[i + y] -= delta;
+        if (i + y <= q) 
+        {
+            if (delta == -1 && i + y == pos) cur--;
+            d[i + y] -= delta;
+        }
     }
-    // for (int i = t + x + y; i <= q; i += x + y) d[i] -= delta;
 }
 
 int main()
@@ -84,14 +83,7 @@ int main()
 
         int res = cur;
         FOR(mod, 2, BK) res += cnt[mod][i % mod];
-        // cout << res << '\n';
-
-        // if (i == 4) 
-        {
-            // cout << "After Query " << i << ":\n";
-            // FOR(i, 1, q) cout << d[i] << ' ';
-            // cout << '\n';
-        }
+        cout << res << '\n';
     }
 
     return 0;
