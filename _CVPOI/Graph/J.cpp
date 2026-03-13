@@ -79,15 +79,16 @@ int main()
     FOR(u, 1, n)
     {
         int v = u;
-        FORD(i, LOG, 0) if (preS[v] - preS[up[v][i]] <= c)
+        FORD(i, LOG, 0) if (preS[u] - preS[up[v][i]] <= c)
         {
-            maxi(res, preP[v] - upP[v][i]);
+            maxi(res, preP[u] - upP[v][i]);
             v = up[v][i];
         }
+
+        maxi(res, preP[u] - preP[v]);
     }
 
-    // cout << res;
-    cout << upP[4][0];
+    cout << res;
 
     return 0;
 }
