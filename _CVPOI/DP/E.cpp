@@ -22,23 +22,46 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
+struct State
+{
+    int x, y, k;
+    char ch = '*';
+};
+
 int const N = 314;
 
 int m, n;
 char a[N][N];
 
 int dp[N][N][N];
-pair<int, int> trace[N][N];
+State trace[N][N][N];
 
-void Optimize(int x, int y, int k, int u, int v, int delta, int val)
+void Optimize(int x, int y, int k, int u, int v)
 {
+    if (v < 1 || v > n) return;
+
+    int val = a[x][y] == '.' ? 0 : 1;
+    int delta = 0;
+
+    if (a[x][y] == '(') delta = 1;
+    if (a[x][y] == ')') delta = -1;
+
     if (k + delta < 0) return;
 
     int haha = dp[u][v][k + delta] + val;
-    auto &p = trace[x][y];
+    auto &p = trace[x][y][k];
 
-    if (maxi(dp[x][y][k], haha)) p = {u, v};
-    else if (dp[x][y][k] == haha && a[u][v] < a[p.F][p.S]) p = {u, v};
+    // char ch = a[x][y] == '.' ? trace[u][v][k + delta].ch : a[x][y];
+    char traceCh = a[u][v] == '.' ? trace[u][v][k + delta].ch : a[u][v];
+
+    // if (x == 8 && y == 1 && k == 0 && u == 7 && v == 1) 
+    // {
+    //     cout << trace[u][v][k + delta].ch << ' ' << p.ch << '\n';
+    //     cout << p.x << ' ' << p.y;
+    // }
+
+    if (maxi(dp[x][y][k], haha)) p = {u, v, k + delta, traceCh};
+    else if (dp[x][y][k] == haha && traceCh < p.ch) p = {u, v, k + delta, traceCh};
 }
 
 int main()
@@ -46,47 +69,44 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    memset(a, '*', sizeof a);
-
     cin >> m >> n;
     FOR(i, 1, m) FOR(j, 1, n) cin >> a[i][j];
 
     memset(dp, -0x3f, sizeof dp);
-    FOR(j, 1, n) if (a[m][j] == 'M') dp[m][j][0] = 0;
 
-    FORD(i, m - 1, 1) FOR(j, 1, n) FOR(k, 0, m) if (a[i][j] != '*')
+    FOR(j, 1, n) dp[0][j][0] = 0;
+    FOR(i, 1, m) FOR(j, 1, m) if (a[i][j] == '*') dp[i][j][0] = 0;
+
+    FOR(i, 1, m) FOR(j, 1, n) FOR(k, 0, i) if (a[i][j] != '*')
     {
-        int delta = 0;
-        int val = (a[i][j] != '*' && a[i][j] != '.') ? 1 : 0;
-
-        if (a[i][j] == '(') delta = -1;
-        if (a[i][j] == ')') delta = 1;
-        
-        Optimize(i, j, k, i + 1, j, delta, val);
-        Optimize(i, j, k, i + 1, j - 1, delta, val);
-        Optimize(i, j, k, i + 1, j + 1, delta, val);
+        Optimize(i, j, k, i - 1, j);
+        Optimize(i, j, k, i - 1, j - 1);
+        Optimize(i, j, k, i - 1, j + 1);
     }
 
-    int x = 0, y = 0;
-
-    FOR(i, 1, m) FOR(j, 1, n)
+    FOR(j, 1, n) if (a[m][j] == 'M')
     {
-        if (dp[x][y][0] < dp[i][j][0]) x = i, y = j;
-        else if (dp[x][y][0] == dp[i][j][0] && a[x][y] > a[i][j]) x = i, y = j;
+        auto p = trace[m][j][0];
+        string res = "";
+        while (p.x && p.y)
+        {
+            if (a[p.x][p.y] == '(' || a[p.x][p.y] == ')') res += a[p.x][p.y];
+            p = trace[p.x][p.y][p.k];
+        }
+
+        cout << sz(res) << '\n' << res;
     }
 
-    // string res = "";
-    // while (x && y)
-    // {
-    //     if (a[x][y] != '.') res += a[x][y];
-    //     pair<int, int> p = trace[x][y];
-    //     x = p.F, y = p.S;
-    // }
+    // cout << dp[4][2][0];
+    // cout << dp[6][1][0];
+    // cout << trace[5][1][0].ch;
 
-    // reverse(all(res));
-    // cout << sz(res) << '\n' << res;
+    // cout << dp[1][7][1];
 
-    cout << dp[1][1][0];
+    // cout << trace[7][1][1].ch << ' ' << trace[7][2][1].ch;
+    // cout << trace[8][1][1].x << ' ' << trace[8][1][1].y;
+
+    // cout << trace[7][1][1].ch;
 
     return 0;
 }
