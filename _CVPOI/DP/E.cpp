@@ -22,18 +22,23 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-int n, k;
+int const N = 314;
 
-long long dp[12][96][MK(9) + 5];
+int m, n;
+char a[N][N];
 
-vector<int> valid;
-vector<int> adj[MK(9) + 5];
+int dp[N][N][N];
+pair<int, int> trace[N][N];
 
-bool Check(int mask1, int mask2)
+void Optimize(int x, int y, int k, int u, int v, int delta, int val)
 {
-    if (mask1 & (mask2 << 1)) return false;
-    if (mask1 & (mask2 >> 1)) return false;
-    return true;
+    if (k + delta < 0) return;
+
+    int haha = dp[u][v][k + delta] + val;
+    auto &p = trace[x][y];
+
+    if (maxi(dp[x][y][k], haha)) p = {u, v};
+    else if (dp[x][y][k] == haha && a[u][v] < a[p.F][p.S]) p = {u, v};
 }
 
 int main()
@@ -41,19 +46,47 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    cin >> n >> k;
+    memset(a, '*', sizeof a);
 
-    REP(mask, MK(n)) if (Check(mask, mask)) valid.push_back(mask);
-    for (auto &mask1 : valid) for (auto &mask2 : valid) 
-        if ((mask1 & mask2) == 0 && Check(mask1, mask2)) adj[mask1].push_back(mask2);
-    
-    dp[0][0][0] = 1;
-    REP(i, n) FOR(cnt, 0, k) for (auto &mask : valid) if (dp[i][cnt][mask])
-        for (auto &nxt : adj[mask]) dp[i + 1][cnt + __builtin_popcount(nxt)][nxt] += dp[i][cnt][mask];
+    cin >> m >> n;
+    FOR(i, 1, m) FOR(j, 1, n) cin >> a[i][j];
 
-    long long res = 0;
-    for (auto &mask : valid) res += dp[n][k][mask];
-    cout << res;
+    memset(dp, -0x3f, sizeof dp);
+    FOR(j, 1, n) if (a[m][j] == 'M') dp[m][j][0] = 0;
+
+    FORD(i, m - 1, 1) FOR(j, 1, n) FOR(k, 0, m) if (a[i][j] != '*')
+    {
+        int delta = 0;
+        int val = (a[i][j] != '*' && a[i][j] != '.') ? 1 : 0;
+
+        if (a[i][j] == '(') delta = -1;
+        if (a[i][j] == ')') delta = 1;
+        
+        Optimize(i, j, k, i + 1, j, delta, val);
+        Optimize(i, j, k, i + 1, j - 1, delta, val);
+        Optimize(i, j, k, i + 1, j + 1, delta, val);
+    }
+
+    int x = 0, y = 0;
+
+    FOR(i, 1, m) FOR(j, 1, n)
+    {
+        if (dp[x][y][0] < dp[i][j][0]) x = i, y = j;
+        else if (dp[x][y][0] == dp[i][j][0] && a[x][y] > a[i][j]) x = i, y = j;
+    }
+
+    // string res = "";
+    // while (x && y)
+    // {
+    //     if (a[x][y] != '.') res += a[x][y];
+    //     pair<int, int> p = trace[x][y];
+    //     x = p.F, y = p.S;
+    // }
+
+    // reverse(all(res));
+    // cout << sz(res) << '\n' << res;
+
+    cout << dp[1][1][0];
 
     return 0;
 }

@@ -92,15 +92,17 @@ int main()
     // int x = 9;
     // assert(x == 7);
 
-    freopen("blabla.out", "w", stdout);
-    // cout << (char)32;
+    // freopen("blabla.out", "w", stdout);
+    // // cout << (char)32;
 
-    int n;
-    cin >> n;
+    // int n;
+    // cin >> n;
 
-    FOR(i, 1, n) cin >> a[i];
+    // FOR(i, 1, n) cin >> a[i];
     // sort(a + 1, a + n + 1);
 
     // FOR(i, 1, n) cout << a[i] << '\n';
-    
+
+    // cout << (long long)1e11 - 1;
+    cout << (int)'.';
 }
