@@ -27,7 +27,7 @@ int const N = 314;
 int m, n;
 char a[N][N];
 
-string dp[N][N][N];
+pair<int, bitset<N>> dp[N][N][N];
 
 void Optimize(int x, int y, int k, int u, int v)
 {
@@ -39,13 +39,9 @@ void Optimize(int x, int y, int k, int u, int v)
     if (a[x][y] == ')') delta = 1;
 
     if (k + delta < 0) return;
-    if (dp[u][v][k + delta] == "#") return;
- 
-    string s = dp[u][v][k + delta];
-    if (a[x][y] != '.' && a[x][y] != '*') s += a[x][y];
 
-    if (sz(dp[x][y][k]) < sz(s) || dp[x][y][k] == "#") dp[x][y][k] = s;
-    else if (sz(dp[x][y][k]) == sz(s)) mini(dp[x][y][k], s);
+    if (maxi(dp[x][y][k].F, dp[u][v][k + delta].F)) dp[x][y][k].S = dp[u][v][k + delta].S;
+    
 }
 
 int main()
@@ -64,19 +60,7 @@ int main()
         Optimize(i, j, k, i + 1, j + 1);
     }
 
-    string res = "";
 
-    FOR(i, 1, m) FOR(j, 1, n) if (i == 1 || a[i][j] == '*')
-    {
-        if (sz(dp[i][j][0]) > sz(res)) 
-        {
-            res = dp[i][j][0];
-            cout << i << ' ' << j << ' ' << res << '\n';
-        }
-        // else if (sz(dp[i][j][0]) == sz(res)) mini(res, dp[i][j][0]);
-    }
-
-    // cout << sz(res) << '\n' << res;
 
     return 0;
 }

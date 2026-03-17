@@ -29,8 +29,6 @@ int const oo = 4e4 + 1;
 int s, n, m;
 
 int req[N][N];
-int cnt[N][2 * M];
-
 int dp[N][M];
 
 int main()
@@ -39,22 +37,19 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> s >> n >> m;
-    FOR(i, 1, s) FOR(j, 1, n)
+    FOR(j, 1, s) FOR(i, 1, n)
     {
         int x; cin >> x;
         req[i][j] = 2 * x + 1;
     }
 
-    FOR(j, 1, n)
+    FOR(i, 1, n) sort(req[i] + 1, req[i] + s + 1);
+
+    FOR(j, 1, s) FOR(i, 1, n) FOR(k, 0, m)
     {
-        FOR(i, 1, s) cnt[j][req[i][j]]++;
-        FOR(i, 1, oo) cnt[j][i] += cnt[j][i - 1];
+        maxi(dp[i][k], dp[i - 1][k]);
+        if (k >= req[i][j]) maxi(dp[i][k], dp[i - 1][k - req[i][j]] + i * j);
     }
-
-    FOR(i, 1, n) FOR(j, 0, m) FOR(x, 0, j)
-        maxi(dp[i][j], dp[i - 1][j - x] + i * cnt[i][x]);
-
-    cout << dp[n][m];
 
     return 0;
 }

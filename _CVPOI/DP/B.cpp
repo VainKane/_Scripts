@@ -12,6 +12,9 @@ using namespace std;
 #define F first
 #define S second
 
+#pragma GCC optimize("O3", "unroll-loops")
+#pragma GCC target("avx2", "popcnt")
+
 template <class t> bool maxi(t &x, t const &y)
 {
     return x < y ? x = y, 1 : 0;
@@ -22,37 +25,30 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-int const N = 1009;
-int const MOD = 1e9 + 7;
+int const N = 1.2e7 + 1;
 
-void Add(int &x, int const &y)
-{
-    x += y;
-    if (x >= MOD) x -= MOD;
-}
+int n, q;
+int a[5009];
 
-int m, n;
-int dp[N][10][MK(10) + 5];
+bitset<N> dp;
+int s = 0;
 
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    cin >> m >> n;
-    swap(m, n);
+    cin >> n >> q;
+    FOR(i, 1, n) cin >> a[i], s += a[i];
 
-    REP(i, m) REP(j, n) REP(mask, MK(n)) if (!dp[i][j][mask])
+    dp[0] = 1;
+    FOR(i, 1, n) dp |= (dp << a[i]);
+
+    while (q--)
     {
-        if (BIT(j, mask)) 
-        {
-            Add(dp[i][j][mask], dp[i][j - 1][mask ^ MK(j)]);
-            if (j && BIT(j - 1, mask)) Add(dp[i][j][mask], dp[i][j][mask ^ MK(j - 1)]);
-        }
-        else Add(dp[i][j][mask], dp[i][j - 1][mask ^ MK(j)]);
+        int x; cin >> x;
+        cout << ((x > s || !dp[x]) ? "no\n" : "yes\n");
     }
-
-    cout << dp[m - 1][n - 1][0];
 
     return 0;
 }
