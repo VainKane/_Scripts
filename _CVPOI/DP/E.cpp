@@ -22,46 +22,30 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-struct State
-{
-    int x, y, k;
-    char ch = '*';
-};
-
 int const N = 314;
 
 int m, n;
 char a[N][N];
 
-int dp[N][N][N];
-State trace[N][N][N];
+string dp[N][N][N];
 
 void Optimize(int x, int y, int k, int u, int v)
 {
     if (v < 1 || v > n) return;
+    if (a[u][v] == '*') return;
 
-    int val = a[x][y] == '.' ? 0 : 1;
     int delta = 0;
-
-    if (a[x][y] == '(') delta = 1;
-    if (a[x][y] == ')') delta = -1;
+    if (a[x][y] == '(') delta = -1;
+    if (a[x][y] == ')') delta = 1;
 
     if (k + delta < 0) return;
+    if (dp[u][v][k + delta] == "#") return;
+ 
+    string s = dp[u][v][k + delta];
+    if (a[x][y] != '.' && a[x][y] != '*') s += a[x][y];
 
-    int haha = dp[u][v][k + delta] + val;
-    auto &p = trace[x][y][k];
-
-    // char ch = a[x][y] == '.' ? trace[u][v][k + delta].ch : a[x][y];
-    char traceCh = a[u][v] == '.' ? trace[u][v][k + delta].ch : a[u][v];
-
-    // if (x == 8 && y == 1 && k == 0 && u == 7 && v == 1) 
-    // {
-    //     cout << trace[u][v][k + delta].ch << ' ' << p.ch << '\n';
-    //     cout << p.x << ' ' << p.y;
-    // }
-
-    if (maxi(dp[x][y][k], haha)) p = {u, v, k + delta, traceCh};
-    else if (dp[x][y][k] == haha && traceCh < p.ch) p = {u, v, k + delta, traceCh};
+    if (sz(dp[x][y][k]) < sz(s) || dp[x][y][k] == "#") dp[x][y][k] = s;
+    else if (sz(dp[x][y][k]) == sz(s)) mini(dp[x][y][k], s);
 }
 
 int main()
@@ -72,41 +56,27 @@ int main()
     cin >> m >> n;
     FOR(i, 1, m) FOR(j, 1, n) cin >> a[i][j];
 
-    memset(dp, -0x3f, sizeof dp);
-
-    FOR(j, 1, n) dp[0][j][0] = 0;
-    FOR(i, 1, m) FOR(j, 1, m) if (a[i][j] == '*') dp[i][j][0] = 0;
-
-    FOR(i, 1, m) FOR(j, 1, n) FOR(k, 0, i) if (a[i][j] != '*')
+    FOR(i, 1, m) FOR(j, 1, n) FOR(k, 0, m) if (a[i][j] != 'M') dp[i][j][k] = "#";
+    FORD(i, m - 1, 1) FOR(j, 1, n) FOR(k, 0, m)
     {
-        Optimize(i, j, k, i - 1, j);
-        Optimize(i, j, k, i - 1, j - 1);
-        Optimize(i, j, k, i - 1, j + 1);
+        Optimize(i, j, k, i + 1, j);
+        Optimize(i, j, k, i + 1, j - 1);
+        Optimize(i, j, k, i + 1, j + 1);
     }
 
-    FOR(j, 1, n) if (a[m][j] == 'M')
+    string res = "";
+
+    FOR(i, 1, m) FOR(j, 1, n) if (i == 1 || a[i][j] == '*')
     {
-        auto p = trace[m][j][0];
-        string res = "";
-        while (p.x && p.y)
+        if (sz(dp[i][j][0]) > sz(res)) 
         {
-            if (a[p.x][p.y] == '(' || a[p.x][p.y] == ')') res += a[p.x][p.y];
-            p = trace[p.x][p.y][p.k];
+            res = dp[i][j][0];
+            cout << i << ' ' << j << ' ' << res << '\n';
         }
-
-        cout << sz(res) << '\n' << res;
+        // else if (sz(dp[i][j][0]) == sz(res)) mini(res, dp[i][j][0]);
     }
 
-    // cout << dp[4][2][0];
-    // cout << dp[6][1][0];
-    // cout << trace[5][1][0].ch;
-
-    // cout << dp[1][7][1];
-
-    // cout << trace[7][1][1].ch << ' ' << trace[7][2][1].ch;
-    // cout << trace[8][1][1].x << ' ' << trace[8][1][1].y;
-
-    // cout << trace[7][1][1].ch;
+    // cout << sz(res) << '\n' << res;
 
     return 0;
 }
