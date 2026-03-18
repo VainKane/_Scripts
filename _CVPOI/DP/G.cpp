@@ -22,7 +22,7 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-int const N = 1009;
+int const N = 109;
 int const MOD = 1e9 + 7;
 
 void Add(int &x, int const &y)
@@ -31,36 +31,46 @@ void Add(int &x, int const &y)
     if (x >= MOD) x -= MOD;
 }
 
-int m, n;
-int dp[N][MK(10) + 5];
+int n, m;
 
-vector<int> adj[MK(10) + 5];
-
-bool Check(int mask1, int mask2)
-{
-    if (mask1 & mask2) return false;
-
-    int tmp = (~mask1 & ~mask2) & (MK(n) - 1);
-    if (tmp % 3) return false;
-    tmp /= 3;
-    if (tmp & (tmp << 1)) return false;
-
-    return true;
-}
+int a[36];
+map<vector<int>, int> dp[N];
 
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    cin >> m >> n;
-    swap(m, n);
+    cin >> n >> m;
+    REP(i, m) cin >> a[i];
 
-    REP(mask1, MK(n)) REP(mask2, MK(n)) if (Check(mask1, mask2)) adj[mask1].push_back(mask2);
+    REP(i, m)
+    {
+        vector<int> haha;
+        REP(j, m)
+        {
+            if (j == i) haha.push_back(0);
+            else haha.push_back(a[j]);
+        }
 
-    dp[0][0] = 1;
-    REP(i, m) REP(mask, MK(n)) for (auto &nxt : adj[mask]) Add(dp[i + 1][nxt], dp[i][mask]);
-    cout << dp[m][0];
+        dp[1][haha] = 1;
+    }
+
+    FOR(i, 1, n) for (auto &p : dp[i]) REP(j, m) if (p.F[j] + 1 >= a[j])
+    {
+        vector<int> v = p.F;
+        REP(id, sz(v))
+        {
+            if (id == j) v[id] = 0;
+            else v[id] = min(v[id] + 1, a[id]);
+        }
+
+        Add(dp[i + 1][v], p.S);
+    }
+
+    int res = 0;
+    for (auto &p : dp[n]) Add(res, p.S);
+    cout << res;
 
     return 0;
 }

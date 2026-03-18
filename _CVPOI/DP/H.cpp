@@ -45,11 +45,13 @@ int main()
 
     FOR(i, 1, n) sort(req[i] + 1, req[i] + s + 1);
 
-    FOR(j, 1, s) FOR(i, 1, n) FOR(k, 0, m)
+    FOR(i, 1, n) FOR(j, 1, s) FOR(k, 0, m)
     {
         maxi(dp[i][k], dp[i - 1][k]);
         if (k >= req[i][j]) maxi(dp[i][k], dp[i - 1][k - req[i][j]] + i * j);
     }
+
+    cout << dp[n][m];
 
     return 0;
 }
