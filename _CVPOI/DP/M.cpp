@@ -22,36 +22,12 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-int const N = 707;
-int const dx[] = {-1, 0, 1, 0};
-int const dy[] = {0, 1, 0, -1}; 
+int const N = 109;
 
 int n;
-int h[N][N], v[N][N];
 
-int ccId[N][N];
-int cc = 0;
-
-bool Inside(int x, int y)
-{
-    return  x >= 1 && x <= n &&
-            y >= 1 && y <= n;
-}
-
-void DFSPrepare(int i, int j)
-{
-    ccId[i][j] = cc;
-
-    REP(dir, 4)
-    {
-        int x = i + dx[i];
-        int y = j + dy[i];
-        
-        if (!Inside(x, y) || ccId[x][y]) continue;
-        if (h[i][j] != h[x][y] || v[i][j] != v[x][y]) continue;
-        DFSPrepare(x, j);
-    }
-}
+vector<int> d;
+vector<pair<int, int>> pt = {{0, 0}};
 
 int main()
 {
@@ -59,10 +35,31 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> n;
-    FOR(i, 1, n) FOR(j, 1, n) cin >> h[i][j];
-    FOR(i, 1, n) FOR(j, 1, n) cin >> v[i][j];
+    FOR(i, 1, n)
+    {
+        int x; cin >> x;
+        d.push_back(x);
+    }
 
-    FOR(i, 1, n) FOR(j, 1, n) if (!ccId[i][j]) cc++, DFSPrepare(i, j);
+    do
+    {
+        REP(mask, MK(n))
+        {
+            int x = 0, y = 0;
+            REP(i, n) 
+            {
+                if (BIT(i, mask)) x += d[i];
+                else y += d[i];
+                pt.push_back({x, y});
+            }
+        }
+
+    } while (next_permutation(all(d)));
+
+    sort(all(pt));
+    pt.erase(unique(all(pt)), pt.end());
+
+    cout << sz(pt);
 
     return 0;
 }

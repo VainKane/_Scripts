@@ -23,14 +23,16 @@ template <class t> bool mini(t &x, t const &y)
 }
 
 int const N = 707;
+int const oo = 1e9;
 int const dx[] = {-1, 0, 1, 0};
 int const dy[] = {0, 1, 0, -1}; 
 
 int n;
-int h[N][N], v[N][N];
 
-int ccId[N][N];
-int cc = 0;
+int h[N][N], v[N][N];
+map<double, bool> visited[N][N];
+
+int cnt = 0;
 
 bool Inside(int x, int y)
 {
@@ -38,18 +40,19 @@ bool Inside(int x, int y)
             y >= 1 && y <= n;
 }
 
-void DFSPrepare(int i, int j)
+void DFS(int i, int j, double t)
 {
-    ccId[i][j] = cc;
+    visited[i][j][t] = true;
+    cnt++;
 
     REP(dir, 4)
     {
-        int x = i + dx[i];
-        int y = j + dy[i];
-        
-        if (!Inside(x, y) || ccId[x][y]) continue;
-        if (h[i][j] != h[x][y] || v[i][j] != v[x][y]) continue;
-        DFSPrepare(x, j);
+        int x = i + dx[dir];
+        int y = j + dy[dir];
+
+        double haha = (h[x][y] - h[i][j]) / (double)(v[i][j] - v[x][y]);
+        if (!Inside(x, y) || visited[x][y][t]) continue;
+        if (haha == t || (h[x][y] == h[i][j] && v[x][y] == v[i][j])) DFS(x, y, t);
     }
 }
 
@@ -62,7 +65,30 @@ int main()
     FOR(i, 1, n) FOR(j, 1, n) cin >> h[i][j];
     FOR(i, 1, n) FOR(j, 1, n) cin >> v[i][j];
 
-    FOR(i, 1, n) FOR(j, 1, n) if (!ccId[i][j]) cc++, DFSPrepare(i, j);
+    int res = 0;
+
+    FOR(i, 1, n) FOR(j, 1, n) REP(dir, 4)
+    {
+        int x = i + dx[dir];
+        int y = j + dy[dir];
+
+        if (v[i][j] == v[x][y])
+        {
+            cnt = 0;
+            if (!visited[i][j][oo]) DFS(i, j, oo);
+            maxi(res, cnt);
+            continue;
+        }
+
+        double t = v[i][j] == v[x][y] ? oo : (h[x][y] - h[i][j]) / (double)(v[i][j] - v[x][y]);
+        if (t < 0 || !Inside(x, y) || visited[i][j][t] || visited[i][j][t]) continue;
+
+        cnt = 0;
+        DFS(i, j, t);
+        maxi(res, cnt);
+    }
+
+    cout << res;
 
     return 0;
 }
