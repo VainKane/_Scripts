@@ -28,8 +28,9 @@ int const K = 55;
 int n, m, k;
 int lb[N], rb[N], c[N];
 
-int dp[2 * N];
-int f[2 * N][2 * N];
+int dp[2 * N][K];
+int cnt[2 * N][2 * N];
+int pre[2 * N][2 * N][K];
 
 vector<int> id[2 * N];
 
@@ -92,20 +93,22 @@ int main()
 
             for (auto &x : v) 
             {
-                f[l][r] += x;
+                cnt[l][r]++;
                 pq.push(x);
             }
+
+            reverse(all(v));
+            FOR(i, 1, cnt[l][r]) pre[l][r][i] = pre[l][r][i - 1] + v[i - 1];
         }
     }
 
-    FOR(r, 1, m)
+    FOR(r, 1, m) FOR(j, 1, k)
     {
-        dp[r] = dp[r - 1];
-        for (auto &i : id[r]) maxi(dp[r], dp[lb[i] - 1] + f[lb[i]][r]);
+        dp[r][j] = dp[r - 1][j];
+        FOR(l, 1, r) FOR(x, 1, min(j, cnt[l][r])) maxi(dp[r][j], dp[l - 1][j - x] + pre[l][r][x]);
     }
 
-    // cout << dp[m];
-    cout << dp[3];
+    cout << dp[m][k];
 
     return 0;
 }
