@@ -47,12 +47,18 @@ int main()
 
         for (int j = rem; j <= x; j += h[i])
         {
-            
+            while (!dq.empty() && (j - dq.front()) / h[i] > k[i]) dq.pop_front();            
 
             dp[i][j] = dp[i - 1][j];
-            maxi(dp[i][j], f[i - 1][dq.front()]);
+            if (!dq.empty()) maxi(dp[i][j], f[i - 1][dq.front()] + (j - rem) / h[i] * s[i]);
+
+            f[i - 1][j] = dp[i - 1][j] - (j - rem) / h[i] * s[i];
+            while (!dq.empty() && f[i - 1][j] >= f[i - 1][dq.back()]) dq.pop_back();
+            dq.push_back(j);
         }
     }
+
+    cout << dp[n][x];
 
     return 0;
 }
