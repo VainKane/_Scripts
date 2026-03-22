@@ -22,10 +22,10 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-int const N = 509;
+int const N = 5009;
 
 int n;
-bool go[N][N];
+int a[N];
 
 int main()
 {
@@ -36,28 +36,21 @@ int main()
     while (t--)
     {
         cin >> n;
-        FOR(i, 1, n) FOR(j, 1, n) go[i][j] = false;
-        FOR(i, 1, n) FOR(j, 1, n) 
+        FOR(i, 1, n) cin >> a[i];
+
+        FOR(i, 1, n)
         {
-            char ch; cin >> ch;
-            go[i][j] = ch - '0';
+            int cnt1 = 0, cnt2 = 0;
+            FOR(j, i + 1, n) if (a[i] != a[j]) 
+            {
+                cnt1 += a[i] - a[j] < 0;
+                cnt2 += a[i] > a[j];
+            }
+
+            cout << max(cnt1, cnt2) << ' ';
         }
 
-        vector<pair<int, int>> edges;
-
-        FOR(i, 1, n) FOR(j, 1, n) if (go[i][j] && i != j) 
-        {
-            bool ok = true;
-            FOR(k, 1, n) if (k != i && k != j) if (go[i][k] && go[k][j]) ok = false;
-            if (ok) edges.push_back({i, j});
-        }
-
-        if (sz(edges) == n - 1) 
-        {
-            cout << "YES\n";
-            for (auto &e : edges) cout << e.F << ' ' << e.S << '\n';
-        }
-        else cout << "NO\n";
+        cout << '\n';
     }
 
     return 0;

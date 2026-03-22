@@ -24,10 +24,10 @@ template <class t> bool mini(t &x, t const &y)
 
 int const N = 1e5 + 5;
 int const M = 14;
-int const BK = 2; // HAY UUU, PLZ REMEMBER TO SET BK BACK TO 314, OTHERWISE...
-int const GR = N * M / BK + 5;
+int const BK = 314;
+int const GR = N / BK + 5;
 
-int bkId[N][M];
+int bkId[N], bkT[GR], bkB[GR];
 
 int const dx[] = {-1, 0, 1, 0};
 int const dy[] = {0, 1, 0, -1};
@@ -39,10 +39,7 @@ char a[N][M];
 pair<int, int> pos[N][M];
 bool visited[N][M];
 
-int GetId(int i, int j)
-{
-    return (i - 1) * m + j;
-}
+vector<pair<int, int>> used;
 
 bool Inside(int x, int y)
 {
@@ -50,70 +47,66 @@ bool Inside(int x, int y)
             y >= 1 && y <= n;
 }
 
-void Build(int x, int y)
+void DFS(int x, int y, pair<int, int> p)
 {
-    auto &p = pos[x][y] = {x, y};
-    int id = bkId[x][y];
+    used.push_back({x, y});
+    visited[x][y] = true;
+    pos[x][y] = p;
 
-    int cnt = 0;
-    while (Inside(p.F, p.S) && bkId[p.F][p.S] == id && cnt <= BK + 20)
+    FOR(i, 1, 3)
     {
-        cnt++;
-        int i = dir[a[p.F][p.S]];
-        p.F += dx[i], p.S += dy[i];
+        int u = x + dx[i];
+        int v = y + dy[i];
+
+        int d = dir[a[u][v]];
+        if (u + dx[d] != x || v + dy[d] != y) continue;
+        if (visited[u][v] || bkId[u] != bkId[x] || !Inside(u, v)) continue;
+        DFS(u, v, p);
     }
+}
+
+void Build(int id)
+{
+    FOR(x, bkT[id], bkB[id]) FOR(y, 1, n) pos[x][y] = {x, y};
+    FOR(x, bkT[id], bkB[id]) FOR(y, 1, n) if (!visited[x][y]) if (x == bkT[id] || y == 1 || y == n)
+    {
+        int i = dir[a[x][y]];
+        int u = x + dx[i];
+        int v = y + dy[i];
+
+        if (bkId[u] == id && Inside(u, v)) continue;
+        DFS(x, y, {u, v});
+    }
+
+    for (auto &p : used) visited[p.F][p.S] = false;
+    used.clear();
 }
 
 void Init()
 {
-    FOR(i, 1, m) FOR(j, 1, n) bkId[i][j] = (GetId(i, j) - 1) / BK + 1;
     dir['>'] = 1, dir['<'] = 3;
-    FOR(i, 1, m) FOR(j, 1, n) Build(i, j);
+
+    FOR(i, 1, m) 
+    {
+        int id = bkId[i] = (i - 1) / BK + 1;
+        if (!bkT[id]) bkT[id] = i;
+        bkB[id] = i;
+    }
+
+    FOR(i, 1, bkId[m]) Build(i);
 }
 
 pair<int, int> Get(int x, int y)
 {
-    auto &p = pos[x][y];
+    auto p = pos[x][y];
 
-    FOR(haha, 1, GR) p = pos[x][y];
-    if (Inside(p.F, p.S)) p = {-1, -1};
-    return p;
-}
-
-void Update(int xs, int ys)
-{
-    Build(xs, ys);
-
-    vector<pair<int, int>> used;
-    queue<pair<int, int>> q;
-
-    used.push_back({xs, ys});
-    visited[xs][ys] = true;
-    q.push({xs, ys});
-
-    while (!q.empty())
+    FOR(haha, 1, GR) 
     {
-        int x = q.front().F;
-        int y = q.front().S;
-        q.pop();
-
-        pos[x][y] = pos[xs][ys];
-
-        REP(i, 4)
-        {
-            int u = x + dx[i];
-            int v = y + dy[i];
-
-            if (bkId[u][v] != bkId[xs][ys] || visited[u][v]) continue;
-            if (u + dx[dir[a[u][v]]] != x || v + dy[dir[a[u][v]]] != y) continue;
-
-            used.push_back({u, v});
-            visited[u][v] = true;
-            q.push({u, v});
-        }
+        if (!Inside(p.F, p.S)) return p;
+        p = pos[p.F][p.S];
     }
 
-    for (auto &p : used) visited[p.F][p.S] = false;
+    return {-1, -1};
 }
 
 int main()
@@ -141,7 +134,7 @@ int main()
         {
             cin >> c;
             a[x][y] = c;
-            Update(x, y);
+            Build(bkId[x]);
         }
     }
 
