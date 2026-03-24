@@ -46,5 +46,19 @@ int main()
     //     cout << l << ' ' << r << ' ' << Rand(1, 2) << ' ' << Rand(1, 2) << '\n';
     // }
 
+    int n = 1e5;
+    int q = 1e5;
+
+    cout << n << ' ' << q << '\n';
+    FOR(i, 1, n) cout << Rand(1, 1e9) << ' ';
+    cout << '\n';
+    while (q--)
+    {
+        int l = Rand(1, n - 1);
+        int r = Rand(l + 1, n);
+
+        cout << l << ' ' << r << '\n';
+    }
+
     return 0;
 }
