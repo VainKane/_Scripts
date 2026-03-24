@@ -23,11 +23,11 @@ template <class t> bool mini(t &x, t const &y)
 }
 
 int const N = 109;
+int const M = 1e6 + 5;
 
-int n;
-
-vector<int> d;
-vector<pair<int, int>> pt = {{0, 0}};
+int n, s = 0;
+int a[N];
+bitset<M> dp;
 
 int main()
 {
@@ -35,31 +35,21 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> n;
-    FOR(i, 1, n)
+    FOR(i, 1, n) cin >> a[i], s += a[i];
+
+    dp[0] = 1;
+    FOR(i, 1, n) dp |= (dp << a[i]);
+
+    long long res = 0;
+    int cnt = 0;
+
+    FORD(x, s, 0)
     {
-        int x; cin >> x;
-        d.push_back(x);
+        if (dp[x]) res += s - x + 1, cnt++;
+        else res += cnt;
     }
 
-    do
-    {
-        REP(mask, MK(n))
-        {
-            int x = 0, y = 0;
-            REP(i, n) 
-            {
-                if (BIT(i, mask)) x += d[i];
-                else y += d[i];
-                pt.push_back({x, y});
-            }
-        }
-
-    } while (next_permutation(all(d)));
-
-    sort(all(pt));
-    pt.erase(unique(all(pt)), pt.end());
-
-    cout << sz(pt);
+    cout << res;
 
     return 0;
 }
