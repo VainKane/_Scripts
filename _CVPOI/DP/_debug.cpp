@@ -11,7 +11,7 @@ using namespace std;
 #define sz(v) ((int)v.size())
 #define F first
 #define S second
-#define name "j"
+#define name "J"
 
 template <class t> bool maxi(t &x, t const &y)
 {

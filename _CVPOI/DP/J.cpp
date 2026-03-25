@@ -31,7 +31,7 @@ pair<int, int> b[N];
 
 bool cur = 0;
 int dp[2][M * M];
-int f[N][M * M];
+bool f[M][M * M];
 
 bool cmp(pair<int, int> a, pair<int, int> b)
 {
@@ -52,27 +52,24 @@ int main()
     }
 
     sort(b + 1, b + m + 1, cmp);
-    memset(f, 0x3f, sizeof f);
-
-    FOR(id, 1, m)
-    {
-        f[id][b[id].F] = m;
-        FOR(i, 1, n) FORD(j, b[id].F, b[id + 1].F) 
-            mini(f[id][j], f[id][j - a[b[id].S][i]] - 1);
-    }
 
     FOR(i, 1, m)
     {
         cur ^= 1;
         memset(dp[cur], 0x3f, (n * k + 2) * sizeof(int));
 
-        FOR(x, b[i + 1].F, b[i].F) if (f[i][x] <= m)
-        {
-            int y = x + k * (m - f[i][x]) + (b[i].S < b[i - 1].S);
-            mini(dp[cur][x], dp[cur ^ 1][y] + f[i][x]);
-        }
+        f[n][b[i].F] = 1;
+        FOR(j, 1, n) FOR(t, 0, n) FOR(x, b[i + 1].F, b[i].F) // this shit shouldn't be tle
+            f[t][x] |= f[t + 1][x + a[b[i].S][j]];
 
-        FORD(x, b[i + 1].F, b[i].F) mini(dp[cur][x], dp[cur][x + 1]);
+        FOR(t, 0, n) FOR(x, b[i + 1].F, b[i].F) if (f[t][x])
+        {
+            int y = x + k * (n - t) + (b[i].S < b[i - 1].S);
+            mini(dp[cur][x], dp[cur ^ 1][y] + t);
+            f[t][x] = 0;
+        } 
+
+        FORD(x, b[i].F, b[i + 1].F) mini(dp[cur][x], dp[cur][x + 1]);
     }
 
     cout << *min_element(dp[cur], dp[cur] + k * n + 1);

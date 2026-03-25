@@ -29,28 +29,10 @@ int const dy[] = {0, 1, 0, -1};
 int n;
 int h[N][N], v[N][N];
 
-int ccId[N][N];
-int cc = 0;
-
 bool Inside(int x, int y)
 {
     return  x >= 1 && x <= n &&
             y >= 1 && y <= n;
-}
-
-void DFSPrepare(int i, int j)
-{
-    ccId[i][j] = cc;
-
-    REP(dir, 4)
-    {
-        int x = i + dx[i];
-        int y = j + dy[i];
-        
-        if (!Inside(x, y) || ccId[x][y]) continue;
-        if (h[i][j] != h[x][y] || v[i][j] != v[x][y]) continue;
-        DFSPrepare(x, j);
-    }
 }
 
 int main()
@@ -62,7 +44,7 @@ int main()
     FOR(i, 1, n) FOR(j, 1, n) cin >> h[i][j];
     FOR(i, 1, n) FOR(j, 1, n) cin >> v[i][j];
 
-    FOR(i, 1, n) FOR(j, 1, n) if (!ccId[i][j]) cc++, DFSPrepare(i, j);
+    
 
     return 0;
 }

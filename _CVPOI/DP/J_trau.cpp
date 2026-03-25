@@ -55,31 +55,23 @@ int main()
     FOR(i, 1, m)
     {
         cur ^= 1;
-        memset(dp[cur], -0x3f, (n * k + 2) * sizeof(int));
+        memset(dp[cur], 0x3f, (n * k + 2) * sizeof(int));
 
         REP(mask, MK(n))
         {
-            int sMin = b[i].F;
-            int sMax = b[i].F;
-            int id = b[i].S;
-            
             int cnt = __builtin_popcount(mask);
+            
+            int x = 0;
+            REP(j, n) if (BIT(j, mask)) x += a[b[i].S][j + 1];
+            int y = x + k * (n - cnt) + (b[i].S < b[i - 1].S);
 
-            for (int tmp = mask; tmp; tmp ^= tmp & -tmp)
-            {
-                int j = __builtin_ctz(tmp);
-                sMin -= a[id][j + 1];
-                sMax += k - a[id][j + 1];
-            }
-
-            sMax += id < b[i - 1].S;
-            maxi(dp[cur][sMin], dp[cur ^ 1][sMax] + cnt);
+            mini(dp[cur][x], dp[cur ^ 1][y] + cnt);
         }
 
-        FORD(sMin, k * n, 0) maxi(dp[cur][sMin], dp[cur][sMin + 1]);
+        FORD(x, k * n, 0) mini(dp[cur][x], dp[cur][x + 1]);
     }
 
-    cout << m * n - *max_element(dp[cur], dp[cur] + k * n + 1);
+    cout << *min_element(dp[cur], dp[cur] + k * n + 1);
 
     return 0;
 }
