@@ -22,40 +22,109 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
+struct FenwickTree
+{
+    vector<int> bit;
+    int n;
+
+    FenwickTree(int _n = 0)
+    {
+        n = _n;
+        bit.assign(n + 5, 0);
+    }
+
+    void Update(int idx, int val)
+    {
+        while (idx <= n)
+        {
+            bit[idx] += val;
+            idx += idx & -idx;
+        }
+    }
+
+    void Update(int l, int r, int val)
+    {
+        if (l > r) return;
+        Update(l, val);
+        Update(r + 1, -val);
+    }
+
+    int GetMax(int idx)
+    {
+        int res = 0;
+        while (idx)
+        {
+            maxi(res, bit[idx]);
+            idx ^= idx & -idx;
+        }
+        return res;
+    }
+};
+
 int const N = 1009;
-int const K = 55;
 
-int n, m, k;
-int lb[N], rb[N], c[N];
-
-int dp[2 * N][K];
-int cnt[2 * N][2 * N];
-int pre[2 * N][2 * N][K];
-
-vector<int> id[2 * N];
+int n, k;
+int s[N], t[N], c[N];
+vector<int> vals;
 
 void Compress()
 {
-    vector<int> vals;
-    
     FOR(i, 1, n)
     {
-        vals.push_back(lb[i]);
-        vals.push_back(rb[i]);
+        vals.push_back(s[i]);
+        vals.push_back(t[i]);
     }
 
     sort(all(vals));
     vals.erase(unique(all(vals)), vals.end());
 
-    #define GetId(x) (lower_bound(all(vals), (x)) - vals.begin() + 1)
-
-    FOR(i, 1, n) 
+    FOR(i, 1, n)
     {
-        lb[i] = GetId(lb[i]);
-        rb[i] = GetId(rb[i]);
+        s[i] = lower_bound(all(vals), s[i]) - vals.begin() + 1;
+        t[i] = lower_bound(all(vals), t[i]) - vals.begin() + 1;
+    }
+}
+
+namespace Sub1
+{
+    bool CheckSub()
+    {
+        return n <= 20;
     }
 
-    m = sz(vals);
+    FenwickTree bit(sz(vals));
+
+    int Check(int mask)
+    {
+        int res = 0;
+
+        for (int tmp = mask; tmp; tmp ^= tmp & -tmp)
+        {
+            int i = __builtin_ctz(tmp);
+            bit.Update(s[i + 1], t[i + 1], 1);
+            res += c[i + 1];
+        }
+
+        int ma = bit.GetMax(sz(vals));
+
+        for (int tmp = mask; tmp; tmp ^= tmp & -tmp)
+        {
+            int i = __builtin_ctz(tmp);
+            bit.Update(s[i + 1], t[i + 1], -1);
+        }
+
+        cout << ma << ' ' << res << '\n';
+        return ma <= k ? res : 0;
+    }
+
+    void Process()
+    {
+        bit = FenwickTree(sz(vals));
+
+        int res = 0;
+        REP(mask, MK(n)) maxi(res, Check(mask));
+        cout << res;
+    }
 }
 
 int main()
@@ -66,49 +135,13 @@ int main()
     cin >> n >> k;
     FOR(i, 1, n) 
     {
-        cin >> lb[i] >> rb[i] >> c[i];
-        rb[i] += lb[i] - 1;
+        cin >> s[i] >> t[i] >> c[i];
+        t[i] += s[i];
     }
 
     Compress();
-    FOR(i, 1, n) id[rb[i]].push_back(i);
 
-    FOR(l, 1, m) 
-    {
-        priority_queue<int, vector<int>, greater<int>> pq;
-        FOR(r, l, m)
-        {
-            for (auto &i : id[r]) if (lb[i] >= l) 
-            {
-                pq.push(c[i]);
-                if (sz(pq) > k) pq.pop();
-            }
-
-            vector<int> v;
-            while (!pq.empty())
-            {
-                int x = pq.top(); pq.pop();
-                v.push_back(x);
-            }
-
-            for (auto &x : v) 
-            {
-                cnt[l][r]++;
-                pq.push(x);
-            }
-
-            reverse(all(v));
-            FOR(i, 1, cnt[l][r]) pre[l][r][i] = pre[l][r][i - 1] + v[i - 1];
-        }
-    }
-
-    FOR(r, 1, m) FOR(j, 1, k)
-    {
-        dp[r][j] = dp[r - 1][j];
-        FOR(l, 1, r) FOR(x, 1, min(j, cnt[l][r])) maxi(dp[r][j], dp[l - 1][j - x] + pre[l][r][x]);
-    }
-
-    cout << dp[m][k];
+    if (Sub1::CheckSub()) Sub1::Process(), 0;
 
     return 0;
 }
