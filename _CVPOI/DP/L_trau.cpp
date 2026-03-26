@@ -127,29 +127,6 @@ namespace Sub1
     }
 }
 
-namespace Sub2
-{
-    bool CheckSub()
-    {
-        return k == 1;
-    }
-
-    vector<int> id[2 * N];
-    int dp[2 * N];
-
-    void Process()
-    {
-        FOR(i, 1, n) id[t[i]].push_back(i);
-        FOR(r, 1, sz(vals)) 
-        {
-            dp[r] = dp[r - 1];
-            for (auto &i : id[r]) maxi(dp[r], dp[s[i] - 1] + c[i]);
-        }
-
-        cout << dp[sz(vals)];
-    }
-}
-
 int main()
 {
     ios_base::sync_with_stdio(false);
@@ -164,8 +141,7 @@ int main()
 
     Compress();
 
-    // if (Sub1::CheckSub()) return Sub1::Process(), 0;
-    if (Sub2::CheckSub()) return Sub2::Process(), 0;
+    if (Sub1::CheckSub()) Sub1::Process(), 0;
 
     return 0;
 }
