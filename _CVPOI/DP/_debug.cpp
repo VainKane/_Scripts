@@ -39,10 +39,10 @@ void GenTest()
     int const oo = 1e9;
 
     int n = Rand(1, lim);
-    int k = 1;
+    int k = Rand(1, n);
 
     cout << n << ' ' << k << '\n';
-    FOR(i, 1, n) cout << Rand(1, oo) << ' ' << Rand(1, oo) << ' ' << Rand(1, 1e6) << '\n';
+    FOR(i, 1, n) cout << Rand(1, oo) << ' ' << Rand(1, oo) << ' ' << Rand(1, 1) << '\n';
 }
 
 int main()
