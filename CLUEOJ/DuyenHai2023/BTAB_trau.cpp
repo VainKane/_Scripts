@@ -22,9 +22,11 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
+int const N = 5e6 + 5;
+
 int m, n;
-vector<vector<int>> a, pre;
-vector<vector<bool>> visited;
+int a[N], b[N];
+int pre[N];
 
 int main()
 {
@@ -32,22 +34,21 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> m >> n;
+    FOR(i, 1, m) cin >> a[i], pre[i] = pre[i - 1] + a[i];
+    FOR(i, 1, n) cin >> b[i];
 
-    a.assign(m + 5, vector<int> (n + 5));
-    pre.assign(m + 5, vector<int> (n + 5));
-    visited.assign(m + 5, vector<bool> (n + 5));
-
-    FOR(i, 1, m) FOR(j, 1, n) 
+    int res = 0;
+    FOR(i, 1, m) FOR(j, 1, n)
     {
-        cin >> a[i][j];
-        if (a[i][j] != -1) visited[i][j] = true;
-        pre[i][j] = pre[i - 1][j] + pre[i][j - 1] - pre[i - 1][j - 1] + (a[i][j] == -1);
+        int k = 0;
+        while (a[i + k] == b[j + k] && a[i + k] && i + k <= m && j + k <= n)
+        {
+            res += pre[i + k] - pre[i - 1] == 0; 
+            k++;
+        }
     }
 
-    FOR(i, 1, m) FOR(j, 1, n) if (!visited[i][j])
-    {
-        
-    }
+    cout << res;
 
     return 0;
 }
