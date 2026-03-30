@@ -43,7 +43,7 @@ int main()
         int k = 0;
         while (a[i + k] == b[j + k] && a[i + k] && i + k <= m && j + k <= n)
         {
-            res += pre[i + k] - pre[i - 1] == 0; 
+            res += pre[i + k] - pre[i - 1] == 0;
             k++;
         }
     }
