@@ -12,6 +12,10 @@ using namespace std;
 #define F first
 #define S second
 
+#pragma GCC optimize("O3,Ofast,unroll-loops")
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
+#pragma GCC target("sse,sse2,sse3,ssse3,sse4,abm,mmx,avx,tune=native")
+
 template <class t> bool maxi(t &x, t const &y)
 {
     return x < y ? x = y, 1 : 0;
@@ -85,12 +89,17 @@ DSU dsu;
 Edge edges[N];
 int node[N];
 
+bool Check()
+{
+    int id = dsu.Find(node[1]);
+    FOR(i, 1, q) if (dsu.Find(node[i]) != id) return false;
+    return true;
+}
+
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
-
-    freopen("01.out", "w", stdout);
 
     cin >> n >> m >> q >> v;
     REP(i, m) edges[i].Input();
@@ -116,16 +125,7 @@ int main()
 
         if (val < v) continue;
 
-        bool ok = true;
-
-        int id = dsu.Find(node[1]);
-        FOR(i, 1, q) if (dsu.Find(node[i]) != id)
-        {
-            ok = false;
-            break;
-        }
-
-        if (!ok) continue;
+        if (!Check()) continue;
         if (mini(res, cost)) haha = mask;
     }
 
