@@ -11,6 +11,7 @@ using namespace std;
 #define sz(v) ((int)v.size())
 #define F first
 #define S second
+#define name "02"
 
 #pragma GCC optimize("O3,Ofast,unroll-loops")
 #pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
@@ -25,6 +26,16 @@ template <class t> bool mini(t &x, t const &y)
 {
     return x > y ? x = y, 1 : 0;
 }
+
+struct Edge
+{
+    int u, v, w;
+
+    int GetOther(int node)
+    {
+        return node ^ u ^ v;
+    }
+};
 
 struct DSU
 {
@@ -74,18 +85,19 @@ int const N = 1009;
 int const oo = 1e9 + 2;
 
 int n, m, q, v;
+int node[N];
+
+Edge edges[N];
+vector<int> adj[N];
 
 DSU dsu;
-
-vector<pair<int, int>> adj[N];
-int node[N];
 
 int d[N][N];
 int par[N][N];
 
 void Dijkstra(int s, int d[], int par[])
 {
-    memset(d, 0x3f, (n + 1) * sizeof d);
+    memset(d, 0x3f, (n + 1) * sizeof (int));
     d[s] = 0;
 
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
@@ -99,25 +111,18 @@ void Dijkstra(int s, int d[], int par[])
 
         if (du > d[u]) continue;
 
-        for (auto &e : adj[u])
+        for (auto &id : adj[u])
         {
-            int v = e.F;
-            int w = e.S;
+            int v = edges[id].GetOther(u);
+            int w = edges[id].w;
 
             if (mini(d[v], d[u] + w)) 
             {
-                par[v] = u;
+                par[v] = id;
                 pq.push({d[v], v});
             }
         }
     }
-}
-
-bool Check()
-{
-    int id = dsu.Find(node[1]);
-    FOR(i, 1, q) if (dsu.Find(node[i]) != id) return false;
-    return true;
 }
 
 int main()
@@ -125,33 +130,69 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
+    freopen(name".inp", "r", stdin);
+    freopen(name".out", "w", stdout);
+
     cin >> n >> m >> q >> v;
     
     FOR(i, 1, m)
     {
         int u, v, c, x;
         cin >> u >> v >> c >> x;
-        adj[u].push_back({v, c});
-        adj[v].push_back({u, c});
+        edges[i] = {u, v, c};
+        adj[u].push_back(i);
+        adj[i].push_back(u);
     }
 
     FOR(i, 1, q) cin >> node[i];
 
     FOR(i, 1, q) Dijkstra(node[i], d[node[i]], par[node[i]]);
     dsu = DSU(n);
+
+    int res = oo;
+    vector<int> haha; 
     
     FOR(i, 1, q)
     {
         vector<int> nodes = {node[i]};
+        vector<int> used;
+        int cost = 0;
         
-        int dist = oo;
-
-        FOR(j, 1, q) for (auto &u : nodes)
+        FOR(j, 1, q) 
         {
-            if (dsu.Find(u) == dsu.Find(node[j])) continue;
-            if (mini(dist, d[u][node[j]]))
+            int dist = oo;
+            int v = 0;
+
+            for (auto &u : nodes)
+            {
+                if (dsu.Find(u) == dsu.Find(node[j])) continue;
+                if (mini(dist, d[u][node[j]])) v = u;
+            }
+
+            if (v == 0) break;
+
+            int x = node[j];
+            while (x != v)
+            {
+                nodes.push_back(x);
+                dsu.Union(x, v);
+
+                Edge &e = edges[par[v][x]];
+                used.push_back(par[v][x]);       
+                x = e.GetOther(x);
+                cost += e.w;
+            }
         }
-    }    
+
+        if (mini(res, cost)) haha = used;
+    }
+
+    if (res == oo) cout << -1;
+    else
+    {
+        cout << res << '\n' << sz(haha);
+        for (auto &id : haha) cout << id << ' ';
+    }
 
     return 0;
 }

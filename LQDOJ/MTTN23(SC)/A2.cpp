@@ -49,7 +49,7 @@ int main()
 
     int res = 0;
 
-    FOR(haha, 0, m)
+    FOR(haha, 0, min(59, m))
     {
         vector<pair<int, int>> pt;
         FOR(i, 1, k)
