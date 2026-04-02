@@ -22,7 +22,7 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-int const N = 2e5 + 5;
+int const N = 2e3 + 5;
 int const LOG = 19;
 long long const oo = 1e18;
 
@@ -96,7 +96,7 @@ bool Inside(int child, int par)
 
 void Merge(int u, int v, vector<int> set[], int des[])
 {
-    if (sz(set[u]) < sz(set[v])) swap(set[u], set[v]);
+    // if (sz(set[u]) < sz(set[v])) swap(set[u], set[v]);
     for (auto &i : set[v])
     {
         if (!Inside(des[i], v)) mini(f[u], 1LL * t[i] * s[1] + Dist(st[i], u));
@@ -115,7 +115,7 @@ void DFS(int u, int p)
 
     for (auto &i : edId[u])
     {
-        mini(f[u], 1LL * t[i] * s[1] + Dist(s[i], u));
+        mini(f[u], 1LL * t[i] * s[1] + Dist(st[i], u));
         edS[u].push_back(i);
     }
 
@@ -160,7 +160,7 @@ int main()
     while (q--)
     {
         int u; cin >> u;
-        if (f[u] == oo) cout << "-1\n";        
+        if (f[u] == oo) cout << "-1\n";
         else cout << fixed << setprecision(6) << (double)f[u] / s[1] << '\n';
     }
 
