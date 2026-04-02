@@ -23,17 +23,14 @@ template <class t> bool mini(t &x, t const &y)
 }
 
 int const N = 2e5 + 5;
-int const LOG = 19;
-long long const oo = 1e18;
+int const LOG = 18;
 
-int n, m, q;
-vector<pair<int, int>> adj[N];
-int st[N], ed[N], t[N], s[N];
+int n, q;
+vector<int> adj[N];
 
+int up[2 * N][20];
 int h[N];
-long long d[N];
 
-int up[2 * N][22];
 int pos[N];
 int timer = 0;
 
@@ -42,15 +39,9 @@ void DFS(int u, int p)
     up[++timer][0] = u;
     pos[u] = timer;
 
-    for (auto &e : adj[u])
+    for (auto &v : adj[u]) if (v != p)
     {
-        int v = e.F;
-        int w = e.S;
-
-        if (v == p) continue;
-
         h[v] = h[u] + 1;
-        d[v] = d[u] + w;
         DFS(v, u);
         up[++timer][0] = u;
     }
@@ -67,18 +58,13 @@ void Build()
         up[i][j] = min(up[i][j - 1], up[i + MK(j - 1)][j - 1], cmp);
 }
 
-int LCA(int u, int v)
+int LCA(int l, int r)
 {
-    u = pos[u], v = pos[v];
-    if (u > v) swap(u, v);
+    l = pos[l], r = pos[r];
+    if (l > r) swap(l, r);
 
-    int k = 31 - __builtin_clz(v - u + 1);
-    return min(up[u][k], up[v - MK(k) + 1][k], cmp);
-}
-
-bool Inter(int &u, int &v, int &p)
-{
-    return (LCA(u, p) ^ LCA(v, p) ^ LCA(u, v)) == p;
+    int k = 31 - __builtin_clz(r - l + 1);
+    return min(up[l][k], up[r - MK(k) + 1][k], cmp);
 }
 
 int main()
@@ -86,32 +72,22 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    cin >> n >> m >> q;
-
+    cin >> n >> q;
     FOR(i, 2, n)
     {
-        int u, v, w;
-        cin >> u >> v >> w;
-        adj[u].push_back({v, w});
-        adj[v].push_back({u, w});
+        int p; cin >> p;
+        adj[i].push_back(p);
+        adj[p].push_back(i);
     }
 
-    h[0] = -1;
     DFS(1, -1);
     Build();
 
-    FOR(i, 1, m) cin >> st[i] >> ed[i] >> t[i] >> s[i];
-
     while (q--)
     {
-        int u; cin >> u;
-
-        double res = oo;
-        FOR(i, 1, m) if (Inter(st[i], ed[i], u))
-            mini(res, t[i] + (double)(d[st[i]] + d[u] - 2 * d[LCA(st[i], u)]) / s[i]);
-
-        if (res == oo) cout << "-1\n";
-        else cout << fixed << setprecision(6) << res << '\n';
+        int u, v;
+        cin >> u >> v;
+        cout << LCA(u, v) << '\n';
     }
 
     return 0;

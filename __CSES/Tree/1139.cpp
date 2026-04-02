@@ -23,28 +23,27 @@ template <class t> bool mini(t &x, t const &y)
 }
 
 int const N = 2e5 + 5;
-long long const oo = 1e18;
 
-int n, m, q;
+int n;
 
-int st[N], t[N], s[N];
-vector<pair<int, int>> adj[N];
+int a[N];
+vector<int> adj[N];
 
-int id[N];
-long long f[N];
+set<int> s[N];
+int res[N];
 
 void DFS(int u, int p)
 {
-    f[u] = id[u] ? 1LL * t[id[u]] * s[1] : oo;
-    for (auto &e : adj[u])
-    {
-        int v = e.F;
-        int w = e.S;
+    s[u].insert(a[u]);
 
-        if (v == p) continue;
+    for (auto &v : adj[u]) if (v != p)
+    {
         DFS(v, u);
-        mini(f[u], f[v] + w);
+        if (sz(s[u]) < sz(s[v])) swap(s[u], s[v]);
+        s[u].insert(all(s[v]));
     }
+
+    res[u] = sz(s[u]);
 }
 
 int main()
@@ -52,31 +51,18 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    cin >> n >> m >> q;
-    
+    cin >> n;
+    FOR(i, 1, n) cin >> a[i];
     FOR(i, 2, n)
     {
-        int u, v, w;
-        cin >> u >> v >> w;
-        adj[u].push_back({v, w});
-        adj[v].push_back({u, w});
-    }
-
-    t[0] = 1e9 + 67;
-    FOR(i, 1, m)
-    {
-        cin >> st[i] >> t[i] >> t[i] >> s[i];
-        if (t[id[st[i]]] > t[i]) id[st[i]] = i;
+        int u, v;
+        cin >> u >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
     }
 
     DFS(1, -1);
-
-    while (q--)
-    {
-        int u; cin >> u;
-        if (f[u] == oo) cout << "-1\n";        
-        else cout << fixed << setprecision(6) << (double)f[u] / s[1] << '\n';
-    }
+    FOR(u, 1, n) cout << res[u] << ' ';
 
     return 0;
 }

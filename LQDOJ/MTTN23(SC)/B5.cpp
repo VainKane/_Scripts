@@ -27,17 +27,23 @@ int const LOG = 19;
 long long const oo = 1e18;
 
 int n, m, q;
-vector<pair<int, int>> adj[N];
-int st[N], ed[N], t[N], s[N];
 
-int h[N];
-long long d[N];
+int st[N], ed[N], t[N], s[N];
+vector<pair<int, int>> adj[N];
+
+vector<int> stId[N], edId[N];
+vector<int> stS[N], edS[N];
+long long f[N];
 
 int up[2 * N][22];
-int pos[N];
+
+long long d[N];
+int h[N];
+
+int pos[N], out[N];
 int timer = 0;
 
-void DFS(int u, int p)
+void DFSPrepare(int u, int p)
 {
     up[++timer][0] = u;
     pos[u] = timer;
@@ -48,12 +54,14 @@ void DFS(int u, int p)
         int w = e.S;
 
         if (v == p) continue;
-
+        
         h[v] = h[u] + 1;
         d[v] = d[u] + w;
-        DFS(v, u);
+        DFSPrepare(v, u);
         up[++timer][0] = u;
     }
+
+    out[u] = timer;
 }
 
 bool cmp(int u, int v)
@@ -76,9 +84,50 @@ int LCA(int u, int v)
     return min(up[u][k], up[v - MK(k) + 1][k], cmp);
 }
 
-bool Inter(int &u, int &v, int &p)
+long long Dist(int u, int v)
 {
-    return (LCA(u, p) ^ LCA(v, p) ^ LCA(u, v)) == p;
+    return d[u] + d[v] - 2 * d[LCA(u, v)];
+}
+
+bool Inside(int child, int par)
+{
+    return pos[par] <= pos[child] && out[par] >= out[child];
+}
+
+void Merge(int u, int v, vector<int> set[], int des[])
+{
+    if (sz(set[u]) < sz(set[v])) swap(set[u], set[v]);
+    for (auto &i : set[v])
+    {
+        if (!Inside(des[i], v)) mini(f[u], 1LL * t[i] * s[1] + Dist(st[i], u));
+        set[u].push_back(i);
+    }
+}
+
+void DFS(int u, int p)
+{
+    f[u] = oo;
+    for (auto &i : stId[u])
+    {
+        mini(f[u], 1LL * t[i] * s[1]);
+        stS[u].push_back(i);
+    }
+
+    for (auto &i : edId[u])
+    {
+        mini(f[u], 1LL * t[i] * s[1] + Dist(s[i], u));
+        edS[u].push_back(i);
+    }
+
+    for (auto &e : adj[u])
+    {
+        int v = e.F;
+        if (v == p) continue;
+
+        DFS(v, u);
+        Merge(u, v, stS, ed);
+        Merge(u, v, edS, st);
+    }
 }
 
 int main()
@@ -96,22 +145,23 @@ int main()
         adj[v].push_back({u, w});
     }
 
-    h[0] = -1;
-    DFS(1, -1);
+    FOR(i, 1, m) 
+    {
+        cin >> st[i] >> ed[i] >> t[i] >> s[i];
+        stId[st[i]].push_back(i);
+        edId[ed[i]].push_back(i);
+    }
+
+    DFSPrepare(1, -1);
     Build();
 
-    FOR(i, 1, m) cin >> st[i] >> ed[i] >> t[i] >> s[i];
+    DFS(1, -1);
 
     while (q--)
     {
         int u; cin >> u;
-
-        double res = oo;
-        FOR(i, 1, m) if (Inter(st[i], ed[i], u))
-            mini(res, t[i] + (double)(d[st[i]] + d[u] - 2 * d[LCA(st[i], u)]) / s[i]);
-
-        if (res == oo) cout << "-1\n";
-        else cout << fixed << setprecision(6) << res << '\n';
+        if (f[u] == oo) cout << "-1\n";        
+        else cout << fixed << setprecision(6) << (double)f[u] / s[1] << '\n';
     }
 
     return 0;

@@ -23,25 +23,20 @@ template <class t> bool mini(t &x, t const &y)
 }
 
 int const N = 2e5 + 5;
-int const LOG = 19;
+int const LOG = 18;
 long long const oo = 1e18;
 
 int n, m, q;
 vector<pair<int, int>> adj[N];
-int st[N], ed[N], t[N], s[N];
 
 int h[N];
 long long d[N];
 
-int up[2 * N][22];
-int pos[N];
-int timer = 0;
+int up[N][20];
+double res[N];
 
 void DFS(int u, int p)
 {
-    up[++timer][0] = u;
-    pos[u] = timer;
-
     for (auto &e : adj[u])
     {
         int v = e.F;
@@ -51,34 +46,49 @@ void DFS(int u, int p)
 
         h[v] = h[u] + 1;
         d[v] = d[u] + w;
+        up[v][0] = u;
+
+        FOR(i, 1, LOG) up[v][i] = up[up[v][i - 1]][i - 1];
         DFS(v, u);
-        up[++timer][0] = u;
     }
-}
-
-bool cmp(int u, int v)
-{
-    return h[u] < h[v];
-}
-
-void Build()
-{
-    FOR(j, 1, LOG) FOR(i, 1, timer - MK(j) + 1)
-        up[i][j] = min(up[i][j - 1], up[i + MK(j - 1)][j - 1], cmp);
 }
 
 int LCA(int u, int v)
 {
-    u = pos[u], v = pos[v];
-    if (u > v) swap(u, v);
+    if (h[u] < h[v]) swap(u, v);
+    FORD(i, LOG, 0) if (h[up[u][i]] >= h[v]) u = up[u][i];
+    if (u == v) return u;
 
-    int k = 31 - __builtin_clz(v - u + 1);
-    return min(up[u][k], up[v - MK(k) + 1][k], cmp);
+    FORD(i, LOG, 0) if (up[u][i] != up[v][i])
+    {
+        u = up[u][i];
+        v = up[v][i];
+    }
+
+    return up[u][0];
 }
 
-bool Inter(int &u, int &v, int &p)
+void Update(int u, int v, int t, int s)
 {
-    return (LCA(u, p) ^ LCA(v, p) ^ LCA(u, v)) == p;
+    int p = LCA(u, v);
+
+    int node = u;
+    while (node != p)
+    {
+        long long dist = d[u] + d[node] - 2 * d[node];
+        mini(res[node], t + (double)dist / s);
+        node = up[node][0];
+    }
+
+    node = v;
+    while (node != p)
+    {
+        long long dist = d[u] + d[node] - 2 * d[p];
+        mini(res[node], t + (double)dist / s);
+        node = up[node][0];
+    }
+
+    mini(res[p], t + (double)(d[u] - d[p]) / s);
 }
 
 int main()
@@ -87,7 +97,7 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> n >> m >> q;
-
+   
     FOR(i, 2, n)
     {
         int u, v, w;
@@ -96,22 +106,22 @@ int main()
         adj[v].push_back({u, w});
     }
 
+    FOR(u, 1, n) res[u] = oo;
     h[0] = -1;
     DFS(1, -1);
-    Build();
 
-    FOR(i, 1, m) cin >> st[i] >> ed[i] >> t[i] >> s[i];
+    FOR(i, 1, m)
+    {
+        int u, v, s, t;
+        cin >> u >> v >> t >> s;
+        Update(u, v, t, s);
+    }
 
     while (q--)
     {
         int u; cin >> u;
-
-        double res = oo;
-        FOR(i, 1, m) if (Inter(st[i], ed[i], u))
-            mini(res, t[i] + (double)(d[st[i]] + d[u] - 2 * d[LCA(st[i], u)]) / s[i]);
-
-        if (res == oo) cout << "-1\n";
-        else cout << fixed << setprecision(6) << res << '\n';
+        if (res[u] == oo) cout << "-1\n";
+        else cout << fixed << setprecision(6) << res[u] << '\n';
     }
 
     return 0;
