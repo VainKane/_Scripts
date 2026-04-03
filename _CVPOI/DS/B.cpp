@@ -22,50 +22,15 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-struct Data
-{
-    int l, r, sz;
-
-    bool operator < (Data const other) const
-    {
-        return r < other.r;
-    }
-};
-
 int const N = 1e5 + 5;
-int const MOD = 1e9 + 7;
 
 int n;
+int cnt[6][N];
 
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
-
-    cin >> n;
-
-    set<Data> s;
-    FOR(i, 1, n)
-    {
-        int l, r, sz = 1;
-        cin >> l >> r;
-
-        if (!s.empty())
-        {
-            auto it = s.upper_bound({0, r, 0});
-
-            while (true)
-            {
-                if ((--it)->r < l) break;
-                l = it->l;
-                sz += it->sz;
-            }
-
-            // auto it = 
-        }
-
-        s.insert({l, r, sz});
-    }
 
     return 0;
 }

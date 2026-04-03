@@ -22,6 +22,8 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
+int const LOG = 21;
+
 struct FenwickTree
 {
     vector<int> bit;
@@ -42,66 +44,46 @@ struct FenwickTree
         }
     }
 
-    int Get(int idx)
+    int Search(int val)
     {
-        int res = 0;
+        int pos = 0;
+        int s = 0;
 
-        while (idx)
-        {
-            res += bit[idx];
-            idx ^= idx & -idx;
-        }
+        FORD(i, LOG, 0) if (pos + MK(i) <= n && s + bit[pos | MK(i)] < val)
+            s += bit[pos |= MK(i)];
 
-        return res;
+        return pos + 1;
     }
 };
 
-int const N = 2e5 + 5;
-
-int h, w, n;
-int r[N], c[N];
-
+int n, k;
 FenwickTree bit;
-vector<int> ed[N];
 
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    cin >> h >> w >> n;
+    cin >> n >> k;
 
-    FOR(i, 1, h) r[i] = w + 1;
-    FOR(i, 1, w) c[i] = h + 1;
+    bit = FenwickTree(n);
+    FOR(i, 1, n) if (i != k) bit.Update(i, 1);
 
-    FOR(i, 1, n)
+    int pos = k;
+    int res = k - 1;
+
+    FOR(i, 2, n)
     {
-        int x, y;
-        cin >> x >> y;
-        mini(r[x], y);
-        mini(c[y], x);
+        pos = (pos + k) % (n - i + 1);
+
+        pos = bit.Search(pos);
+        bit.Update(pos, -1);
+        res ^= abs(pos - i);
+
+        cout << pos << ' ';
     }
 
-    bit = FenwickTree(w);
-    long long res = 0;
-
-    FOR(i, 1, r[1] - 1)
-    {
-        res += c[i] - 1;
-
-        ed[c[i]].push_back(i);
-        bit.Update(i, 1);
-    }
-
-    FOR(i, 1, c[1] - 1)
-    {
-        res += r[i] - 1;
-        
-        res -= bit.Get(r[i] - 1);
-        for (auto &j : ed[i]) bit.Update(j, -1);
-    }
-
-    cout << res;
+    // cout << res;
 
     return 0;
 }
