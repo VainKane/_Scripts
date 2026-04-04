@@ -24,31 +24,47 @@ template <class t> bool mini(t &x, t const &y)
 
 struct FenwickTree
 {
-    vector<int> bit;
+    vector<long long> sum;
+    vector<int> cnt;
     int n;
 
     FenwickTree(int _n = 0)
     {
         n = _n;
-        bit.assign(n + 5, 0);
+        cnt.assign(n + 5, 0);
+        sum.assign(n + 5, 0);
     }
 
-    void Update(int idx, int val)
+    void Update(int idx, int val, int delta)
     {
         while (idx <= n)
         {
-            bit[idx] += val;
+            sum[idx] += delta * val;
+            cnt[idx] += delta;
             idx += idx & -idx;
         }
     }
 
-    int Get(int idx)
+    int GetFreq(int idx)
     {
         int res = 0;
 
         while (idx)
         {
-            res += bit[idx];
+            res += cnt[idx];
+            idx ^= idx & -idx;
+        }
+
+        return res;
+    }
+
+    long long GetPre(int idx)
+    {
+        long long res = 0;
+
+        while (idx)
+        {
+            res += sum[idx];
             idx ^= idx & -idx;
         }
 
@@ -62,10 +78,15 @@ long long const oo = 1e18;
 int n;
 int h[N];
 
-vector<int> vals;
 int haha[N], hehe[N];
 
 FenwickTree bitL, bitR;
+vector<int> vals;
+
+int GetId(int x)
+{
+    return upper_bound(all(vals), x) - vals.begin();
+}
 
 void Compress()
 {
@@ -96,24 +117,32 @@ int main()
     FOR(i, 1, n) cin >> h[i];
 
     Compress();
-    FOR(i, 1, n) bitR.Update(hehe[i], 1);
+    long long sL = 0, sR = 0;
+
+    FOR(i, 1, n) 
+    {
+        bitR.Update(hehe[i], vals[hehe[i] - 1], 1);
+        sR += vals[hehe[i] - 1];
+    }
 
     long long res = oo;
 
     FOR(i, 1, n)
     {
-        bitR.Update(hehe[i], -1);
-        bitL.Update(haha[i], 1);
+        sR -= vals[hehe[i] - 1];
+        sL += vals[haha[i] - 1];
 
-        int l = 1;
-        int r = 1e9 + n;
+        bitR.Update(hehe[i], vals[hehe[i] - 1], -1);
+        bitL.Update(haha[i], vals[haha[i] - 1], 1);
+
+        int l = max(i, n - i + 1);
+        int r = 1e9 + N;
         int med = r;
 
         while (l <= r)
         {
             int mid = (l + r) >> 1;
-            if (bitL.Get(upper_bound(all(vals), mid - i)) +
-                bitR.Get(upper_bound(all(vals), mid + i)) >= (n + 1) / 2)
+            if (bitL.GetFreq(GetId(mid - i)) + bitR.GetFreq(GetId(mid + i)) >= (n + 1) / 2)
             {
                 med = mid;
                 r = mid - 1;
@@ -121,7 +150,23 @@ int main()
             else l = mid + 1;
         }
 
+        int idL = GetId(med - i);
+        int cntL = bitL.GetFreq(idL);
+        long long sumL = bitL.GetPre(idL);
 
+        int idR = GetId(med + i);
+        int cntR = bitR.GetFreq(idR);
+        long long sumR = bitR.GetPre(idR);
+
+        long long cost = 0;
+        
+        cost += 1LL * (med - i) * cntL - sumL;
+        cost += sL - sumL - 1LL * (med - i) * (i - cntL);
+
+        cost += 1LL * (med + i) * cntR - sumR;
+        cost += sR - sumR - 1LL * (med + i) * (n - i - cntR);
+
+        mini(res, cost);
     }
 
     cout << res;

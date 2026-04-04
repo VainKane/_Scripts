@@ -26,7 +26,7 @@ int const N = 1e5 + 5;
 long long const oo = 1e18;
 
 int n;
-int h[N];
+int h[N], a[N];
 
 int main()
 {
@@ -40,16 +40,14 @@ int main()
 
     FOR(i, 1, n)
     {
-        vector<int> pt;
-        FOR(j, 1, i - 1) pt.push_back(h[j] + i - j);
-        FOR(j, i + 1, n) pt.push_back(h[j] + j - i);
+        FOR(j, 1, i) a[j] = h[j] + i - j;
+        FOR(j, i + 1, n) a[j] = h[j] + j - i;
 
-        sort(all(pt));
+        sort(a + 1, a + n + 1);
+        int med = max({i, n - i + 1, a[(n + 1) / 2]});
 
-        int med = n / 2;
-        long long cost = abs(pt[med] - h[i]);
-
-        for (auto &x : pt) cost += abs(x - pt[med]);
+        long long cost = 0;
+        FOR(j, 1, n) cost += abs(h[j] + abs(i - j) - med);
         mini(res, cost);
     }
 

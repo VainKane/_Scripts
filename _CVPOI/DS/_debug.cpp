@@ -35,11 +35,11 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int lim = 2e5;
+    int const lim = 2e5;
 
     int n = Rand(1, lim);
     int k = Rand(1, 25);
-    int q = Rand(1, 100);
+    int q = Rand(1, lim);
 
     cout << n << ' ' << k << '\n';
     FOR(i, 1, n) cout << Rand(0, MK(k) - 1) << ' ';

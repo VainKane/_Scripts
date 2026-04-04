@@ -36,6 +36,21 @@ int const N = 1e5 + 5;
 int const MOD = 1e9 + 7;
 
 int n;
+int inv[N];
+
+int PowMod(int a, int b)
+{
+    int res = 1;
+
+    while (b)
+    {
+        if (b & 1) res = 1LL * res * a % MOD;
+        a = 1LL * a * a % MOD;
+        b >>= 1;
+    }
+
+    return res;
+}
 
 int main()
 {
@@ -43,6 +58,9 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> n;
+
+    int res = 1;
+    FOR(i, 1, n) inv[i] = PowMod(i, MOD - 2);
 
     set<Data> s;
     FOR(i, 1, n)
@@ -52,19 +70,23 @@ int main()
 
         if (!s.empty())
         {
-            auto it = s.upper_bound({0, r, 0});
-
-            while (true)
+            auto it = s.lower_bound({0, l, 0});
+            while (it != s.end() && it->l <= r && it->r >= l)
             {
-                if ((--it)->r < l) break;
-                l = it->l;
+                res = 1LL * res * inv[it->sz] % MOD;
                 sz += it->sz;
-            }
 
-            // auto it = 
+                mini(l, it->l);
+                maxi(r, it->r);
+
+                s.erase(it++);
+            }
         }
 
+        res = 1LL * res * sz % MOD;
         s.insert({l, r, sz});
+
+        cout << res << '\n';
     }
 
     return 0;

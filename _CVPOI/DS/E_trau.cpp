@@ -22,10 +22,139 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
+struct SegmentTree
+{
+    vector<vector<int>> t;
+    vector<int> lz, len;
+    int n, k;
+
+    void Build(int v, int l, int r, int a[])
+    {
+        len[v] = r - l + 1;
+        
+        if (l == r)
+        {
+            for (int tmp = a[l]; tmp; tmp ^= tmp & -tmp)
+            {
+                int i = __builtin_ctz(tmp & -tmp);
+                t[v][i]++;
+            }
+
+            return;
+        }
+
+        int mid = (l + r) >> 1;
+
+        Build(2 * v, l, mid, a);
+        Build(2 * v + 1, mid + 1, r, a);
+
+        REP(i, k) t[v][i] = t[2 * v][i] + t[2 * v + 1][i];
+    }
+
+    SegmentTree(int _n = 0, int _k = 0, int a[] = {})
+    {
+        n = _n, k = _k;
+        
+        t.assign(4 * n, vector<int> (k + 1));
+        lz.assign(4 * n, 0);
+        len.assign(4 * n, 0);
+        
+        if (n) Build(1, 1, n, a);
+    }
+
+    void Lazy(int v)
+    {
+        if (lz[v])
+        {
+            FOR(u, 2 * v, 2 * v + 1)
+            {
+                REP(i, k) t[u][i] = len[u] - t[u][i];
+                lz[u] ^= 1;
+            }
+
+            lz[v] = 0;
+        }
+    }    
+
+    void RangeUpdate(int v, int l, int r, int left, int right)
+    {
+        if (l > right || r < left) return;
+        if (left <= l && right >= r)
+        {
+            REP(i, k) t[v][i] = len[v] - t[v][i];
+            lz[v] ^= 1;
+            return;
+        }
+
+        Lazy(v);
+        int mid = (l + r) >> 1;
+
+        RangeUpdate(2 * v, l, mid, left, right);
+        RangeUpdate(2 * v + 1, mid + 1, r, left, right);
+
+        REP(i, k) t[v][i] = t[2 * v][i] + t[2 * v + 1][i];
+    }
+
+    void PointUpdate(int v, int l, int r, int pos, int val)
+    {
+        if (l == r)
+        {
+            REP(i, k) t[v][i] = BIT(i, val);
+            return;
+        }
+
+        Lazy(v);
+        int mid = (l + r) >> 1;
+
+        if (pos <= mid) PointUpdate(2 * v, l, mid, pos, val);
+        else PointUpdate(2 * v + 1, mid + 1, r, pos, val);
+
+        REP(i, k) t[v][i] = t[2 * v][i] + t[2 * v + 1][i];
+    }
+
+    long long Get(int v, int l, int r, int left, int right)
+    {
+        if (l > right || r < left) return 0;
+        if (left <= l && right >= r)
+        {
+            long long res = 0;
+            REP(i, k) res += 1LL * t[v][i] * MK(i);
+            return res;   
+        }
+
+        Lazy(v);
+        int mid = (l + r) >> 1;
+
+        long long val1 = Get(2 * v, l, mid, left, right);
+        long long val2 = Get(2 * v + 1, mid + 1, r, left, right);
+
+        return val1 + val2;
+    }
+
+    void RangeUpdate(int l, int r)
+    {
+        if (l > r) return;
+        RangeUpdate(1, 1, n, l, r);
+    }
+
+    void PointUpdate(int pos, int val)
+    {
+        PointUpdate(1, 1, n, pos, val);
+    }
+
+    long long Get(int l, int r)
+    {
+        if (l > r) return 0;
+        return Get(1, 1, n, l, r);
+    }
+};
+
 int const N = 2e5 + 5;
 
 int n, k;
 int a[N];
+
+SegmentTree it;
 
 int main()
 {
@@ -35,20 +164,17 @@ int main()
     cin >> n >> k;
     FOR(i, 1, n) cin >> a[i];
 
+    it = SegmentTree(n, k, a);
+
     int q; cin >> q;
     while (q--)
     {
         int type, x, y;
         cin >> type >> x >> y;
 
-        if (type == 1) a[x] = y;
-        else if (type == 2) FOR(i, x, y) a[i] = a[i] ^ (MK(k) - 1);
-        else
-        {
-            long long res = 0;
-            FOR(i, x, y) res += a[i];
-            cout << res << '\n';
-        }
+        if (type == 1) it.PointUpdate(x, y);
+        else if (type == 2) it.RangeUpdate(x, y);
+        else cout << it.Get(x, y) << '\n';
     }
 
     return 0;

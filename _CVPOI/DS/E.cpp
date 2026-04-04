@@ -24,41 +24,34 @@ template <class t> bool mini(t &x, t const &y)
 
 struct SegmentTree
 {
-    vector<vector<int>> t;
-    vector<int> lz, len;
+    vector<long long> t;
+    vector<int> len, lz;
     int n, k;
 
     void Build(int v, int l, int r, int a[])
     {
         len[v] = r - l + 1;
-        
+
         if (l == r)
         {
-            for (int tmp = a[l]; tmp; tmp ^= tmp & -tmp)
-            {
-                int i = __builtin_ctz(tmp & -tmp);
-                t[v][i]++;
-            }
-
+            t[v] = a[l];
             return;
         }
 
         int mid = (l + r) >> 1;
+        Build(v << 1, l, mid, a);
+        Build(v << 1 | 1, mid + 1, r, a);
 
-        Build(2 * v, l, mid, a);
-        Build(2 * v + 1, mid + 1, r, a);
-
-        REP(i, k) t[v][i] = t[2 * v][i] + t[2 * v + 1][i];
+        t[v] = t[v << 1] + t[v << 1 | 1];
     }
 
     SegmentTree(int _n = 0, int _k = 0, int a[] = {})
     {
         n = _n, k = _k;
-        
-        t.assign(4 * n, vector<int> (k + 1));
+        t.assign(4 * n, 0);
         lz.assign(4 * n, 0);
         len.assign(4 * n, 0);
-        
+
         if (n) Build(1, 1, n, a);
     }
 
@@ -66,22 +59,22 @@ struct SegmentTree
     {
         if (lz[v])
         {
-            FOR(u, 2 * v, 2 * v + 1)
+            FOR(u, v << 1, v << 1 | 1)
             {
-                REP(i, k) t[u][i] = len[u] - t[u][i];
+                t[u] = 1LL * len[u] * (MK(k) - 1) - t[u];
                 lz[u] ^= 1;
             }
 
             lz[v] = 0;
         }
-    }    
+    }
 
-    void RangUpdate(int v, int l, int r, int left, int right)
+    void RangeUpdate(int v, int l, int r, int left, int right)
     {
         if (l > right || r < left) return;
         if (left <= l && right >= r)
         {
-            REP(i, k) t[v][i] = len[v] - t[v][i];
+            t[v] = 1LL * len[v] * (MK(k) - 1) - t[v];
             lz[v] ^= 1;
             return;
         }
@@ -89,56 +82,52 @@ struct SegmentTree
         Lazy(v);
         int mid = (l + r) >> 1;
 
-        RangUpdate(2 * v, l, mid, left, right);
-        RangUpdate(2 * v + 1, mid + 1, r, left, right);
+        RangeUpdate(v << 1, l, mid, left, right);
+        RangeUpdate(v << 1 | 1, mid + 1, r, left, right);
 
-        REP(i, k) t[v][i] = t[2 * v][i] + t[2 * v + 1][i];
+        t[v] = t[v << 1] + t[v << 1 | 1];
     }
 
     void PointUpdate(int v, int l, int r, int pos, int val)
     {
         if (l == r)
         {
-            REP(i, k) t[v][i] = BIT(i, val);
+            t[v] = val;
             return;
         }
 
         Lazy(v);
         int mid = (l + r) >> 1;
 
-        if (pos <= mid) PointUpdate(2 * v, l, mid, pos, val);
-        else PointUpdate(2 * v + 1, mid + 1, r, pos, val);
+        if (pos <= mid) PointUpdate(v << 1, l, mid, pos, val);
+        else PointUpdate(v << 1 | 1, mid + 1, r, pos, val);
 
-        REP(i, k) t[v][i] = t[2 * v][i] + t[2 * v + 1][i];
+        t[v] = t[v << 1] + t[v << 1 | 1];
     }
 
     long long Get(int v, int l, int r, int left, int right)
     {
         if (l > right || r < left) return 0;
-        if (left <= l && right >= r)
-        {
-            long long res = 0;
-            REP(i, k) res += 1LL * t[v][i] * MK(i);
-            return res;   
-        }
+        if (left <= l && right >= r) return t[v];
 
         Lazy(v);
         int mid = (l + r) >> 1;
 
-        long long val1 = Get(2 * v, l, mid, left, right);
-        long long val2 = Get(2 * v + 1, mid + 1, r, left, right);
+        long long val1 = Get(v << 1, l, mid, left, right);
+        long long val2 = Get(v << 1 | 1, mid + 1, r, left, right);
 
         return val1 + val2;
     }
 
-    void RangUpdate(int l, int r)
+    void RangeUpdate(int l, int r)
     {
         if (l > r) return;
-        RangUpdate(1, 1, n, l, r);
+        RangeUpdate(1, 1, n, l, r);
     }
 
     void PointUpdate(int pos, int val)
     {
+        if (pos < 1 || pos > n) return;
         PointUpdate(1, 1, n, pos, val);
     }
 
@@ -153,7 +142,6 @@ int const N = 2e5 + 5;
 
 int n, k;
 int a[N];
-
 SegmentTree it;
 
 int main()
@@ -173,7 +161,7 @@ int main()
         cin >> type >> x >> y;
 
         if (type == 1) it.PointUpdate(x, y);
-        else if (type == 2) it.RangUpdate(x, y);
+        else if (type == 2) it.RangeUpdate(x, y);
         else cout << it.Get(x, y) << '\n';
     }
 
