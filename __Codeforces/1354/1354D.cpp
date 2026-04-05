@@ -25,15 +25,16 @@ template <class t> bool mini(t &x, t const &y)
 struct FenwickTree
 {
     vector<int> bit;
-    int n;
+    int n, LOG;
 
     FenwickTree(int _n = 0)
     {
         n = _n;
+        LOG = 31 - __builtin_clz(n);
         bit.assign(n + 5, 0);
     }
 
-    void Update(unsigned idx, int val)
+    void Update(int idx, int val)
     {
         while (idx <= n)
         {
@@ -42,67 +43,49 @@ struct FenwickTree
         }
     }
 
-    int Get(unsigned idx)
-    {
-        int res = 0;
-
-        while (idx)
-        {
-            res += bit[idx];
-            idx ^= idx & -idx;
-        }
-
-        return res;
-    }
-
     int Search(int val)
     {
-        unsigned pos = 0;
-        int s = 0;
+        int pos = 0, s = 0;
 
-        FORD(i, 31 - __builtin_clz(n), 0) if (pos + MK(i) <= n && s + bit[pos | MK(i)] < val)
+        FORD(i, LOG, 0) if ((pos | MK(i)) <= n && s + bit[pos | MK(i)] < val)
             s += bit[pos |= MK(i)];
-
+        
         return pos + 1;
     }
 };
 
-int n, k;
+int n, q;
 FenwickTree bit;
-
-int pos;
-
-void Jump(int x)
-{
-    int haha = bit.Get(pos);
-    int y = bit.Get(n) - haha + 1;
-
-    if (x < y) pos = bit.Search(haha + x);
-    else pos = bit.Search(x - y + 1);
-}
 
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    cin >> n >> k;
-
-    bit = FenwickTree(n);
-    unsigned res = k - 1;
-    pos = k;
-
-    FOR(i, 1, n) if (i != k) bit.Update(i, 1);
-
-    FOR(i, 1, n - 1)
-    {
-        Jump(1);
-        Jump((k - 1) % (n - i));
-        
-        bit.Update(pos, -1);
-        res ^= pos - i - 1 < 0 ? i - pos + 1 : pos - i - 1;
-    }
+    cin >> n >> q;
     
+    bit = FenwickTree(n);
+
+    FOR(i, 1, n)
+    {
+        int x; cin >> x;
+        bit.Update(x, 1);
+    }
+
+    while (q--)
+    {
+        int k; cin >> k;
+        if (k > 0) bit.Update(k, 1);
+        else
+        {
+            k = bit.Search(-k);
+            bit.Update(k, -1);
+        }
+    }
+
+    int res = bit.Search(1);
+    if (res == n + 1) res = 0;
+
     cout << res;
 
     return 0;

@@ -22,6 +22,8 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
+int const LOG = 21;
+
 struct FenwickTree
 {
     vector<int> bit;
@@ -33,7 +35,7 @@ struct FenwickTree
         bit.assign(n + 5, 0);
     }
 
-    void Update(unsigned idx, int val)
+    void Update(int idx, int val)
     {
         while (idx <= n)
         {
@@ -42,7 +44,7 @@ struct FenwickTree
         }
     }
 
-    int Get(unsigned idx)
+    int Get(int idx)
     {
         int res = 0;
 
@@ -57,10 +59,10 @@ struct FenwickTree
 
     int Search(int val)
     {
-        unsigned pos = 0;
+        int pos = 0;
         int s = 0;
 
-        FORD(i, 31 - __builtin_clz(n), 0) if (pos + MK(i) <= n && s + bit[pos | MK(i)] < val)
+        FORD(i, LOG, 0) if (pos + MK(i) <= n && s + bit[pos | MK(i)] < val)
             s += bit[pos |= MK(i)];
 
         return pos + 1;
@@ -74,10 +76,9 @@ int pos;
 
 void Jump(int x)
 {
-    int haha = bit.Get(pos);
-    int y = bit.Get(n) - haha + 1;
+    int y = bit.Get(n) - bit.Get(pos) + 1;
 
-    if (x < y) pos = bit.Search(haha + x);
+    if (x < y) pos = bit.Search(bit.Get(pos) + x);
     else pos = bit.Search(x - y + 1);
 }
 
@@ -89,10 +90,11 @@ int main()
     cin >> n >> k;
 
     bit = FenwickTree(n);
-    unsigned res = k - 1;
     pos = k;
 
     FOR(i, 1, n) if (i != k) bit.Update(i, 1);
+
+    cout << pos << ' ';
 
     FOR(i, 1, n - 1)
     {
@@ -100,10 +102,8 @@ int main()
         Jump((k - 1) % (n - i));
         
         bit.Update(pos, -1);
-        res ^= pos - i - 1 < 0 ? i - pos + 1 : pos - i - 1;
+        cout << pos << ' ';
     }
-    
-    cout << res;
 
     return 0;
 }
