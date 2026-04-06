@@ -94,29 +94,19 @@ string guess_sequence(int NN)
     n = NN;
     string s = "";
 
-    if (press("AB"))
-    {
-        if (press("A")) s = "A";
-        else s = "B";
-    }
-    else if (press("X")) s = "X";
+    if (press("A") == 1) s = "A";
+    else if (press("B") == 1) s = "B";
+    else if (press("X") == 1) s = "X";
     else s = "Y";
 
     string haha = "";
     for (auto &ch : moves) if (ch != s[0]) haha += ch;
 
-    FOR(i, 1, n - 2)
+    bool ok = true;
+    FOR(i, 2, n)
     {
-        int len = press(s + haha[0] + s + haha[1] + haha[0] + s + haha[1] + haha[1] + s + haha[1] + haha[2]);
-        if (len == i + 1) s += haha[0];
-        else if (len == i + 2) s += haha[1];
-        else s += haha[2];
-    }
-
-    if (n != 1)
-    {
-        if (press(s + haha[0]) == n) s += haha[0];
-        else if (press(s + haha[1]) == n) s += haha[1];
+        if (press(s + haha[0]) == i) s += haha[0];
+        else if (press(s + haha[1]) == i) s += haha[1];
         else s += haha[2];
     }
 
