@@ -30,14 +30,26 @@ int const N = 2e5 + 5;
 int const M = 5e5 + 5;
 
 int l, r, n;
-int w[N];
+pair<int, int> a[N];
 
 vector<int> find_subset(int ll, int uu, vector<int> ww)
 {
     l = ll, r = uu, n = sz(ww);
-    FOR(i, 1, n) w[i] = ww[i - 1];
+    FOR(i, 1, n) a[i] = {ww[i - 1], i};
 
+    sort(a + 1, a + n + 1);
+
+    long long s = 0;
+    int i = 0, j = 1;
     
+    for (; i < n && s + a[i + 1].F <= r; s += a[++i].F);
+    while (s < l && i < n) s += a[++i].F - a[j++].F;
+
+    if (s < l || s > r) return {};
+
+    vector<int> v;
+    FOR(id, j, i) v.push_back(a[id].S - 1);
+    return v;
 }
 
 #ifdef LOCALONLY
