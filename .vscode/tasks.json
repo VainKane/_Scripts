@@ -10,7 +10,7 @@
                 "${file}",
                 "--std=c++14",
                 "-pipe",
-                "-O2",
+                // "-O2", // also this guy
                 // "-s", // turn off to debug
                 "-static",
                 "-lm",
