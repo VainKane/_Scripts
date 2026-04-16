@@ -105,7 +105,6 @@ void Compress()
         vals.push_back(y1[i]);
         vals.push_back(x2[i] = x1[i] + k);
         vals.push_back(y2[i] = y1[i] + k);
-        vals.push_back(y1[i] + 1);
     }
 
     sort(all(vals));
@@ -158,7 +157,7 @@ int main()
     long long res = 0;
     REP(i, sz(events) - 1)
     {
-        it.Update(GetId(vals[events[i].y1 - 1] + 1), events[i].y2, events[i].type);
+        it.Update(events[i].y1 + 1, events[i].y2, events[i].type);
         res += 1LL * it.t[1].S * (vals[events[i + 1].x - 1] - vals[events[i].x - 1]);
     }
 

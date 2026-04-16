@@ -11,7 +11,7 @@ using namespace std;
 #define sz(v) ((int)v.size())
 #define F first
 #define S second
-#define name "L"
+#define name "t9"
 
 template <class t> bool maxi(t &x, t const &y)
 {
@@ -24,7 +24,7 @@ template <class t> bool mini(t &x, t const &y)
 }
 
 mt19937_64 rd(time(0));
-int const ntest = 1e4;
+int const ntest = 1;
 
 long long Rand(long long l, long long r)
 {
@@ -35,15 +35,21 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int const lim = 100;
+    int const lim = 2000;
 
-    int k = Rand(1, lim);
+    int m = Rand(1, lim);
     int n = Rand(1, lim);
 
-    string dir = "NSEW";
-
-    cout << k << ' ' << n << '\n';
-    FOR(i, 1, n) cout << dir[Rand(0, 3)] << ' ' << Rand(1, 3) << '\n';
+    cout << m << ' ' << n << '\n';
+    FOR(i, 1, m) 
+    {
+        FOR(j, 1, n)
+        {
+            int type = Rand(0, 0);
+            cout << (type ? 0 : 1);
+        }
+        cout << '\n';
+    }
 }
 
 int main()
@@ -52,15 +58,15 @@ int main()
     {
         GenTest();
         system(name".exe <"name".inp> "name".out");
-        system(name"_trau.exe <"name".inp> "name".ans");
+        // system(name"_trau.exe <"name".inp> "name".ans");
 
-        if (system("fc "name".out "name".ans") != 0)
-        {
-            cout << "Test: " << i << " WRONG!\n";
-            return 0;
-        }
+        // if (system("fc "name".out "name".ans") != 0)
+        // {
+        //     cout << "Test: " << i << " WRONG!\n";
+        //     return 0;
+        // }
 
-        cout << "Test: " << i << " CORRECT!\n";
+        // cout << "Test: " << i << " CORRECT!\n";
     }
 
     return 0;
