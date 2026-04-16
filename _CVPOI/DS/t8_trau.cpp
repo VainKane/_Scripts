@@ -11,6 +11,7 @@ using namespace std;
 #define sz(v) ((int)v.size())
 #define F first
 #define S second
+#define name "t8"
 
 template <class t> bool maxi(t &x, t const &y)
 {
@@ -40,6 +41,12 @@ struct Gen
         FOR(i, 1, n) cin >> s[i];
     }
 
+    void Print()
+    {
+        FOR(i, 1, n) cout << s[i];
+        cout << '\n';
+    }
+
     bool operator < (Gen const other) const
     {
         FOR(i, 1, n) if (s[i] != other.s[i]) return s[i] < other.s[i];
@@ -61,12 +68,6 @@ struct Gen
             else res.s[i] = 'V' ^ 'O' ^ 'I' ^ s[i] ^ other.s[i];
         }
         return res;
-    }
-
-    void Print()
-    {
-        FOR(i, 1, n) cout << s[i];
-        cout << '\n';
     }
 };
 
@@ -109,6 +110,9 @@ int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
+
+    // freopen(name".inp", "r", stdin);
+    // freopen(name".out", "w", stdout);
 
     cin >> n;
     FOR(i, 1, 3)

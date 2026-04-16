@@ -11,7 +11,7 @@ using namespace std;
 #define sz(v) ((int)v.size())
 #define F first
 #define S second
-#define name "t9"
+#define name "t8"
 
 template <class t> bool maxi(t &x, t const &y)
 {
@@ -24,7 +24,7 @@ template <class t> bool mini(t &x, t const &y)
 }
 
 mt19937_64 rd(time(0));
-int const ntest = 1;
+int const ntest = 1e4;
 
 long long Rand(long long l, long long r)
 {
@@ -35,20 +35,29 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int const lim = 2000;
+    int const lim = 2e5;
 
-    int m = Rand(1, lim);
     int n = Rand(1, lim);
+    int q = Rand(1, lim);
 
-    cout << m << ' ' << n << '\n';
-    FOR(i, 1, m) 
+    cout << n << '\n';
+    
+    FOR(haha, 1, 3)
     {
-        FOR(j, 1, n)
-        {
-            int type = Rand(0, 0);
-            cout << (type ? 0 : 1);
-        }
+        FOR(i, 1, n) cout << "VOI"[Rand(0, 2)];
         cout << '\n';
+    }
+
+    cout << q << '\n';
+    FOR(i, 1, n) cout << "VOI"[Rand(0, 2)];
+    cout << '\n';
+
+    while (q--)
+    {
+        int l = Rand(1, n);
+        int r = Rand(l, n);
+        char c = "VOI"[Rand(0, 2)];
+        cout << l << ' ' << r << ' ' << c << '\n';
     }
 }
 
@@ -58,15 +67,15 @@ int main()
     {
         GenTest();
         system(name".exe <"name".inp> "name".out");
-        // system(name"_trau.exe <"name".inp> "name".ans");
+        system(name"_trau.exe <"name".inp> "name".ans");
 
-        // if (system("fc "name".out "name".ans") != 0)
-        // {
-        //     cout << "Test: " << i << " WRONG!\n";
-        //     return 0;
-        // }
+        if (system("fc "name".out "name".ans") != 0)
+        {
+            cout << "Test: " << i << " WRONG!\n";
+            return 0;
+        }
 
-        // cout << "Test: " << i << " CORRECT!\n";
+        cout << "Test: " << i << " CORRECT!\n";
     }
 
     return 0;
