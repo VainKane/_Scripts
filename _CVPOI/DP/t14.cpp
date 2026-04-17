@@ -23,37 +23,10 @@ template <class t> bool mini(t &x, t const &y)
 }
 
 long long a, b;
-
-long long dp[20][2][12][12];
-
-bool Check(int x)
-{
-    vector<int> digits;
-
-    while (x)
-    {
-        digits.push_back(x % 10);
-        x /= 10;
-    }
-
-    REP(i, sz(digits))
-    {
-        if (i > 0 && digits[i] == digits[i - 1]) return false;
-        if (i > 1 && digits[i] == digits[i - 2]) return false;
-    }
-
-    return true;
-}
+long long dp[20][2][10][10][2][2];
 
 long long Get(long long x)
 {
-    if (x < 100)
-    {
-        int res = 0;
-        FOR(i, 1, x) res += Check(i);
-        return res;
-    }
-
     vector<int> digits;
 
     while (x)
@@ -66,20 +39,27 @@ long long Get(long long x)
     int n = sz(digits);
 
     memset(dp, 0, sizeof dp);
-    FOR(pre, 0, digits[0])
-    {
-        int lim = pre < digits[0] ? 9 : digits[1];
-        FOR(cur, 0, lim) if (cur != pre) dp[2][pre < digits[0] || cur < digits[1]][cur][pre] = 1;
-    }
+    dp[0][0][0][0][1][1] = 1;
 
-    FOR(i, 2, n - 1) REP(r, 2) FOR(cur, 0, 9) FOR(pre, 0, 9) if (dp[i][r][cur][pre])
+    REP(i, n) REP(r, 2) FOR(cur, 0, 9) FOR(pre, 0, 9) REP(lead, 2) REP(preLead, 2)
     {
+        long long &val = dp[i][r][cur][pre][lead][preLead];
+        if (!val) continue;
+
         int lim = r ? 9 : digits[i];
-        FOR(d, 0, lim) if (d != cur && d != pre) dp[i + 1][r | (d < lim)][d][cur] += dp[i][r][cur][pre];
+        FOR(d, 0, lim) 
+        {
+            if (!lead && d == cur) continue;
+            if (!preLead && d == pre) continue;
+            dp[i + 1][r | (d < lim)][d][cur][lead & !d][lead] += val;   
+        }
     }
 
     long long res = 0;
-    REP(r, 2) FOR(cur, 0, 9) FOR(pre, 0, 9) res += dp[n][r][cur][pre];
+
+    REP(r, 2) FOR(cur, 0, 9) FOR(pre, 0, 9) REP(lead, 2) REP(nLead, 2) 
+        res += dp[n][r][cur][pre][lead][nLead];
+
     return res;
 }
 

@@ -35,9 +35,9 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int lim = 100;
+    long long lim = 1e3;
     long long a = Rand(1, lim);
-    cout << a << ' ' << Rand(a, lim);
+    cout << a << ' ' << a + Rand(1, 1e5);
 }
 
 int main()

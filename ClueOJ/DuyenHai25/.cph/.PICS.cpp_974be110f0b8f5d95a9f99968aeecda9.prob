@@ -1,0 +1,1 @@
+{"name":"Local: PICS","url":"d:\\Dev\\_CP\\ClueOJ\\DuyenHai25\\PICS.cpp","tests":[{"id":1776400004262,"input":"6 3\n2 1 1 3 4 1\n5 5 0\n5 5 2 2 6\n5 7 0","output":"5\n111022\n4 5"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"d:\\Dev\\_CP\\ClueOJ\\DuyenHai25\\PICS.cpp","group":"local","local":true}
