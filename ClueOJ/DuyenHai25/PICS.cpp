@@ -22,91 +22,35 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-struct SegmentTree
+struct FenwickTree
 {
-    vector<long long> t;
-    vector<long long> lz;
+    vector<long long> bit;
     int n;
-    
-    void Build(int v, int l, int r, long long a[])
-    {
-        if (l == r)
-        {
-            t[v] = a[l];
-            return;
-        }
 
-        int mid = (l + r) >> 1;
-        Build(v << 1, l, mid, a);
-        Build(v << 1, mid + 1, r, a);
-
-        t[v] = max(t[v << 1], t[v << 1 | 1]);
-    }
-
-    SegmentTree(int _n = 0, long long pre[] = {})
+    FenwickTree(int _n = 0)
     {
         n = _n;
-        t.assign(4 * n, 0);
-        lz.assign(4 * n, 0);
-        if (n) Build(1, 1, n, pre);
+        bit.assign(n + 5, 0);
     }
 
-    void Lazy(int v)
+    void Update(int idx, int val)
     {
-        if (lz[v])
+        while (idx <= n)
         {
-            FOR(u, v << 1, v << 1 | 1)
-            {
-                t[u] += lz[v];
-                lz[u] += lz[v];
-            }
-
-            lz[v] = 0;
+            bit[idx] += val;
+            idx += idx & -idx;
         }
     }
 
-    void Update(int v, int l, int r, int left, int right, int val)
+    int Search(int val)
     {
-        if (l > right || r < left) return;
-        if (left <= l && right >= r)
-        {
-            t[v] += val;
-            lz[v] += val;
-            return;
-        }
+        int pos = 0;
+        long long s = 0;
 
-        Lazy(v);
-        int mid = (l + r) >> 1;
+        FORD(i, 31 - __builtin_clz(n), 0) if ((pos | MK(i)) <= n && s + bit[pos | MK(i)] <= val)
+            s += bit[pos |= MK(i)];
 
-        Update(v << 1, l, mid, left, right, val);
-        Update(v << 1 | 1, mid + 1, r, left, right, val);
-
-        t[v] = max(t[v << 1], t[v << 1 | 1]);
-    }
-
-    int Search(int v, int l, int r, int left, int right, int val)
-    {
-        if (l > right || r < left || t[v] < val) return 0;
-        if (l == r) return l;
-
-        Lazy(v);
-        int mid = (l + r) >> 1;
-    
-        int pos = Search(v << 1, l, mid, left, right, val);
-        if (pos) return pos;
-        return Search(v << 1 | 1, mid + 1, r, left, right, val);
-    }
-
-    void Update(int l, int r, int val)
-    {
-        if (l > r) return;
-        Update(1, 1, n, l, r, val);
-    }
-
-    int Search(int l, int r, int val)
-    {
-        if (l > r) return 0;
-        return Search(1, 1, n, l, r, val);
+        return pos + 1;
     }
 };
 
@@ -114,12 +58,11 @@ int const N = 1e5 + 5;
 
 int n, q;
 pair<int, int> s[N];
-long long pre[N];
 
 bool mark[N];
 
 int res[N];
-SegmentTree it;
+FenwickTree bit;
 int id[N];
 
 void SolveTrace()
@@ -159,10 +102,10 @@ int main()
     FOR(i, 1, n) cin >> s[i].F, s[i].S = i;
 
     sort(s + 1, s + n + 1);
-    FOR(i, 1, n) pre[i] = pre[i - 1] + s[i].F;
     FOR(i, 1, n) id[s[i].S] = i;
 
-    it = SegmentTree(n, pre);
+    bit = FenwickTree(n);
+    FOR(i, 1, n) bit.Update(i, s[i].F);
 
     SolveTrace();
     q--;
@@ -179,10 +122,14 @@ int main()
             v.push_back(id[i]);
         }
 
-        for (auto &i : v) it.Update(i, it.n, -s[i].F);
-        int pos1 = it.Search(1, n, a);
-        
-        for (auto &i : v) it.Update(i, it.n, s[i].F);
+        sort(all(v));
+        for (auto &i : v) bit.Update(i, -s[i].F);
+
+        int pos = bit.Search(a + b) - 1;
+        pos -= upper_bound(all(v), pos) - v.begin();
+        cout << max(0, pos - 1) << ' ';
+
+        for (auto &i : v) bit.Update(i, s[i].F);
     }
 
     return 0;

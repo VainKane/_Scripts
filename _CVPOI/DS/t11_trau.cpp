@@ -31,13 +31,15 @@ int maxH[N][N];
 int pre[N][N];
 
 vector<int> h;
+int avail[N];
 
-bool mark[N];
-
-bool Check(vector<int> &v)
+bool Check(int i, int j)
 {
+    vector<int> v;
+    FOR(id, j, j + k - 1) v.push_back(maxH[i - 1][id]);
     sort(all(v));
-    REP(i, k) if (h[i] <= v[i]) return false;
+    
+    REP(id, k) if (h[id] <= v[id]) return false;
     return true;
 }
 
@@ -71,17 +73,27 @@ int main()
     sort(all(h));
     int res = 0;
 
-    FORD(i, m, 1) FOR(j, 1, n - k + 1) if (Valid(i, j))
+    FOR(j, 1, n)
     {
-        if (mark[j]) res++;
-        else
+        int l = 0;
+        int r = m;
+        avail[j] = l;
+
+        while (l <= r)
         {
-            vector<int> v;
-            FOR(id, j, j + k - 1) v.push_back(maxH[i - 1][id]);
-            res += mark[j] = Check(v);
+            int mid = (l + r) >> 1;
+            if (Check(mid, j))
+            {
+                avail[j] = mid;
+                l = mid + 1;
+            }
+            else r = mid - 1;
         }
     }
 
+    FORD(i, m, 1) FOR(j, 1, n - k + 1)
+        res += Valid(i, j) && avail[j] >= i;
+    
     cout << res;
 
     return 0;
