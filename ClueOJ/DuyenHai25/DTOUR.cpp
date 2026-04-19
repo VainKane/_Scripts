@@ -78,7 +78,6 @@ namespace Sub2
         }
 
         for (auto &node : nodes) visited[node] = false;
-
         return ok;
     }
 
@@ -104,9 +103,47 @@ namespace Sub3
         return true;
     }
 
+    int in[N];
+    int timer = 0;
+
+    int l[N], r[N];
+    int res[N];
+
+    void DFS(int u, int p)
+    {
+        in[u] = ++timer;
+        for (auto &v : adj[u]) if (v != p) DFS(v, u);
+    }
+
     void Process()
     {
-        
+        FOR(u, 1, n) if (sz(adj[u]) == 1)
+        {
+            DFS(u, -1);
+            break;
+        }
+
+        FOR(i, 1, n + 1) r[i] = n + 1;
+
+        FOR(i, 1, k)
+        {
+            a[i].F = in[a[i].F], a[i].S = in[a[i].S];
+            if (a[i].F > a[i].S) swap(a[i].F, a[i].S);
+
+            maxi(l[a[i].S], a[i].F);
+            mini(r[a[i].F], a[i].S);
+        }
+
+        FOR(i, 1, n) maxi(l[i], l[i - 1]);
+        FORD(i, n, 1) mini(r[i], r[i + 1]);
+
+        while (q--)
+        {
+            int u; cin >> u;
+            u = in[u];
+
+            cout << l[u] + n - r[u] + 1 << ' ';
+        }
     }
 }
 
@@ -126,6 +163,7 @@ int main()
     FOR(i, 1, k) cin >> a[i].F >> a[i].S;
 
     if (Sub2::CheckSub()) return Sub2::Process(), 0;
+    if (Sub3::CheckSub()) return Sub3::Process(), 0;
 
     return 0;
 }

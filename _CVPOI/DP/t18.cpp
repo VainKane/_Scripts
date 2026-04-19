@@ -23,9 +23,14 @@ template <class t> bool mini(t &x, t const &y)
 }
 
 int const N = 1e5 + 5;
+int const K = 12;
+long long const oo = 1e18 + 67;
 
 int n, k;
-int a[N], b[N];
+long long a[N][K];
+int b[N];
+
+long long dp[N][K][K];
 
 int main()
 {
@@ -33,10 +38,25 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> n >> k;
-    FOR(i, 1, n) cin >> a[i];
+    FOR(i, 1, n) cin >> a[i][0];
     FOR(i, 1, n) cin >> b[i];
 
-    
+    FOR(i, 1, n) FOR(j, 1, k) a[i][j] = 1LL * a[i][j - 1] * b[i];
+
+    memset(dp, -0x3f, sizeof dp);
+    dp[0][0][0] = 0;
+
+    FOR(i, 1, n) FOR(u, 0, k) FOR(v, 0, u) FOR(c1, 0, u) FOR(c2, 0, v)
+        maxi(dp[i][u][v], dp[i - 1][c1][c2] + a[i][u - v]);
+
+    long long res = -oo;
+    FOR(i, 1, n) FOR(u, 0, k) FOR(v, 0, u) 
+    {
+        cout << i << ' ' << u << ' ' << v << ' ' << dp[i][u][v] << '\n';
+        maxi(res, dp[i][u][v]);
+    }
+
+    cout << res;
 
     return 0;
 }

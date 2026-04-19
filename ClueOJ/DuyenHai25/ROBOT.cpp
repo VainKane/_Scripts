@@ -22,6 +22,13 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
+mt19937_64 rd(time(0));
+
+long long Rand(long long l, long long r)
+{
+    return l + rd () * 1LL * rd() % (r - l + 1);
+}
+
 int const N = 209;
 
 int dx[] = {-1, 0, 1, 0};
@@ -30,119 +37,34 @@ char key[] = {'U', 'R', 'D', 'L'};
 
 int m, n, k;
 bool a[N][N];
-int xs[4], ys[4];
 
-namespace Sub2
+string res[N][N];
+
+void BFS(int xs, int ys)
 {
-    bool CheckSub()
+    queue<pair<int, int>> q;
+    q.push({xs, ys});
+
+    a[xs][ys] = 1;
+
+    while (!q.empty())
     {
-        return k == 1;
-    }
+        int x = q.front().F;
+        int y = q.front().S;
+        q.pop();
 
-    string res[N][N];
-
-    void BFS(int xs, int ys)
-    {
-        queue<pair<int, int>> q;
-        q.push({xs, ys});
-
-        a[xs][ys] = 1;
-
-        while (!q.empty())
+        REP(i, 4)
         {
-            int x = q.front().F;
-            int y = q.front().S;
-            q.pop();
+            int u = x + dx[i];
+            int v = y + dy[i];
 
-            REP(i, 4)
+            if (!a[u][v])
             {
-                int u = x + dx[i];
-                int v = y + dy[i];
-
-                if (!a[u][v])
-                {
-                    a[u][v] = 1;
-                    res[u][v] = res[x][y] + key[i];
-                    q.push({u, v});
-                }
+                a[u][v] = 1;
+                res[u][v] = res[x][y] + key[i];
+                q.push({u, v});
             }
         }
-    }
-
-    void Process()
-    {
-        BFS(xs[1], ys[1]);
-        cout << res[1][1];
-    }
-}
-
-namespace Sub3
-{
-    bool CheckSub()
-    {
-        return k <= 3;
-    }
-
-    struct State
-    {
-        int x[4], y[4];
-        
-        State(int _x[], int _y[])
-        {
-            FOR(i, 1, 3) x[i] = _x[i], y[i] = _y[i];
-        }
-    };
-
-    int const N = 12;
-    bool visited[N][N][N][N][N][N];
-    string res[N][N][N][N][N][N];
-
-    bool Avail(int x[], int y[])
-    {
-        FOR(i, 1, 3) if (a[x[i]][y[i]]) return false;
-        return true;
-    }
-
-    void BFS()
-    {
-        queue<State> q;
-        q.push({xs, ys});
-        visited[xs[1]][ys[1]][xs[2]][ys[2]][xs[3]][ys[3]] = true;
-
-        while (!q.empty())
-        {
-            int x[4], y[4];
-            int u[4], v[4];
-
-            FOR(i, 1, 3) x[i] = q.front().x[i], y[i] = q.front().y[i];
-            q.pop();
-
-            REP(dir, 4)
-            {
-                FOR(i, 1, 3) 
-                {
-                    u[i] = x[i] + dx[dir];
-                    v[i] = y[i] + dy[dir];
-                    if (a[u[i]][v[i]]) u[i] = x[i], v[i] = y[i];
-                }
-
-                bool &vs = visited[u[1]][v[1]][u[2]][v[2]][u[3]][v[3]];
-                if (Avail(u, v) && !vs)
-                {
-                    res[u[1]][v[1]][u[2]][v[2]][u[3]][v[3]] = 
-                        res[x[1]][y[1]][x[2]][y[2]][x[3]][y[3]] + key[dir];
-                    vs = true;
-                    q.push({u, v});
-                }
-            }
-        }
-    }
-
-    void Process()
-    {
-        if (k == 2) xs[3] = xs[1], ys[3] = ys[1];
-        BFS();
-        cout << res[1][1][1][1][1][1];
     }
 }
 
@@ -156,14 +78,24 @@ int main()
     cin >> m >> n >> k;
     FOR(i, 1, m) FOR(j, 1, n) cin >> a[i][j];
     
-    FOR(i, 1, k)
+    int xs, ys;
+    cin >> xs >> ys;
+    xs++, ys++;
+
+    REP(haha, 2.5e7)
     {
-        cin >> xs[i] >> ys[i];
-        xs[i]++, ys[i]++;
+        int i = Rand(0, 3);
+
+        int u = xs + dx[i];
+        int v = ys + dy[i];
+
+        cout << key[i];
+        if (a[u][v]) continue;
+        xs = u, ys = v;
     }
 
-    if (Sub2::CheckSub()) return Sub2::Process(), 0;
-    if (Sub3::CheckSub()) return Sub3::Process(), 0;
+    BFS(xs, ys);
+    cout << res[1][1];
 
     return 0;
 }

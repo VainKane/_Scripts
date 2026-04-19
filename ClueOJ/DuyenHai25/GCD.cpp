@@ -23,62 +23,33 @@ template <class t> bool mini(t &x, t const &y)
 }
 
 int const N = 1009;
+int const M = 1e6 + 5;
 
 int n;
 long long a[N];
+bool prime[M];
 
-namespace Sub2
+vector<int> primes;
+
+int cnt[M];
+map<long long, int> cntGCD;
+
+long long GCD(long long a, long long b)
 {
-    bool CheckSub()
+    while (true)
     {
-        return n <= 20;
-    }
-
-    long long GCD(long long a, long long b)
-    {
-        while (true)
-        {
-            if (a == 0 || b == 0 || a == b) return a | b;
-            if (a > b) a %= b; else b %= a;
-        }
-    }
-
-    void Process()
-    {
-        int res = 0;
-
-        REP(mask, MK(n))
-        {
-            long long gcd = 0;
-            for (int tmp = mask; tmp; tmp ^= tmp & -tmp)
-            {
-                int i = __builtin_ctz(tmp);
-                gcd = GCD(gcd, a[i + 1]);
-            }
-
-            if (gcd > 1) maxi(res, __builtin_popcount(mask));
-        }
-
-        cout << res;
+        if (a == 0 || b == 0 || a == b) return a | b;
+        if (a > b) a %= b; else b %= a;
     }
 }
 
-namespace Sub3
+void Sieve()
 {
-    bool CheckSub()
-    {
-        FOR(i, 1, n) if (a[i] > 1e6) return false;
-        return true;
-    }
+    memset(prime, true, sizeof prime);
+    prime[0] = prime[1] = false;
 
-    int cntDiv[(int)1e6 + 5];
-
-    void Process()
-    {
-        FOR(i, 1, n) cntDiv[a[i]]++;
-        FOR(i, 1, 1e6) for (int j = 2 * i; j <= 1e6; j += i) cntDiv[i] += cntDiv[j];
-        cout << *max_element(cntDiv + 2, cntDiv + (int)1e6 + 1);
-    }
+    FOR(i, 2, sqrt(1e6)) if (prime[i]) for (int j = i * i; j <= 1e6; j += i) prime[j] = false;
+    FOR(i, 2, 1e6) if (prime[i]) primes.push_back(i);
 }
 
 int main()
@@ -89,8 +60,31 @@ int main()
     cin >> n;
     FOR(i, 1, n) cin >> a[i];
 
-    if (Sub2::CheckSub()) return Sub2::Process(), 0;
-    if (Sub3::CheckSub()) return Sub3::Process(), 0;
+    Sieve();
+    int res = 0;
+
+    FOR(i, 1, n) for (auto &p : primes)
+    {
+        if (p > a[i]) break;
+        maxi(res, cnt[p] += a[i] % p == 0);
+    }
+
+    FOR(i, 1, n) for (auto &p : primes)
+    {
+        if (p > a[i]) break;
+        while (a[i] % p == 0) a[i] /= p;
+    }
+
+    FOR(i, 1, n) FOR(j, 1, n) cntGCD[GCD(a[i], a[j])]++;
+
+    long long x = 1e18 + 1;
+    int ma = 0;
+
+    for (auto &p : cntGCD) if (p.F > 1 && maxi(ma, p.S)) x = p.F;
+
+    int haha = 0;
+    FOR(i, 1, n) haha += a[i] % x == 0;
+    cout << max(haha, res);
 
     return 0;
 }

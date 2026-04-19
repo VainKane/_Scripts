@@ -51,13 +51,13 @@ long long Get(long long x)
         {
             if (!lead && d == cur) continue;
             if (!preLead && d == pre) continue;
-            dp[i + 1][r | (d < lim)][d][cur][lead & !d][lead] += val;   
+            dp[i + 1][r | (d < lim)][d][cur][lead & !d][lead] += val;
         }
     }
 
     long long res = 0;
 
-    REP(r, 2) FOR(cur, 0, 9) FOR(pre, 0, 9) REP(lead, 2) REP(nLead, 2) 
+    REP(r, 2) FOR(cur, 0, 9) FOR(pre, 0, 9) REP(lead, 2) REP(nLead, 2)
         res += dp[n][r][cur][pre][lead][nLead];
 
     return res;
