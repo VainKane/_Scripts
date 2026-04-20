@@ -11,6 +11,7 @@ using namespace std;
 #define sz(v) ((int)v.size())
 #define F first
 #define S second
+#define name "LISYS"
 
 template <class t> bool maxi(t &x, t const &y)
 {
@@ -22,39 +23,41 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-int const N = 1e5 + 5;
-int const K = 12;
-long long const oo = 1e18 + 67;
+int const N = 1009;
+int const MOD = 1e9 + 7;
 
-int n, k;
-long long a[N][K];
-int b[N];
+void Add(int &x, int const &y)
+{
+    x += y;
+    if (x >= MOD) x -= MOD;
+}
 
-long long dp[N][K][K];
+int n;
+
+int a[N];
+int dp[N][2 * N];
 
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    cin >> n >> k;
-    FOR(i, 1, n) cin >> a[i][0];
-    FOR(i, 1, n) cin >> b[i];
+    // freopen(name".inp", "r", stdin);
 
-    FOR(i, 1, n) FOR(j, 1, k) a[i][j] = 1LL * a[i][j - 1] * b[i];
+    cin >> n;
+    FOR(i, 1, n) cin >> a[i];
 
-    memset(dp, -0x3f, sizeof dp);
-    dp[0][0][0] = 0;
-
-    REP(i, n) FOR(u, 0, k) FOR(v, 0, u) FOR(c1, 0, k - u) FOR(c2, 0, u - v + c1)
+    dp[0][0] = 1;
+    FOR(i, 1, n) FOR(j, 1, (n - 1) << 1)
     {
-        maxi(dp[i + 1][u + c1][v + c2], a[i + 1][u + c1 - v - c2]);
-        maxi(dp[i + 1][u + c1][v + c2], dp[i][u][v] + a[i + 1][u + c1 - v - c2]);
+        if (a[i] != -1)
+        {
+            if (j >= a[i]) dp[i][j] = dp[i - 1][j - a[i]];
+        }
+        else FOR(k, 1, min(n - 1, j)) Add(dp[i][j], dp[i - 1][j - k]);
     }
 
-    long long res = -oo;
-    FOR(i, 1, n) FOR(u, 0, k) FOR(v, 0, u) maxi(res, dp[i][u][v]);
-    cout << res;
+    cout << dp[n][(n - 1) << 1];
 
     return 0;
 }
