@@ -11,7 +11,7 @@ using namespace std;
 #define sz(v) ((int)v.size())
 #define F first
 #define S second
-#define name "LISYS"
+#define name "TABLE"
 
 template <class t> bool maxi(t &x, t const &y)
 {
@@ -35,27 +35,29 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int const lim = 1000;
-    int n = Rand(2, lim);
+    int const lim = 5;
+    int const oo = 5;
 
-    int s = n - 2;
-    int a[n + 1];
+    int m = Rand(1, lim);
+    int n = Rand(1, lim);
+    int q = Rand(1, 1);
 
-    FOR(i, 1, n) a[i] = 1;
-    FOR(i, 1, n)
+    cout << m << ' ' << n << ' ' << q << '\n';
+    FOR(i, 1, m)
     {
-        int k = Rand(0, s);
-        s -= k;
-        a[i] += k;
+        FOR(j, 1, n) cout << Rand(1, oo) << ' ';
+        cout << '\n';
     }
 
-    a[1] += s;
-
-    cout << n << '\n';
-    FOR(i, 1, n)
+    while (q--)
     {
-        int type = Rand(0, 4);
-        cout << (type ? -1 : a[i]) << ' ';
+        int type = Rand(1, 2);
+        int x1 = Rand(1, m);
+        int y1 = Rand(1, n);
+
+        cout << type << ' ' << x1 << ' ' << y1 << ' ' << Rand(x1, m) << ' ' << Rand(y1, n);
+        if (type == 1) cout << ' ' << Rand(1, oo);
+        cout << '\n';
     }
 }
 
