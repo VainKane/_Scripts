@@ -22,9 +22,15 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-int const N = 509;
+int const N = 109;
 int const dx[] = {0, 1, 0, -1};
 int const dy[] = {1, 0, -1, 0};
+
+struct State
+{
+    int x, y;
+    int du;
+};
 
 int n, m, q;
 
@@ -32,7 +38,6 @@ int x[N], y[N], u[N], v[N];
 int xs[N], ys[N], xt[N], yt[N];
 
 int a[8 * N][8 * N];
-bool visited[8 * N][8 * N];
 int d[8 * N][8 * N];
 
 void Compress()
@@ -83,33 +88,31 @@ bool Inside(int x, int y)
 
 void BFS(int xs, int ys)
 {
-    deque<pair<int, int>> q;
-    q.push_front({xs, ys});
+    memset(d, 0x3f, sizeof d);
+    d[xs][ys] = 0;
 
-    memset(d, 0, sizeof d);
-    memset(visited, 0, sizeof visited);
+    deque<State> dq;
+    dq.push_front({xs, ys, d[xs][ys]});
 
-    visited[xs][ys] = true;
-
-    while (!q.empty())
+    while (!dq.empty())
     {
-        int x = q.front().F;
-        int y = q.front().S;
-        q.pop_front();
+        int x = dq.front().x;
+        int y = dq.front().y;
+        int du = dq.front().du;
+        dq.pop_front();
+
+        if (du > d[x][y]) continue;
 
         REP(i, 4)
         {
             int u = x + dx[i];
             int v = y + dy[i];
-        
-            if (Inside(u, v) && !visited[u][v])
+            bool w = a[u][v] != a[x][y] && a[u][v];
+            
+            if (Inside(u, v) && mini(d[u][v], d[x][y] + w))
             {
-                int w = a[u][v] != a[x][y] && a[u][v];
-                d[u][v] = d[x][y] + w;
-
-                visited[u][v] = true;
-                if (w) q.push_back({u, v});
-                else q.push_front({u, v});
+                if (w) dq.push_back({u, v, d[u][v]});
+                else dq.push_front({u, v, d[u][v]});
             }
         }
     }
@@ -126,22 +129,16 @@ int main()
 
     Compress();
 
-    FOR(i, q, n)
+    FOR(i, 1, n)
     {
         FOR(p, x[i], u[i]) a[p][y[i]] = a[p][v[i]] = i;
         FOR(p, y[i], v[i]) a[x[i]][p] = a[u[i]][p] = i;
     }
 
-    FOR(i, 1, 1)
+    FOR(i, 1, q)
     {
         BFS(xs[i], ys[i]);
         cout << d[xt[i]][yt[i]] << '\n';
-    
-        FORD(hihi, m, 1)
-        {
-            FOR(haha, 1, m) cout << d[haha][hihi] << ' ';
-            cout << '\n';
-        }
     }
 
     return 0;

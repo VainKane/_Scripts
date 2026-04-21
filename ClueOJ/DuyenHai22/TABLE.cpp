@@ -22,105 +22,55 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-struct SegmentTree
+struct FenwickTree
 {
-    vector<long long> t;
-    vector<long long> lz;
-    vector<int> sz;
-    int n;
+    vector<vector<long long>> bit[4];
+    int m, n;
 
-    void Build(int v, int l, int r, int a[])
+    FenwickTree(int _m = 0, int _n = 0)
     {
-        sz[v] = r - l + 1;
-
-        if (l == r)
-        {
-            t[v] = a[l];
-            return;
-        }
-
-        int mid = (l + r) >> 1;
-        Build(v << 1, l, mid, a);
-        Build(v << 1 | 1, mid + 1, r, a);
-
-        t[v] = t[v << 1] + t[v << 1 | 1];
+        m = _m, n = _n;
+        REP(i, 4) bit[i].assign(m + 5, vector<long long> (n + 5, 0));
     }
 
-    SegmentTree(int _n = 0, int a[] = {})
+    void Update(int x, int y, long long val)
     {
-        n = _n;
-        t.assign(4 * n, 0);
-        lz.assign(4 * n, 0);
-        sz.assign(4 * n, 0);
-
-        if (n) Build(1, 1, n, a);
-    }
-
-    void Lazy(int v)
-    {
-        if (lz[v])
+        for (int i = x; i <= m; i += i & -i) for (int j = y; j <= n; j += j & -j)
         {
-            FOR(u, v << 1, v << 1 | 1)
-            {
-                t[u] += lz[v] * sz[u];
-                lz[u] += lz[v];
-            }
-
-            lz[v] = 0;
+            bit[0][i][j] += val;
+            bit[1][i][j] += 1LL * x * val;
+            bit[2][i][j] += 1LL * y * val;
+            bit[3][i][j] += 1LL * x * y * val;
         }
     }
 
-    void Update(int v, int l, int r, int left, int right, int val)
+    void Update(int x, int y, int u, int v, int val)
     {
-        if (l > right || r < left) return;
-        if (left <= l && right >= r)
-        {
-            t[v] += 1LL * val * sz[v];
-            lz[v] += val;
-            return;
-        }
-
-        Lazy(v);
-        int mid = (l + r) >> 1;
-
-        Update(v << 1, l, mid, left, right, val);
-        Update(v << 1 | 1, mid + 1, r, left, right, val);
-
-        t[v] = t[v << 1] + t[v << 1 | 1];
+        Update(x, y, val);
+        Update(x, v + 1, -val);
+        Update(u + 1, y, -val);
+        Update(u + 1, v + 1, val);
     }
 
-    long long Get(int v, int l, int r, int left, int right)
+    long long Get(int x, int y)
     {
-        if (l > right || r < left) return 0;
-        if (left <= l && right >= r) return t[v];
+        long long res = 0;
 
-        Lazy(v);
-        int mid = (l + r) >> 1;
-
-        long long val1 = Get(v << 1, l, mid, left, right);
-        long long val2 = Get(v << 1 | 1, mid + 1, r, left, right);
-
-        return val1 + val2;
+        for (int i = x; i; i ^= i & -i) for (int j = y; j; j ^= j & -j)
+            res += 1LL * (x + 1) * (y + 1) * bit[0][i][j] - 1LL * (y + 1) * bit[1][i][j] 
+                - 1LL * (x + 1) * bit[2][i][j] + bit[3][i][j];
+        
+        return res;
     }
 
-    void Update(int l, int r, int val)
+    long long Get(int x, int y, int u, int v)
     {
-        if (l > r) return;
-        Update(1, 1, n, l, r, val);
-    }
-
-    long long Get(int l, int r)
-    {
-        if (l > r) return 0;
-        return Get(1, 1, n, l, r);
+        return Get(u, v) - Get(x - 1, v) - Get(u, y - 1) + Get(x - 1, y - 1); 
     }
 };
 
-int const N = 509;
-
 int m, n, q;
-int a[N];
-SegmentTree it[N];
+FenwickTree bit;
 
 int main()
 {
@@ -128,10 +78,12 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> m >> n >> q;
-    FOR(i, 1, m)
+    bit = FenwickTree(m, n);
+
+    FOR(i, 1, m) FOR(j, 1, n)
     {
-        FOR(j, 1, n) cin >> a[j];
-        it[i] = SegmentTree(n, a);
+        int x; cin >> x;
+        bit.Update(i, j, i, j, x);
     }
 
     while (q--)
@@ -142,14 +94,9 @@ int main()
         if (type == 1)
         {
             int val; cin >> val;
-            FOR(i, x1, x2) it[i].Update(y1, y2, val);
+            bit.Update(x1, y1, x2, y2, val);
         }
-        else
-        {
-            long long res = 0;
-            FOR(i, x1, x2) res += it[i].Get(y1, y2);
-            cout << res << '\n';
-        }
+        else cout << bit.Get(x1, y1, x2, y2) << '\n';
     }
 
     return 0;

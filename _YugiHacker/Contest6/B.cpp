@@ -23,26 +23,21 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-struct Data
-{
-    int d, x, y;
-
-    bool operator < (Data const other) const
-    {
-        return d > other.d;
-    }
-};
-
 int const N = 2009;
+int const dx[] = {-1, 0, 1, 0};
+int const dy[] = {0, 1, 0, -1};
+char const dir[] = {'^', '>', 'v', '<'};
+
+struct State
+{
+    int x, y;
+    int du;
+};
 
 int m, n;
 int xs, ys, xt, yt;
 
 char a[N][N];
-
-int dx[] = {-1, 0, 1, 0};
-int dy[] = {0, 1, 0, -1};
-char dir[] = {'^', '>', 'v', '<'};
 
 int d[N][N];
 int par[N][N];
@@ -53,34 +48,34 @@ bool Inside(int x, int y)
             y >= 1 && y <= n;
 }
 
-void Dijkstra()
+void BFS()
 {
     memset(d, 0x3f, sizeof d);
     d[xs][ys] = 0;
 
-    priority_queue<Data> pq;
-    pq.push({0, xs, ys});
-    
-    while (!pq.empty())
-    {
-        int x = pq.top().x;
-        int y = pq.top().y;
-        int dxy = pq.top().d;
-        pq.pop();
+    deque<State> dq;
+    dq.push_front({xs, ys, d[xs][ys]});
 
-        if (dxy > d[x][y]) continue;
+    while (!dq.empty())
+    {
+        int x = dq.front().x;
+        int y = dq.front().y;
+        int du = dq.front().du;
+        dq.pop_front();
+
+        if (du > d[x][y]) continue;
 
         REP(i, 4)
         {
             int u = x + dx[i];
             int v = y + dy[i];
-            int w = a[x][y] != dir[i];
+            bool w = a[x][y] != dir[i];
 
-            if (!Inside(u, v)) continue;
-            if (mini(d[u][v], d[x][y] + w)) 
+            if (Inside(u, v) && mini(d[u][v], d[x][y] + w))
             {
                 par[u][v] = i;
-                pq.push({d[u][v], u, v});
+                if (w) dq.push_back({u, v, d[u][v]});
+                else dq.push_front({u, v, d[u][v]});
             }
         }
     }
@@ -110,7 +105,7 @@ int main()
         }
     }
 
-    Dijkstra();
+    BFS();
     cout << d[xt][yt] - 1 << '\n';
 
     while (true)

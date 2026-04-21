@@ -24,60 +24,39 @@ template <class t> bool mini(t &x, t const &y)
 
 struct FenwickTree
 {
-    vector<long long> bit;
+    vector<long long> bit1, bit2;
     int n;
 
     FenwickTree(int _n = 0)
     {
         n = _n;
-        bit.assign(n + 5, 0);
+        bit1.assign(n + 5, 0);
+        bit2.assign(n + 5, 0);
     }
 
-    void Update(int idx, long long val)
+    void Update(int idx, int val)
     {
-        while (idx <= n)
+        for (int i = idx; i <= n; i += i & -i)
         {
-            bit[idx] += val;
-            idx += idx & -idx;
+            bit1[i] += 1LL * val * (n - idx + 1);
+            bit2[i] += val;
         }
+    }
+
+    void Update(int l, int r, int val)
+    {
+        Update(l, val);
+        Update(r + 1, -val);
     }
 
     long long Get(int idx)
     {
         long long res = 0;
 
-        while (idx)
-        {
-            res += bit[idx];
-            idx ^= idx & -idx;
-        }
+        for (int i = idx; i; i ^= i & -i)
+            res += bit1[i] - 1LL * (n - idx) * bit2[i];
 
         return res;
-    }
-};
-
-struct SuperTree
-{
-    FenwickTree bit1, bit2;
-    int n;
-
-    SuperTree(int _n = 0)
-    {
-        n = _n;
-        bit1 = bit2 = FenwickTree(n);
-    }
-
-    void Update(int l, int r, int val)
-    {
-        bit1.Update(l, 1LL * (n - l + 1) * val);
-        bit1.Update(r + 1, -1LL * (n - r) * val);
-        bit2.Update(l, val);
-        bit2.Update(r + 1, -val);
-    }
-
-    long long Get(int idx)
-    {
-        return bit1.Get(idx) - 1LL * (n - idx) * bit2.Get(idx);
     }
 
     long long Get(int l, int r)
@@ -90,7 +69,7 @@ struct SuperTree
 int const N = 2e5 + 5;
 
 int n, q;
-SuperTree st;
+FenwickTree bit;
 
 int main()
 {
@@ -98,12 +77,12 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> n >> q;
-    st = SuperTree(n);
+    bit = FenwickTree(n);
 
     FOR(i, 1, n) 
     {
         int x; cin >> x;
-        st.Update(i, i, x);
+        bit.Update(i, i, x);
     }
 
     while (q--)
@@ -114,9 +93,9 @@ int main()
         if (type == 1)
         {
             cin >> x;
-            st.Update(a, b, x);
+            bit.Update(a, b, x);
         }
-        else cout << st.Get(a, b) << '\n';
+        else cout << bit.Get(a, b) << '\n';
     }
 
     return 0;
