@@ -44,6 +44,7 @@ void DFS(int u, int p)
     }
 
     bool cur = 1;
+    sz[u] = 1;
 
     memset(f[cur], -0x3f, sizeof f[cur]);
     f[cur][0] = 0;
@@ -54,14 +55,17 @@ void DFS(int u, int p)
         memset(f[cur], -0x3f, sizeof f[cur]);
 
         int v = child[i - 1];
-        FOR(k1, 0, sz[u]) FOR(k2, 0, sz[v])
-            maxi(f[cur][k1 + k2 - 1], f[cur ^ 1][k1] + dp[v][k2]);
+        REP(k1, sz[u]) REP(k2, sz[v])
+        {
+            maxi(f[cur][k1 + k2], f[cur ^ 1][k1] + dp[v][k2]);
+            if (dp[v][k2] >= 0) maxi(f[cur][k1 + k2 + 1], f[cur ^ 1][k1]);
+        }
 
         sz[u] += sz[v];
     }
 
-    sz[u]++;
-    FOR(k, 1, sz[u]) dp[u][k] = f[cur][k] + a[u];
+    REP(k, sz[u]) maxi(dp[u][k], f[cur][k] + a[u]);
+    if (sz[u] == 1) dp[u][0] = a[u];
 }
 
 int main()
@@ -88,9 +92,9 @@ int main()
     memset(dp, -0x3f, sizeof dp);
     DFS(1, -1);
 
-    FORD(k, n, 1) if (dp[1][k] >= 0)
+    FORD(k, n - 1, 0) if (dp[1][k] >= 0)
     {
-        cout << n - k;
+        cout << n - k - 1;
         break;
     }
 

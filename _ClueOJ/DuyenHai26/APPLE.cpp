@@ -81,7 +81,7 @@ int main()
 
         memset(mark, false, sizeof mark);
         memset(used, false, sizeof mark);
-        random_shuffle(id + 1, id + n + 1);
+        shuffle(id + 1, id + n + 1, mt19937_64(time(0)));
     }
 
     cout << sz(ids) << '\n';

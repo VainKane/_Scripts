@@ -11,7 +11,7 @@ int cnt = 0;
 long long GCD(long long a, long long b)
 {
     if (a == 0 || b == 0 || a == b) return a | b;
-    
+    if (a > b) a %= b; else b %= a;
 }
 
 int a[1000] = {0, 1, 2, 3};
@@ -30,7 +30,7 @@ int main()
     // int n; cin >> n;
 
     // for (int i = 1; i <= n; i++) a[i] = i;
-    
+
     // do
     // {
     //     for (int i = 1; i <= n; i++) cout << a[i] << ' ';
@@ -78,7 +78,7 @@ int main()
 
     // int tmp = 0, res = 0;
 
-    // for (int i = 1; i <= n; i++) 
+    // for (int i = 1; i <= n; i++)
     // {
     //     int x; cin >> x;
     //     tmp += x;
@@ -104,5 +104,9 @@ int main()
     // FOR(i, 1, n) cout << a[i] << '\n';
 
     // cout << (long long)1e11 - 1;
-    cout << (int)'.';
+//    cout << (int)'.';
+
+    #ifdef LOCALONLY
+    cout << "gold medalist\n";
+    #endif //LOCALONLY
 }

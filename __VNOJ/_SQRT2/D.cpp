@@ -23,7 +23,6 @@ template <class t> bool mini(t &x, t const &y)
 }
 
 int const N = 1e5 + 5;
-int const LOG = 18;
 int const BK = 314;
 int const GR = N / BK + 5;
 int const oo = 1e9;
@@ -33,41 +32,47 @@ int n, q;
 vector<int> adj[N];
 pair<int, int> qr[N];
 
-int up[N][20];
+int up[2 * N][20];
+int pos[N];
+int timer = 0;
+
 int h[N], d[N];
 
-int ds[1009][1009];
+bool cmp(int u, int v)
+{
+    return pos[u] < pos[v];
+}
 
 void DFS(int u, int p)
 {
+    up[++timer][0] = u;
+    pos[u] = timer;
+
     for (auto &v : adj[u]) if (v != p)
     {
         h[v] = h[u] + 1;
-        up[v][0] = u;
-
-        FOR(i, 1, LOG) up[v][i] = up[up[v][i - 1]][i - 1];
         DFS(v, u);
+        up[++timer][0] = u;
     }
+}
+
+void Build()
+{
+    FOR(j, 1, 31 - __builtin_clz(timer)) FOR(i, 1, timer - MK(j) + 1)
+        up[i][j] = min(up[i][j - 1], up[i + MK(j - 1)][j - 1], cmp);
 }
 
 int LCA(int u, int v)
 {
-    if (h[u] < h[v]) swap(u, v);
-    FORD(i, LOG, 0) if (h[up[u][i]] >= h[v]) u = up[u][i];
-    if (u == v) return u;
+    u = pos[u], v = pos[v];
+    if (u > v) swap(u, v);
 
-    FORD(i, LOG, 0) if (up[u][i] != up[v][i])
-    {
-        u = up[u][i];
-        v = up[v][i];
-    }
-
-    return up[u][0];
+    int k = 31 - __builtin_clz(v - u + 1);
+    return min(up[u][k], up[v - MK(k) + 1][k], cmp);
 }
 
 int Dist(int u, int v)
 {
-    if (u <= 1000 && v <= 1000 && ds[u][v] != -1) return ds[u][v];
     return h[u] + h[v] - 2 * h[LCA(u, v)];
 }
 
@@ -105,8 +110,6 @@ void Init()
         if (!bkL[id]) bkL[id] = i;
         bkR[id] = i;
     }
-
-    FOR(u, 1, 1000) FOR(v, u, 1000) ds[u][v] = ds[v][u] = Dist(u, v); 
 }
 
 int main()
@@ -126,9 +129,9 @@ int main()
     FOR(i, 1, q) cin >> qr[i].F >> qr[i].S;
 
     DFS(1, -1);
+    Build();
 
     memset(d, 0x3f, sizeof d);
-    memset(ds, -1, sizeof ds);
     h[0] = -1;
 
     Init();
