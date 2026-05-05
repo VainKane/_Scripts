@@ -3,8 +3,24 @@
 using namespace std;
 
 #define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
+#define FORD(i, b, a) for (int i = (b), _a = (a); i >= _a; i--)
 #define REP(i, n) for (int i = 0, _n = (n); i < _n; i++)
-#define FORD(i, a, b) for (int i = (a), _b = (b); i >= _b; i--)
+#define BIT(i, x) (((x) >> (i)) & 1)
+#define MK(i) (1LL << (i))
+#define all(v) v.begin(), v.end()
+#define sz(v) ((int)v.size())
+#define F first
+#define S second
+
+template <class t> bool maxi(t &x, t const &y)
+{
+    return x < y ? x = y, 1 : 0;
+}
+
+template <class t> bool mini(t &x, t const &y)
+{
+    return x > y ? x = y, 1 : 0;
+}
 
 int cnt = 0;
 
@@ -22,8 +38,18 @@ int Fibo(int n)
     return Fibo(n - 1) + Fibo(n - 2);
 }
 
+int Count(int x)
+{
+    int cnt = 0;
+    FOR(i, 2, x) if (x % i == 0) cnt++;
+    return cnt;
+}
+
 int main()
 {
+    int res = 0;
+    FOR(i, 2, 1e4) maxi(res, Count(i));
+    cout << res << '\n';
     // GCD(1e18, 4352345234231234);
     // cout << cnt;
 
