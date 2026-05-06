@@ -60,15 +60,17 @@ void DFS(int u, int p)
 
         FOR(k1, 0, sz[u]) REP(r1, 2) FOR(k2, 0, sz[v]) REP(r2, 2)
         {
-            bool nR = (r1 && k1) | (r2 && k2);
+            bool nR = (r1 & k1) | (r2 & k2);
             mini(f[cur][k1 + k2][nR], f[cur ^ 1][k1][r1] + dp[v][k2][r2]);
         }
  
         sz[u] += sz[v];
     }
 
+    // if (u == 1) cout << "debug: " << f[cur][3][0] << '\n';
+
     sz[u]++;
-    FOR(k, 1, sz[u])
+    FOR(k, 0, sz[u])
     {
         dp[u][k][0] = min(f[cur][k - 1][0] + a[u], f[cur][k][0]);
 
@@ -98,11 +100,22 @@ int main()
     DFSPrepare(1, -1);
     DFS(1, -1);
 
-    FORD(k, n, 1) REP(r, 2) if (dp[1][k][r] <= s)
-    {
-        cout << k;
-        return 0;
-    }
+    // FORD(k, n, 1) REP(r, 2) if (dp[1][k][r] <= s)
+    // {
+    //     cout << k;
+    //     return 0;
+    // }
+
+    // cout << dp[2][4][0];
+    cout << dp[1][3][0];
+    // cout << dp[9][2][0];
+
+    // FOR(u, 1, n)
+    // {
+    //     cout << "Adj of " << u << ":\n";
+    //     for (auto &v : adj[u]) cout << v << ' ';
+    //     cout << '\n';
+    // }
 
     return 0;
 }
