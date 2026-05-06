@@ -86,7 +86,7 @@ int main()
     }
 
     dsu = DSU(n);
-    int res = 1, cnt = 1;
+    int res = 0, cnt = 1;
 
     REP(mask, MK(n))
     {
