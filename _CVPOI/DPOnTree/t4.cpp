@@ -56,18 +56,26 @@ void DFSPrepare(int u, int p)
 
 void DFS(int u, int p)
 {
+    vector<int> child;
     dp[u][0] = pw[sz[u] - 1];
+
+    for (auto &v : adj[u]) if (v != p)
+    {
+        child.push_back(v);
+        DFS(v, u);
+    }
+
     bool cur = 1;
 
     memset(f[cur], 0, (m + 1) * sizeof (int));
     f[cur][0] = 1;
 
-    for (auto &v : adj[u]) if (v != p)
+    FOR(i, 1, sz(child))
     {
-        DFS(v, u);
         cur ^= 1;
         memset(f[cur], 0, (m + 1) * sizeof (int));
 
+        int v = child[i - 1];
         FOR(s1, 0, min(m, s[u])) FOR(s2, 0, min(s[v], m - s1))
             Add(f[cur][s1 + s2], f[cur ^ 1][s1] * dp[v][s2] % MOD);
 
