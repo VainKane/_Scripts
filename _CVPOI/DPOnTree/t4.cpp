@@ -22,15 +22,13 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
+#pragma GCC optimize("O3,Ofast,unroll-loops")
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
+#pragma GCC target("sse,sse2,sse3,ssse3,sse4,abm,mmx,avx,tune=native")
+
 int const N = 3009;
 int const M = 3509;
 int const MOD = 31333;
-
-void Add(int &x, int const &y)
-{
-    x += y;
-    if (x >= MOD) x -= MOD;
-}
 
 int n, m;
 
@@ -70,14 +68,14 @@ void DFS(int u, int p)
     memset(f[cur], 0, (m + 1) * sizeof (int));
     f[cur][0] = 1;
 
-    FOR(i, 1, sz(child))
+    REP(i, sz(child))
     {
         cur ^= 1;
         memset(f[cur], 0, (m + 1) * sizeof (int));
 
-        int v = child[i - 1];
-        FOR(s1, 0, min(m, s[u])) FOR(s2, 0, min(s[v], m - s1))
-            Add(f[cur][s1 + s2], f[cur ^ 1][s1] * dp[v][s2] % MOD);
+        int v = child[i];
+        FOR(s1, 0, min(m, s[u])) if (f[cur ^ 1][s1]) FOR(s2, 0, min(s[v], m - s1))
+            f[cur][s1 + s2] = (f[cur][s1 + s2] + f[cur ^ 1][s1] * dp[v][s2]) % MOD;
 
         s[u] += s[v];
     }

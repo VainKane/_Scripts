@@ -15,50 +15,10 @@ int main()
 {
     ofstream cout("testcase.inp");
 
-    // int n = 1e5;
-    // for (int i = 1; i <= n; i++) cout << (char)Rand('a', 'a');
-    // cout << ' ';
-    // while (n--) cout << (char)Rand('a', 'a');
+    int n = Rand(67, 100);
 
-    // cout << "1\n";
-    // int n = Rand(1, 2e5);
-    // int m = Rand(1, 2e5);
-
-    // cout << n << ' ' << m << '\n';
-    // for (int i = 1; i <= m; i++)
-    // {
-    //     int a = Rand(1, n);
-    //     int d = Rand(1, 10);
-    //     int k = Rand(0, (n - a) / d);
-
-    //     cout << a << ' ' << d << ' ' << k << '\n';
-    // }
-
-    // int n = 2e5;
-
-    // cout << n << '\n';
-    // FOR(i, 1, n) cout << Rand(1, 2) << ' ';
-    // cout << n << '\n';
-    // FOR(i, 1, n)
-    // {
-    //     int l = Rand(1, 400);
-    //     int r = Rand(n - 400, n);
-    //     cout << l << ' ' << r << ' ' << Rand(1, 2) << ' ' << Rand(1, 2) << '\n';
-    // }
-
-    int n = 1e5;
-    int q = 1e5;
-
-    cout << n << ' ' << q << '\n';
-    FOR(i, 1, n) cout << Rand(1, 1e9) << ' ';
-    cout << '\n';
-    while (q--)
-    {
-        int l = Rand(1, n - 1);
-        int r = Rand(l + 1, n);
-
-        cout << l << ' ' << r << '\n';
-    }
+    cout << n << ' ' << (int)1e4 << '\n';
+    FOR(i, 2, n) cout << Rand(1, i - 1) << ' ' << i << '\n';
 
     return 0;
 }

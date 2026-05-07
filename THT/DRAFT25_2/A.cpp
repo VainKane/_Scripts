@@ -11,41 +11,35 @@ using namespace std;
 #define sz(v) ((int)v.size())
 #define F first
 #define S second
-#define ff first
-#define ss second
-#define pb push_back
-#define sp ' '
-#define endl '\n'
-#define TASKNAME "TASKNAMEGOESHERE"
 
-using ll = long long;
-using vi = vector<int>;
-using vll = vector<long long>;
-using pii = pair<int, int>;
-using pll = pair<long long, long long>;
-using mii = map<int, int>;
-using mll = map<long long, long long>;
-using vi2d = vector<vector<int>>;
-
-template<typename T> bool mini(T &a, const T &b) {
-     return a > b ? a = b, 1 : 0;
-}
-
-template<typename T> bool maxi(T &a, const T &b) {
-     return a < b ? a = b, 1 : 0;
-}
-
-int n, m;
-
-vector<int> GetDivs(int x)
+template <class t> bool maxi(t &x, t const &y)
 {
-    vector<int> v;
-    FOR(i, 2, sqrt(x)) if (x % i == 0)
+    return x < y ? x = y, 1 : 0;
+}
+
+template <class t> bool mini(t &x, t const &y)
+{
+    return x > y ? x = y, 1 : 0;
+}
+
+int const N = 36;
+
+int n;
+int a[N];
+
+bool Check(int mask)
+{
+    for (int tmp = mask; tmp; tmp ^= tmp & -tmp)
     {
-        v.push_back(i);
-        if (i * i != x) v.push_back(x / i);
+        int i = __builtin_ctz(tmp);
+        for (int haha = tmp ^ MK(i); haha; haha ^= haha & -haha)
+        {
+            int j = __builtin_ctz(haha);
+            if (a[i] % a[j] == 0 || a[j] % a[i] == 0) return false;
+        }
     }
-    return v;
+
+    return true;
 }
 
 int main()
@@ -53,13 +47,12 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    int t; cin >> t;
-    while (t--)
-    {
-        cin >> m;
-        n = m * (m + 1) * (m + 2);
-        vector<int> divs = GetDivs(n * n);
-    }
+    cin >> n;
+    REP(i, n) cin >> a[i];
+
+    int res = 0;
+    REP(mask, MK(n)) if (Check(mask)) maxi(res, __builtin_popcount(mask));
+    cout << res;
 
     return 0;
 }
