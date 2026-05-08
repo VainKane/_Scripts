@@ -11,7 +11,6 @@ using namespace std;
 #define sz(v) ((int)v.size())
 #define F first
 #define S second
-#define name "dayso"
 
 template <class t> bool maxi(t &x, t const &y)
 {
@@ -24,12 +23,12 @@ template <class t> bool mini(t &x, t const &y)
 }
 
 int const N = 5e4 + 5;
-int const BK = 400;
+int const BK = 224;
 int bkId[N];
 
 struct Query
 {
-    int l, r, delta, id;
+    int l, r, d, id;
 
     bool operator < (Query const other) const
     {
@@ -42,23 +41,22 @@ struct Query
 int n, q;
 
 int a[N];
+vector<Query> qrs;
+long long res[4 * N];
 
-vector<Query> queries;
 int cnt[2][N];
-
-long long res[N];
 long long cur = 0;
 
 void Init()
 {
-    FOR(i, 1, n) bkId[i] = i / BK;
-    sort(all(queries));
+    FOR(i, 1, n) bkId[i] = (i - 1) / BK + 1;
+    sort(all(qrs));
 }
 
-void Update(int &val, int delta, int id)
+void Update(int val, int delta, bool id)
 {
     cnt[id][val] += delta;
-    cur += delta * cnt[id ^ 1][val];
+    cur += cnt[id ^ 1][val] * delta;
 }
 
 int main()
@@ -66,26 +64,24 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    freopen(name".inp", "r", stdin);
-    freopen(name".out", "w", stdout);
-
-    cin >> n >> q;
+    cin >> n;
     FOR(i, 1, n) cin >> a[i];
+    cin >> q;
     FOR(i, 1, q)
     {
-        int l, r, u, v;
-        cin >> l >> r >> u >> v;
-
-        queries.push_back({r, v, 1, i});
-        queries.push_back({v, l - 1, -1, i});
-        queries.push_back({r, u - 1, -1, i});
-        queries.push_back({l - 1, u - 1, 1, i});
+        int l1, r1, l2, r2;
+        cin >> l1 >> r1 >> l2 >> r2;
+        
+        qrs.push_back({r1, r2, 1, i});
+        qrs.push_back({r1, l2 - 1, -1, i});
+        qrs.push_back({r2, l1 - 1, -1, i});
+        qrs.push_back({l1 - 1, l2 - 1, 1, i});
     }
 
     Init();
-    int l = 0, r = l - 1;
 
-    for (auto &qr : queries)
+    int l = 0, r = l - 1;
+    for (auto &qr : qrs)
     {
         while (r < qr.r) Update(a[++r], 1, 0);
         while (r > qr.r) Update(a[r--], -1, 0);
@@ -93,7 +89,7 @@ int main()
         while (l < qr.l) Update(a[++l], 1, 1);
         while (l > qr.l) Update(a[l--], -1, 1);
 
-        res[qr.id] += cur * qr.delta;
+        res[qr.id] += qr.d * cur;
     }
 
     FOR(i, 1, q) cout << res[i] << '\n';

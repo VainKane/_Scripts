@@ -65,7 +65,6 @@ void DFS(int u, int p)
     }
 
     REP(k, sz[u]) maxi(dp[u][k], f[cur][k] + a[u]);
-    if (sz[u] == 1) dp[u][0] = a[u];
 }
 
 int main()
