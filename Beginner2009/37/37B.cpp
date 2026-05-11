@@ -2,51 +2,59 @@
 
 using namespace std;
 
-int const N = 25;
+#define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
+#define FORD(i, b, a) for (int i = (b), _a = (a); i >= _a; i--)
+#define REP(i, n) for (int i = 0, _n = (n); i < _n; i++)
+#define BIT(i, x) (((x) >> (i)) & 1)
+#define MK(i) (1LL << (i))
+#define all(v) v.begin(), v.end()
+#define sz(v) ((int)v.size())
+#define F first
+#define S second
+
+template <class t> bool maxi(t &x, t const &y)
+{
+    return x < y ? x = y, 1 : 0;
+}
+
+template <class t> bool mini(t &x, t const &y)
+{
+    return x > y ? x = y, 1 : 0;
+}
+
+int const N = 36;
 
 int n;
 long long k;
 
 int a[N];
 
-long long res1 = 0;
-long long res2 = 0;
-
-int m = 0;
-
-int bit(int i, int mask)
-{
-    return (mask >> i) & 1;
-}
-
 long long GCD(long long a, long long b)
 {
-    long long r = a % b;
-    if (!r) return b;
-
-    while (r)
+    while (true)
     {
-        r = a % b;
-        a = b;
-        b = r;
+        if (a == 0 || b == 0 || a == b) return a | b;
+        if (a > b) a %= b; else b %= a;
     }
+}
 
-    return a;
+long long LCM(long long a, long long b)
+{
+    return a * b / GCD(a, b);
 }
 
 long long Cal(int mask)
 {
-    long long res = 1;
-    for (int i = 0; i < m; i++)
+    long long lcm = 1;
+
+    for (int tmp = mask; tmp; tmp ^= tmp & -tmp)
     {
-        if (bit(i, mask)) 
-        {
-            long long gcd = GCD(res, a[i + 1]);
-            if (res / gcd > k / a[i + 1]) return 0;
-            res *= (a[i + 1] / gcd);
-        }
+        int i = __builtin_ctz(tmp);
+        if ((double)a[i] / GCD(lcm, a[i]) > (double)k / lcm) return 0;
+        lcm = LCM(lcm, a[i]);
     }
-    return k / res;
+
+    return k / lcm;
 }
 
 int main()
@@ -55,27 +63,17 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> n >> k;
-    for (int i = 1; i <= n; i++) 
-    {
-        int x; cin >> x;
-        if (x <= k) a[++m] = x;
-    }
+    REP(i, n) cin >> a[i];
 
-    for (int mask = 1; mask < (1 << m); mask++)
-    {
-        int k = __builtin_popcount(mask); 
-        long long x = Cal(mask);
+    long long res1 = 0, res2 = 0;
 
-        if (k & 1) 
-        {
-            res1 += x;
-            res2 += k * x;
-        }
-        else 
-        {
-            res1 -= x;
-            res2 -= k * x;
-        }
+    FOR(mask, 1, MK(n) - 1)
+    {
+        int cnt = __builtin_popcount(mask);
+        int delta = (cnt & 1) ? 1 : -1;
+
+        res1 += delta * Cal(mask);
+        res2 += delta * cnt * Cal(mask);
     }
 
     cout << res1 << ' ' << res2;

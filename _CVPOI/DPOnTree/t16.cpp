@@ -22,22 +22,16 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-long long n;
-int k, m = 0;
+int const N = 2e5 + 5;
+int const LOG = 17;
 
-vector<int> primes = {0, 2, 3, 5, 7, 11, 13, 17, 19, 67};
+int n, q;
+int up[N][20];
 
-long long Cal(int mask)
+void Build()
 {
-    int haha = 1;
-
-    for (int tmp = mask; tmp; tmp ^= tmp & - tmp)
-    {
-        int i = __builtin_ctz(tmp);
-        haha *= primes[i + 1];
-    }
-
-    return n / haha;
+    FOR(j, 1, 31 - __builtin_clz(n)) FOR(i, 1, n)
+        up[i][j] = up[up[i][j - 1]][j - 1];
 }
 
 int main()
@@ -45,13 +39,24 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    cin >> n >> k;
+    cin >> n >> q;
+    FOR(i, 2, n) cin >> up[i][0];
 
-    for (; primes[m + 1] <= k; m++);
+    Build();
 
-    long long res = 0;
-    REP(mask, MK(m)) res += Cal(mask) * (__builtin_parity(mask) ? -1 : 1);
-    cout << res;
+    while (q--)
+    {
+        int u, k;
+        cin >> u >> k;
+
+        for (int tmp = k; tmp; tmp ^= tmp & -tmp)
+        {
+            int i = __builtin_ctz(tmp);
+            u = up[u][i];
+        }
+
+        cout << (u ? u : -1) << '\n';
+    }
 
     return 0;
 }

@@ -22,22 +22,22 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-long long n;
-int k, m = 0;
+int const N = 1e5 + 5;
 
-vector<int> primes = {0, 2, 3, 5, 7, 11, 13, 17, 19, 67};
+int n;
+vector<int> adj[N];
 
-long long Cal(int mask)
+int dp[N][2];
+
+void DFS(int u, int p)
 {
-    int haha = 1;
-
-    for (int tmp = mask; tmp; tmp ^= tmp & - tmp)
+    dp[u][1] = 1;
+    for (auto &v : adj[u]) if (v != p)
     {
-        int i = __builtin_ctz(tmp);
-        haha *= primes[i + 1];
+        DFS(v, u);
+        dp[u][0] += max(dp[v][0], dp[v][1]);
+        dp[u][1] += dp[v][0];
     }
-
-    return n / haha;
 }
 
 int main()
@@ -45,13 +45,17 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    cin >> n >> k;
+    cin >> n;
+    FOR(i, 2, n)
+    {
+        int u, v;
+        cin >> u >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
 
-    for (; primes[m + 1] <= k; m++);
-
-    long long res = 0;
-    REP(mask, MK(m)) res += Cal(mask) * (__builtin_parity(mask) ? -1 : 1);
-    cout << res;
+    DFS(1, -1);
+    cout << max(dp[1][0], dp[1][1]);
 
     return 0;
 }

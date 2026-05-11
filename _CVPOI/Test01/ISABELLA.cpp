@@ -22,22 +22,22 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-long long n;
-int k, m = 0;
+int const N = 1e6 + 5;
 
-vector<int> primes = {0, 2, 3, 5, 7, 11, 13, 17, 19, 67};
+int n, k;
+long long c;
 
-long long Cal(int mask)
+string ToString(__int128 x)
 {
-    int haha = 1;
-
-    for (int tmp = mask; tmp; tmp ^= tmp & - tmp)
+    string digits = "";
+    while (x)
     {
-        int i = __builtin_ctz(tmp);
-        haha *= primes[i + 1];
+        digits += x % 10 + '0';
+        x /= 10;
     }
 
-    return n / haha;
+    reverse(all(digits));
+    return digits;
 }
 
 int main()
@@ -45,13 +45,22 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    cin >> n >> k;
+    cin >> n >> k >> c;
 
-    for (; primes[m + 1] <= k; m++);
+    long long pre = 0, x;
+    __int128 res = 0;
 
-    long long res = 0;
-    REP(mask, MK(m)) res += Cal(mask) * (__builtin_parity(mask) ? -1 : 1);
-    cout << res;
+    FOR(i, 1, n)
+    {
+        res += pre + c;
+
+        cin >> x;
+        pre += x;
+
+        assert(res > 0);
+    }
+
+    cout << ToString((res + c) * (n - 1));
 
     return 0;
 }

@@ -22,35 +22,52 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-long long n;
-int k, m = 0;
+int const MOD = 1e9 + 7;
+int const LOG = 20;
 
-vector<int> primes = {0, 2, 3, 5, 7, 11, 13, 17, 19, 67};
-
-long long Cal(int mask)
+void Add(int &x, int const &y)
 {
-    int haha = 1;
-
-    for (int tmp = mask; tmp; tmp ^= tmp & - tmp)
-    {
-        int i = __builtin_ctz(tmp);
-        haha *= primes[i + 1];
-    }
-
-    return n / haha;
+    x += y;
+    if (x >= MOD) x -= MOD;
 }
+
+void Sub(int &x, int const &y)
+{
+    x -= y;
+    if (x < MOD) x += MOD;
+}
+
+int n;
+int cnt[MK(20) + 5];
+int pw[MK(20) + 5];
 
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    cin >> n >> k;
+    cin >> n;
+    FOR(i, 1, n)
+    {
+        int x; cin >> x;
+        cnt[x]++;
+    }
 
-    for (; primes[m + 1] <= k; m++);
+    pw[0] = 1;
+    FOR(i, 1, MK(20)) pw[i] = 2 * pw[i - 1] % MOD;
 
-    long long res = 0;
-    REP(mask, MK(m)) res += Cal(mask) * (__builtin_parity(mask) ? -1 : 1);
+    int res = 0;
+
+    REP(mask, 1e6)
+    {
+        int tmp = mask ^ (MK(LOG) - 1);
+
+        int haha = 0;
+        for (int s = tmp; s; s = (s - 1) & tmp)
+            haha += cnt[s];
+        Add(res, pw[haha]);
+    }
+
     cout << res;
 
     return 0;
