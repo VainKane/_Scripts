@@ -38,10 +38,10 @@ void GenTest()
 {
     ofstream cout(name".inp");
 
-    int const lim = 1e4;
+    int const lim = 10;
     k = 2;
-    n = Rand(67, lim);
-    s = Rand(1, n * (n + 1) / 2);
+    n = Rand(5, lim);
+    s = Rand(1, n * (n + 1) / 2 - 4);
 
     cout << n << " 2 " << s;
 }
@@ -85,15 +85,6 @@ int main()
         GenTest();
         system(name".exe <"name".inp> "name".out");
         CheckRes();
-//        system(name"_trau.exe <"name".inp> "name".ans");
-
-//        if (system("fc "name".out "name".ans") != 0)
-//        {
-//            cout << "Test: " << i << " WRONG!\n";
-//            return 0;
-//        }
-//
-//        cout << "Test: " << i << " CORRECT!\n";
     }
 
     return 0;

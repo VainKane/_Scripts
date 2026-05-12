@@ -22,40 +22,59 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
-int const N = 1e6 + 5;
+int const N = 1e5 + 5;
 int const MOD = 1e9 + 7;
 
-void Add(int &x, int const &y, int delta)
+void Add(int &x, int const &y)
 {
-    x += delta * y;
+    x += y;
     if (x >= MOD) x -= MOD;
-    if (x < 0) x += MOD;
 }
 
-int n;
-int f[MK(20) + 5];
-int pw[N];
+int n, m;
+
+int a[N];
+vector<int> adj[N];
+
+int f[N], dp[N];
+
+void DFS(int u, int p)
+{
+    f[u] = 1;
+    dp[u] = a[u];
+
+    for (auto &v : adj[u]) if (v != p)
+    {
+        DFS(v, u);
+        f[u] = 1LL * f[u] * (f[v] + 1) % MOD;
+        dp[u] = (dp[u] + dp[v] + 1LL * f[v] * a[u]) % MOD;
+    }
+}
 
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    cin >> n;
-    FOR(i, 1, n)
+    cin >> n >> m;
+    FOR(i, 1, n) cin >> a[i];
+    FOR(i, 2, n)
     {
-        int x; cin >> x;
-        f[x]++;
+        int p; cin >> p;
+        adj[i].push_back(p);
+        adj[p].push_back(i);
     }
 
-    REP(i, 20) FOR(x, 0, 1e6) if (!BIT(i, x)) f[x] += f[x | MK(i)];
-
-    pw[0] = 1;
-    FOR(i, 1, n) pw[i] = 2 * pw[i - 1] % MOD;
-
     int res = 0;
-    FOR(mask, 0, 1e6) Add(res, pw[f[mask]] - 1, __builtin_parity(mask) ? -1 : 1);
-    cout << res;
+    // FOR(u, 1, n)
+    // {
+    //     DFS(u, -1);
+    //     Add(res, dp[u]);
+    // }
+
+    // cout << res;
+
+    DFS(2, -1);
 
     return 0;
 }

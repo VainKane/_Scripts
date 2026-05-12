@@ -36,33 +36,14 @@ template<typename T> bool maxi(T &a, const T &b) {
 }
 
 int const N = 1e4 + 5;
-int const BASE = MK(14);
-int const NMOD = 2;
-int const MODS[] = {(int)1e9 + 2277, (int)1e9 + 5277};
-
-struct Hash
-{
-    int x[NMOD];
-
-    Hash()
-    {
-        memset(x, 0, sizeof x);
-    }
-
-    bool operator < (Hash const other) const
-    {
-        REP(k, NMOD) if (x[k] != other.x[k]) return x[k] < other.x[k];
-        return false;
-    }
-
-    bool operator == (Hash const other) const
-    {
-        REP(k, NMOD) if (x[k] != other.x[k]) return false;
-        return true;
-    }
-};
 
 int n, k, s;
+mt19937_64 rd(time(0));
+
+long long Rand(long long l, long long r)
+{
+    return l + rd() * 1LL * rd() % (r - l + 1);
+}
 
 namespace Sub1
 {
@@ -105,57 +86,32 @@ namespace TrickLord
     }
 
     int a[N];
-    set<Hash> visited;
-
-    int pw[NMOD][N];
-    bool mark[N];
-
-    void Init()
-    {
-        REP(k, NMOD)
-        {
-            pw[k][0] = 1;
-            FOR(i, 1, n) pw[k][i] = 1LL * pw[k][i - 1] * BASE % MODS[k];
-        }
-    }
-
-    Hash GetHash(vector<int> &v)
-    {
-        Hash res;
-
-        REP(k, NMOD)
-        {
-            int tmp = 0;
-            REP(i, sz(v)) tmp = (tmp + 1LL * pw[k][i - 1] * v[i]) % MODS[k];
-            res.x[k] = tmp;
-        }
-
-        return res;
-    }
+    long long randVal[N];
+    set<long long> visited;
 
     void Process()
     {
-        FOR(i, 1, n) a[i] = i;
-        Init();
+        FOR(i, 1, n)
+        {
+            randVal[i] = Rand(1, 1e18);
+            a[i] = i;
+        }
 
         while (sz(visited) < k)
         {
-            shuffle(a + 1, a + n + 1, mt19937_64(time(0)));
+            shuffle(a + 1, a + 5 + 1, mt19937_64(time(0)));
             long long sum = 0;
+
+            vector<int> v;
+            long long hs = 0;
+
             FOR(i, 1, n) if (sum + a[i] <= s)
             {
-                mark[a[i]] = true;
+                hs ^= randVal[a[i]];
+                v.push_back(a[i]);
                 sum += a[i];
             }
 
-            vector<int> v;
-            FOR(i, 1, n) if (mark[i])
-            {
-                v.push_back(i);
-                mark[i] = false;
-            }
-
-            Hash hs = GetHash(v);
             if (sum == s && !visited.count(hs))
             {
                 for (auto &x : v) cout << x << ' ';
@@ -173,7 +129,7 @@ int main()
 
     cin >> n >> k >> s;
 
-    if (Sub1::CheckSub()) return Sub1::Process(), 0;
+    // if (Sub1::CheckSub()) return Sub1::Process(), 0;
     if (TrickLord::CheckSub()) return TrickLord::Process(), 0;
 
     return 0;
