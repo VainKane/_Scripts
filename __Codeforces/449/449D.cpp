@@ -22,24 +22,12 @@ template <class t> bool mini(t &x, t const &y)
     return x > y ? x = y, 1 : 0;
 }
 
+int const LOG = 22;
 int const MOD = 1e9 + 7;
-int const LOG = 20;
-
-void Add(int &x, int const &y)
-{
-    x += y;
-    if (x >= MOD) x -= MOD;
-}
-
-void Sub(int &x, int const &y)
-{
-    x -= y;
-    if (x < MOD) x += MOD;
-}
 
 int n;
-int cnt[MK(20) + 5];
-int pw[MK(20) + 5];
+int f[MK(20) + 5][LOG];
+int pw[LOG];
 
 int main()
 {
@@ -50,22 +38,24 @@ int main()
     FOR(i, 1, n)
     {
         int x; cin >> x;
-        cnt[x]++;
+        f[x][0]++;
+    }
+
+    FORD(x, 1e6, 0) REP(i, 20)
+    {
+        if (BIT(i, x)) f[x][i + 1] = f[x][i];
+        else f[x][i + 1] = (f[x][i] + f[x | MK(i)][i]) % MOD;
     }
 
     pw[0] = 1;
-    FOR(i, 1, MK(20)) pw[i] = 2 * pw[i - 1] % MOD;
+    FOR(i, 1, 20) pw[i] = 2 * pw[i - 1] % MOD;
 
     int res = 0;
-
-    REP(mask, 1e6)
+    FOR(mask, 0, 0)
     {
-        int tmp = mask ^ (MK(LOG) - 1);
-
-        int haha = 0;
-        for (int s = tmp; s; s = (s - 1) & tmp)
-            haha += cnt[s];
-        Add(res, pw[haha]);
+        int cnt = __builtin_popcount(mask);
+        int delta = (cnt & 1) ? -1 : 1;
+        res = (res + 1LL * delta * f[mask][20] * (pw[cnt] + MOD)) % MOD;
     }
 
     cout << res;
