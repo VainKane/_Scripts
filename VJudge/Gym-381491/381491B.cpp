@@ -23,7 +23,7 @@ template <class t> bool mini(t &x, t const &y)
 }
 
 int const N = 1e5 + 5;
-int const oo = 2e9;
+int const oo = 101;
 
 int Ceil(int a, int b)
 {
@@ -35,27 +35,22 @@ struct Segment
 {
     int x, a, b;
 
-    Segment(int _x = 0, int _a = 0, int _b = 0)
+    int Val()
     {
-        x = _x, a = _a, b = _b;
-    }
-
-    bool operator < (Segment const other) const
-    {
-        return x < other.x;
-    }
+        return a * x + b;
+    }        
 };
 
 struct ConvexHullTrick
 {
     vector<Segment> seg;
+    int id = 0;
 
     void Add(int a, int b)
     {
         while (!seg.empty())
         {
-            double x = seg.back().x;
-            if (1LL * x * seg.back().a + seg.back().b >= x * a + b) seg.pop_back();
+            if (seg.back().Val() >= seg.back().x * a + b) seg.pop_back();
             else break;
         }
 
@@ -69,7 +64,10 @@ struct ConvexHullTrick
 
     int Get(int x)
     {
-        int id = upper_bound(all(seg), Segment(x)) - seg.begin() - 1;
+        mini(id, sz(seg) - 1);
+        for (; id < sz(seg) && seg[id].x <= x; id++);
+        id--;
+
         return x * seg[id].a + seg[id].b;
     }
 } cht;

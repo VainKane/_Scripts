@@ -24,8 +24,62 @@ template <class t> bool mini(t &x, t const &y)
 
 int const N = 1e6 + 5;
 
+long long Ceil(long long a, long long b)
+{
+    if (b < 0) a = -a, b = -b;
+    return (a ^ b) < 0 ? a / b : (a + b - 1) / b;
+}
+
+struct Segment
+{
+    long long x, a, b;
+
+    long long Val()
+    {
+        return a * x + b;
+    }
+};
+
+struct ConvexHullTrick
+{
+    vector<Segment> seg;
+    int id = 0;
+
+    void Reset()
+    {
+        seg.clear();
+        id = 0;
+    }
+
+    void Add(long long a, long long b)
+    {
+        while (!seg.empty())
+        {
+            if (seg.back().Val() >= seg.back().x * a + b) seg.pop_back();
+            else break;
+        }
+
+        if (seg.empty()) seg.push_back({0, a, b});
+        else
+        {
+            if (a == seg.back().a) return;
+            seg.push_back({Ceil(b - seg.back().b, seg.back().a - a), a, b});
+        }
+    }
+
+    long long Get(int x)
+    {
+        mini(id, sz(seg));
+        for (; id < sz(seg) && seg[id].x <= x; id++);
+        id--;
+
+        return x * seg[id].a + seg[id].b;
+    }
+} cht;
+
 int n, k;
 long long c;
+
 long long v[N];
 
 namespace Sub1
@@ -43,22 +97,18 @@ namespace Sub1
     }
 }
 
-namespace Sub3
+namespace Sub5
 {
     bool CheckSub()
     {
-        return n <= 300;
+        return n <= 1e5;
     }
 
-    int const N = 309;
+    int const N = 1e5 + 5;
+    int const K = 907;
 
     long long pre[N], preI[N];
-    long long dp[N][N];
-
-    long long Cost(int l, int r)
-    {
-        return 2 * r * (c + pre[r] - pre[l - 1]) - (preI[r] - preI[l - 1]);
-    }
+    long long dp[N][K];
 
     void Process()
     {
@@ -68,11 +118,21 @@ namespace Sub3
             preI[i] = preI[i - 1] + i * v[i];
         }
 
+        mini(k, 900);
+        
         memset(dp, 0x3f, sizeof dp);
         dp[0][0] = 0;
 
-        FOR(i, 1, n) FOR(j, 1, min(i, k)) REP(p, i)
-            mini(dp[i][j], dp[p][j - 1] + Cost(p + 1, i));
+        FOR(j, 1, k)
+        {
+            cht.Reset();
+
+            FOR(i, 1, n)
+            {
+                cht.Add(-2 * pre[i - 1], dp[i - 1][j - 1] + preI[i - 1]);
+                dp[i][j] = cht.Get(i) + 2 * i * (c + pre[i]) - preI[i];
+            }
+        }
 
         cout << *min_element(dp[n] + 1, dp[n] + k + 1);
     }
@@ -87,7 +147,7 @@ int main()
     FOR(i, 1, n) cin >> v[i];
 
     if (Sub1::CheckSub()) return Sub1::Process(), 0;
-    if (Sub3::CheckSub()) return Sub3::Process(), 0;
+    if (Sub5::CheckSub()) return Sub5::Process(), 0;
 
     return 0;
 }

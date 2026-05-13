@@ -27,29 +27,35 @@ long long const oo = 1e18;
 
 int n, m;
 
-int a[N], node[N];
+int a[N];
 vector<pair<int, int>> adj[N];
 bool mark[N];
 
-int up[2 * N][20];
-int pos[N];
-int timer = 0;
+long long dp[N], dpPar[N];
+int cnt[N];
 
-long long d[N];
-
-bool lol[N];
-long long c[N];
-
-bool cmp(int u, int v)
-{
-    return pos[u] < pos[v];
-}
+long long res = oo;
 
 void DFSPrepare(int u, int p)
 {
-    up[++timer][0] = u;
-    pos[u] = timer;
+    cnt[u] = mark[u];
+    dp[u] = 0;
 
+    for (auto &e : adj[u])
+    {
+        int v = e.F;
+        int w = e.S;
+        if (v == p) continue;
+
+        DFSPrepare(v, u);
+        cnt[u] += cnt[v];
+
+        if (cnt[v]) dp[u] += dp[v] + 2 * w + a[u];
+    }
+}
+
+void DFS(int u, int p)
+{
     for (auto &e : adj[u])
     {
         int v = e.F;
@@ -57,48 +63,20 @@ void DFSPrepare(int u, int p)
 
         if (v == p) continue;
 
-        d[v] = d[u] + w;
-        DFSPrepare(v, u);
-        up[++timer][0] = u;
+        if (m - cnt[v]) dpPar[v] = dpPar[u] + dp[u] + 2 * w + a[v];
+        if (cnt[v]) dpPar[v] -= dp[v] + 2 * w + a[u];
+        DFS(v, u);
     }
-}
 
-void DFS(int u, int p)
-{
-    lol[u] = mark[u];
-    c[u] = 0;
-
+    long long tmp = dp[u] + dpPar[u];
     for (auto &e : adj[u])
     {
         int v = e.F;
-        if (v == p) continue;
-
-        DFS(v, u);
-
-        lol[u] |= lol[v];
-        c[u] += a[u] * lol[v];
-        c[u] += c[v];
+        if (v != p && cnt[v]) tmp -= a[u];
     }
-}
 
-void Build()
-{
-    FOR(j, 1, 31 - __builtin_clz(timer)) FOR(i, 1, timer - MK(j) + 1)
-        up[i][j] = min(up[i][j - 1], up[i + MK(j - 1)][j - 1], cmp);
-}
-
-int LCA(int u, int v)
-{
-    u = pos[u], v = pos[v];
-    if (u > v) swap(u, v);
-
-    int k = 31 - __builtin_clz(v - u + 1);
-    return min(up[u][k], up[v - MK(k) + 1][k], cmp);
-}
-
-long long Dist(int u, int v)
-{
-    return d[u] + d[v] - 2 * d[LCA(u, v)];
+    if (m - cnt[u]) tmp -= a[u];
+    mini(res, tmp);
 }
 
 int main()
@@ -119,29 +97,12 @@ int main()
     FOR(i, 1, n) cin >> a[i];
     FOR(i, 1, m)
     {
-        cin >> node[i];
-        mark[node[i]] = true;
+        int u; cin >> u;
+        mark[u] = true;
     }
 
     DFSPrepare(1, -1);
-    Build();
-
-    long long res = oo;
-
-    FOR(u, 1, n)
-    {
-        vector<int> nodes = {u};
-        FOR(i, 1, m) nodes.push_back(node[i]);
-        nodes.push_back(u);
-
-        long long cost = 0;
-        REP(i, sz(nodes) - 1) cost += Dist(nodes[i], nodes[i + 1]);
-
-        DFS(u, -1);
-        for (auto &e : adj[u]) cost += c[e.F];
-
-        mini(res, cost);
-    }
+    DFS(1, -1);
 
     cout << res;
 
