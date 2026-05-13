@@ -26,18 +26,56 @@ int const N = 1e6 + 5;
 
 int n, k;
 long long c;
+long long v[N];
 
-string ToString(__int128 x)
+namespace Sub1
 {
-    string digits = "";
-    while (x)
+    bool CheckSub()
     {
-        digits += x % 10 + '0';
-        x /= 10;
+        return k == 1;
     }
 
-    reverse(all(digits));
-    return digits;
+    void Process()
+    {
+        long long res = 2 * n * c;
+        FOR(i, 1, n) res += v[i] * (2 * n - i);
+        cout << res;
+    }
+}
+
+namespace Sub3
+{
+    bool CheckSub()
+    {
+        return n <= 300;
+    }
+
+    int const N = 309;
+
+    long long pre[N], preI[N];
+    long long dp[N][N];
+
+    long long Cost(int l, int r)
+    {
+        return 2 * r * (c + pre[r] - pre[l - 1]) - (preI[r] - preI[l - 1]);
+    }
+
+    void Process()
+    {
+        FOR(i, 1, n)
+        {
+            pre[i] = pre[i - 1] + v[i];
+            preI[i] = preI[i - 1] + i * v[i];
+        }
+
+        memset(dp, 0x3f, sizeof dp);
+        dp[0][0] = 0;
+
+        FOR(i, 1, n) FOR(j, 1, min(i, k)) REP(p, i)
+            mini(dp[i][j], dp[p][j - 1] + Cost(p + 1, i));
+
+        cout << *min_element(dp[n] + 1, dp[n] + k + 1);
+    }
 }
 
 int main()
@@ -46,21 +84,10 @@ int main()
     cin.tie(0); cout.tie(0);
 
     cin >> n >> k >> c;
+    FOR(i, 1, n) cin >> v[i];
 
-    long long pre = 0, x;
-    __int128 res = 0;
-
-    FOR(i, 1, n)
-    {
-        res += pre + c;
-
-        cin >> x;
-        pre += x;
-
-        assert(res > 0);
-    }
-
-    cout << ToString((res + c) * (n - 1));
+    if (Sub1::CheckSub()) return Sub1::Process(), 0;
+    if (Sub3::CheckSub()) return Sub3::Process(), 0;
 
     return 0;
 }
