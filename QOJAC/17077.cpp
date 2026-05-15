@@ -30,17 +30,11 @@ struct Edge
     {
         cin >> u >> v >> w;
     }
-
-    int GetOther(int node)
-    {
-        return node ^ u ^ v;
-    }
 };
 
-int const N = 1e5 + 5;
-int const M = 2e5 + 5;
+int const N = 1509;
+int const M = 5009;
 int const MOD = 1e9 + 7;
-long long const oo = 1e18;
 
 void Add(int &x, int const &y)
 {
@@ -50,34 +44,37 @@ void Add(int &x, int const &y)
 
 int n, m;
 
-Edge edges[M];
 vector<int> adj[N];
+vector<int> dagAdj[N];
+Edge edges[M];
 
-long long d[N];
-int deg[N];
+int d[N];
 
 vector<int> topo;
-int dp[N];
+int deg[N];
 
-void Dijkstra()
+int f[N], g[N];
+int res[M];
+
+void Dijkstra(int s)
 {
     memset(d, 0x3f, sizeof d);
-    d[1] = 0;
+    d[s] = 0;
 
-    priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> pq;
-    pq.push({d[1], 1});
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    pq.push({d[s], s});
 
     while (!pq.empty())
     {
         int u = pq.top().S;
-        long long du = pq.top().F;
+        int du = pq.top().F;
         pq.pop();
 
         if (du > d[u]) continue;
 
         for (auto &id : adj[u])
         {
-            int v = edges[id].GetOther(u);
+            int v = edges[id].v;
             int w = edges[id].w;
 
             if (mini(d[v], d[u] + w)) pq.push({d[v], v});
@@ -88,11 +85,7 @@ void Dijkstra()
 void BFS()
 {
     queue<int> q;
-    FOR(u, 1, n) if (!deg[u])
-    {
-        dp[u] = 1;
-        q.push(u);
-    }
+    FOR(u, 1, n) if (!deg[u]) q.push(u), f[u] = 1;
 
     while (!q.empty())
     {
@@ -100,7 +93,12 @@ void BFS()
         q.pop();
 
         topo.push_back(u);
-        for (auto &v : adj[u]) if (!--deg[v]) q.push(v);
+
+        for (auto &id : dagAdj[u])
+        {
+            int v = edges[id].v;
+            if (!--deg[v]) q.push(v);
+        }
     }
 }
 
@@ -114,26 +112,47 @@ int main()
     {
         edges[i].Input();
         adj[edges[i].u].push_back(i);
-        adj[edges[i].v].push_back(i);
     }
 
-    Dijkstra();
-
-    FOR(u, 1, n) adj[u].clear();
-    FOR(i, 1, m)
+    FOR(s, 1, m)
     {
-        int u = edges[i].u;
-        int v = edges[i].v;
-        int w = edges[i].w;
+        FOR(u, 1, n) dagAdj[u].clear(), deg[u] = 0;
+        topo.clear();
 
-        if (d[u] + w == d[v]) adj[u].push_back(v), deg[v]++;
-        if (d[v] + w == d[u]) adj[v].push_back(u), deg[u]++;
+        Dijkstra(s);
+
+        FOR(i, 1, m)
+        {
+            int u = edges[i].u, v = edges[i].v;
+            if (d[u] + edges[i].w == d[v]) dagAdj[u].push_back(i), deg[v]++;
+        }
+
+        BFS();
+
+        FOR(u, 1, n) g[u] = dagAdj[u].empty();
+
+        for (auto &u : topo) for (auto &id : dagAdj[u])
+        {
+            int v = edges[id].v;
+            Add(f[v], f[u] + 1);
+        }
+
+        FORD(i, sz(topo) - 1, 0)
+        {
+            int u = topo[i];
+
+            for (auto &id : dagAdj[u])
+            {
+                int v = edges[id].v;
+                Add(g[u], g[v] + 1);
+            }
+        }
+
+        for (auto &u : topo) for (auto &id : dagAdj[u])
+            res[id] = (res[id] + 1LL * f[u] * g[edges[id].v]) % MOD;
     }
 
-    BFS();
-
-    for (auto &u : topo) for (auto &v : adj[u]) Add(dp[v], dp[u]);
-    FOR(u, 1, n) cout << (d[u] < oo ? d[u] : -1) << ' ' << dp[u] << '\n';
+    FOR(i, 1, m) cout << res[i] << '\n';
 
     return 0;
 }

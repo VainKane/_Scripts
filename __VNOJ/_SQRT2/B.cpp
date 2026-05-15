@@ -24,7 +24,7 @@ template <class t> bool mini(t &x, t const &y)
 
 int const N = 3e5 + 5;
 long long const oo = 1e18;
-int const BK = 314;
+int const BK = 547;
 int const GR = N / BK + 5;
 int bkId[N], bkL[GR], bkR[GR];
 
@@ -78,6 +78,7 @@ struct ConvexHullTrick
         for (; id < sz(seg) && seg[id].x <= x; id++);
         id--;
 
+        assert(id >= 0 && id < sz(seg));
         return 1LL * x * seg[id].a + seg[id].b;
     }
 } cht;
@@ -88,7 +89,7 @@ int a[N], b[N];
 pair<int, int> qr[N];
 
 long long res[N];
-bool mark[N], bkMark[GR];
+bool mark[N], bkMark[N];
 
 vector<int> vals;
 vector<int> adj[N];
@@ -156,11 +157,13 @@ int main()
             else
             {
                 ids.push_back(i);
-                FOR(j, bkL[id], i - 1) if (qr[j].F == 1) maxi(res[i], 1LL * a[j] * qr[i].S + b[j]);
-                FOR(j, i + 1, bkR[id]) if (qr[j].F == -1) if (mark[qr[j].S])
+                int x = qr[i].S;
+
+                FOR(j, bkL[id], i - 1) if (qr[j].F == 1 && mark[j]) maxi(res[i], 1LL * vals[a[j] - 1] * x + b[j]);
+                FOR(j, i + 1, bkR[id]) if (qr[j].F == -1 && mark[qr[j].S])
                 {
                     int idx = qr[j].S;
-                    maxi(res[i], 1LL * a[idx] * qr[i].S + b[idx]);
+                    maxi(res[i], 1LL * vals[a[idx] - 1] * x + b[idx]);
                 }
             }
         }
